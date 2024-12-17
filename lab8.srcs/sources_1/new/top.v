@@ -13,6 +13,7 @@ wire hen,ven,clk_50,rfclk;
 wire [14 : 0] raddr;
 wire [11:0] rdata;
 reg [1:0] game_state;
+reg playing_state;
 localparam welcome = 0;
 localparam playing = 1;
 localparam fail =2;
@@ -26,6 +27,7 @@ localparam win =3;
         .pclk(clk_50),
         .rstn(rstn),
         .game_state(game_state),
+        .playing_state(playing_state),
         .rgb(rgb),
         .hs(hs),
         .vs(rfclk)
@@ -33,7 +35,7 @@ localparam win =3;
     assign vs = rfclk; 
     MUSIC this_is_true_music (
     .clk(clk),             // 输入时钟
-    .start(SW[0]),
+    .start(playing_state),
     .song(game_state),        //切歌
     .rstn(rstn),           // 输入复位
     .btn1(BTNU),

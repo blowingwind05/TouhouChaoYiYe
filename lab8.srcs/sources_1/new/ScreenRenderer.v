@@ -2,11 +2,12 @@ module ScreenRenderer(
     input       pclk,
     input       rstn,
     input [1:0] game_state,
+    input       playing_state,
     input [20:0] players,             
-    input [7:0] playerPositionX, 
-    input [7:0] playerPositionY, 
-    input [7:0] enemyPositionX, 
-    input [7:0] enemyPositionY,   
+    input [7:0] PlayerPositionX, 
+    input [7:0] PlayerPositionY, 
+    input [7:0] EnemyPositionX, 
+    input [7:0] EnemyPositionY,   
     output      [11:0] rgb,
     output      hs,vs
     );   
@@ -58,41 +59,25 @@ blk_mem_gen_0 vram (
   .addrb(raddr),  // input wire [14 : 0] addrb
   .doutb(rdata)  // output wire [11 : 0] doutb
 );
-blk_mem_gen_0 background (
-  .clka(pclk),    // input wire clka
-  .wea(1'b0),      // input wire [0 : 0] wea
-  .addra(0),  // input wire [14 : 0] addra
-  .dina(0),    // input wire [11 : 0] dina
-  .clkb(pclk),    // input wire clkb
-  .addrb(bgaddr),  // input wire [14 : 0] addrb
-  .doutb(bgdata)  // output wire [11 : 0] doutb
+blk_mem_gen_3 background (
+  .clka(pclk),    // input wire clkb
+  .addra(bgaddr),  // input wire [14 : 0] addrb
+  .douta(bgdata)  // output wire [11 : 0] doutb
 );
 blk_mem_gen_1 welcomepage (
-  .clka(pclk),    // input wire clka
-  .wea(1'b0),      // input wire [0 : 0] wea
-  .addra(0),  // input wire [14 : 0] addra
-  .dina(0),    // input wire [11 : 0] dina
-  .clkb(pclk),    // input wire clkb
-  .addrb(wcaddr),  // input wire [14 : 0] addrb
-  .doutb(wcdata)  // output wire [11 : 0] doutb
+  .clka(pclk),    // input wire clkb
+  .addra(wcaddr),  // input wire [14 : 0] addrb
+  .douta(wcdata)  // output wire [11 : 0] doutb
 );
 blk_mem_gen_2 failpage (
-  .clka(pclk),    // input wire clka
-  .wea(1'b0),      // input wire [0 : 0] wea
-  .addra(0),  // input wire [14 : 0] addra
-  .dina(0),    // input wire [11 : 0] dina
-  .clkb(pclk),    // input wire clkb
-  .addrb(fladdr),  // input wire [14 : 0] addrb
-  .doutb(fldata)  // output wire [11 : 0] doutb
+  .clka(pclk),    // input wire clkb
+  .addra(fladdr),  // input wire [14 : 0] addrb
+  .douta(fldata)  // output wire [11 : 0] doutb
 );
-blk_mem_gen_0_1 texture (
-  .clka(pclk),   
-  .wea(1'b0),      
-  .addra(0),  
-  .dina(0),   
-  .clkb(pclk),    
-  .addrb(txaddr),  
-  .doutb(txdata) 
+blk_mem_gen_0_1 texture (  
+  .clka(pclk),    
+  .addra(txaddr),  
+  .douta(txdata) 
 );
 localparam welcome = 0;
 localparam playing = 1;
