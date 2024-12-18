@@ -5,5 +5,5 @@ module game(
     );
 endmodule
 playermove PLAYERMOVE(
-    
+    .rfclk(rfclk)
 );

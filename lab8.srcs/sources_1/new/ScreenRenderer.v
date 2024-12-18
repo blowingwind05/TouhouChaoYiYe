@@ -3,7 +3,8 @@ module ScreenRenderer(
     input       rstn,
     input [1:0] game_state,
     input       playing_state,
-    input [20:0] players,             
+    input       shift,
+    input [20:0]players,             
     input [7:0] PlayerPositionX, 
     input [7:0] PlayerPositionY, 
     input [7:0] EnemyPositionX, 
@@ -32,6 +33,11 @@ wire [11 : 0] fldata;
 reg [14 : 0] txaddr;
 wire [15 : 0] txdata;
 integer i;
+localparam reimu = 15'd0;
+localparam yukari = 15'd1600;
+localparam marisa = 15'd3200;
+localparam redstar = 15'd4800;
+localparam bluestar = 15'd4921;
 DST dst(
     .rstn(rstn),
     .pclk(pclk),

@@ -9,15 +9,16 @@ module Top(
     output      pwm,
     output      gain
 );
-wire hen,ven,clk_50,rfclk;
-wire [14 : 0] raddr;
-wire [11:0] rdata;
-reg [1:0] game_state;
-reg playing_state;
-localparam welcome = 0;
-localparam playing = 1;
-localparam fail =2;
-localparam win =3;
+    wire hen,ven,clk_50,rfclk;
+    wire w,a,s,d,z,x,q,o,r,shift,enter,esc,up,down,left,right;
+    wire [14 : 0] raddr;
+    wire [11:0] rdata;
+    reg [1:0] game_state;
+    reg playing_state;
+    localparam welcome = 0;
+    localparam playing = 1;
+    localparam fail =2;
+    localparam win =3;
 
     clk_wiz_0 clk_wiz_0(
     .clk_in1(clk),
@@ -36,12 +37,20 @@ localparam win =3;
     MUSIC this_is_true_music (
     .clk(clk),             // 输入时钟
     .start(playing_state),
+    .shift(shift),
     .song(game_state),        //切歌
     .rstn(rstn),           // 输入复位
-    .btn1(BTNU),
-    .btn2(BTND),
+    .btn1(up),
+    .btn2(down),
     .speedup(2'b00), // 控制音符速度
     .B(pwm),  // 输出音频信号
     .G(gain)
-);
+    );
+    keyboard_output KEYBOARDOUT(
+    .clk(clk),
+    .rstn(rstn),
+    .ps2_clk(PS2_CLK),
+    .ps2_data(PS2_DATA),
+    .w(w),.a(a),.s(s),.d(d),.z(z),.x(x),.q(q),.o(o),.r(r),.shift(shift),.enter(enter),.esc(esc),.up(up),.down(down),.left(left),.right(right)
+    );
 endmodule
