@@ -15,11 +15,15 @@ module Top(
     wire [11:0] rdata;
     reg [1:0] game_state;
     reg playing_state;
+    //game_state
     localparam welcome = 2'd0;
     localparam playing = 2'd1;
     localparam fail = 2'd2;
     localparam win = 2'd3;
-
+    //playing_state
+    localparam paused = 1'b1;
+    localparam unpaused = 1'b0;
+    
     clk_wiz_0 clk_wiz_0(
     .clk_in1(clk),
     .clk_out1(clk_50)
@@ -59,6 +63,8 @@ module Top(
     game GAME(
         .clk(clk),.rfclk(rfclk),
         .w(w),.a(a),.s(s),.d(d),.z(z),.x(x),.q(q),.o(o),.r(r),.shift(shift),.enter(enter),.esc(esc),.up(up),.down(down),.left(left),.right(right),
-        .game_state(game_state),.playing_state(playing_state),.PlayerPositionX(PlayerPositionX),.PlayerPositionY(PlayerPositionY)
+        .game_state(game_state),
+        .playing_state(playing_state),
+        .PlayerPositionX(PlayerPositionX),.PlayerPositionY(PlayerPositionY)
     );
 endmodule

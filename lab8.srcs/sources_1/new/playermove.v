@@ -7,13 +7,14 @@ module playermove(//坐标以左下角为原点，左下角坐标1，1 右上角
     output reg [7:0] Next_PlayerPositionY
     );
     reg dow,dos,doa,dod;
+    //gamestate
     localparam welcome = 0;
     localparam playing = 1;
     localparam fail =2;
     localparam win =3;
 always @(posedge rfclk) begin
     if(game_state == playing)begin
-        if(shift) begin
+        if(shift) begin//slowmode
             if(!w && !s)begin
                 Next_PlayerPositionY <= PlayerPositionY;
             end
@@ -100,7 +101,7 @@ always @(posedge rfclk) begin
             end
         end
     end
-    else begin
+    else begin//game_state != playing
         Next_PlayerPositionX <= PlayerPositionX;
         Next_PlayerPositionY <= PlayerPositionY;
     end

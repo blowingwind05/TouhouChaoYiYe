@@ -42,7 +42,7 @@ playermove PLAYERMOVE(
 );
 playerbulletinitialize PLAYERBULLETINIT(
     .rfclk(clk1),
-    .pause(pause),
+    .pause(game_state != playing || playing_state == paused || !z),
     .PlayerPositionX(PlayerPositionX),
     .PlayerPositionY(PlayerPositionY),
     .PlayerBullet(PlayerBullet),

@@ -86,6 +86,7 @@ blk_mem_gen_0_1 texture (
   .addra(txaddr),  
   .douta(txdata) 
 );
+//game_state
 localparam welcome = 2'd0;
 localparam playing = 2'd1;
 localparam fail = 2'd2;
