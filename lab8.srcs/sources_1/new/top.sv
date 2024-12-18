@@ -13,7 +13,7 @@ module Top(
     wire w,a,s,d,z,x,q,o,r,shift,enter,esc,up,down,left,right;
     wire [14 : 0] raddr;
     wire [11:0] rdata;
-    reg [1:0] game_state;
+    reg [2:0] game_state;
     reg playing_state;
     //game_state
     localparam welcome = 2'd0;
@@ -23,13 +23,14 @@ module Top(
     //playing_state
     localparam paused = 1'b1;
     localparam unpaused = 1'b0;
-    
+
     clk_wiz_0 clk_wiz_0(
     .clk_in1(clk),
     .clk_out1(clk_50)
     );
     ScreenRenderer RENDERER(
         .pclk(clk_50),
+        .clk(clk),
         .rstn(rstn),
         .game_state(game_state),
         .playing_state(playing_state),

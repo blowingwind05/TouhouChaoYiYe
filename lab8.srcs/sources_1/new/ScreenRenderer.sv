@@ -1,7 +1,8 @@
 module ScreenRenderer(
     input       pclk,
+    input       clk,
     input       rstn,
-    input [1:0] game_state,
+    input [2:0] game_state,
     input       playing_state,
     input       shift,
     input [20:0]players,             
@@ -91,7 +92,7 @@ localparam welcome = 2'd0;
 localparam playing = 2'd1;
 localparam fail = 2'd2;
 localparam win = 2'd3;
-always @(posedge pclk) begin
+always @(posedge clk) begin
     prev_rfclk <= rfclk;
     case(game_state)
     welcome:begin
