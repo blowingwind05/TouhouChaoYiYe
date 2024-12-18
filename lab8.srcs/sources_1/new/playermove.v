@@ -1,6 +1,6 @@
 module playermove(//坐标以左下角为原点，左下角坐标1，1 右上角150，150
     input w,s,a,d,shift,rfclk, 
-    input [1:0] game_state,
+    input [2:0] game_state,
     input [7:0] PlayerPositionX,
     input [7:0] PlayerPositionY,
     output reg [7:0] Next_PlayerPositionX,
