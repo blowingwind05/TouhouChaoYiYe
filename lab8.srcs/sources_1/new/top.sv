@@ -15,10 +15,10 @@ module Top(
     wire [11:0] rdata;
     reg [1:0] game_state;
     reg playing_state;
-    localparam welcome = 0;
-    localparam playing = 1;
-    localparam fail =2;
-    localparam win =3;
+    localparam welcome = 2'd0;
+    localparam playing = 2'd1;
+    localparam fail = 2'd2;
+    localparam win = 2'd3;
 
     clk_wiz_0 clk_wiz_0(
     .clk_in1(clk),
@@ -29,6 +29,9 @@ module Top(
         .rstn(rstn),
         .game_state(game_state),
         .playing_state(playing_state),
+        .PlayerPositionX(PlayerPositionX),
+        .PlayerPositionY(PlayerPositionY),
+        .PlayerBullet(PlayerBullet),
         .rgb(rgb),
         .hs(hs),
         .vs(rfclk)
@@ -52,5 +55,10 @@ module Top(
     .ps2_clk(PS2_CLK),
     .ps2_data(PS2_DATA),
     .w(w),.a(a),.s(s),.d(d),.z(z),.x(x),.q(q),.o(o),.r(r),.shift(shift),.enter(enter),.esc(esc),.up(up),.down(down),.left(left),.right(right)
+    );
+    game GAME(
+        .clk(clk),.rfclk(rfclk),
+        .w(w),.a(a),.s(s),.d(d),.z(z),.x(x),.q(q),.o(o),.r(r),.shift(shift),.enter(enter),.esc(esc),.up(up),.down(down),.left(left),.right(right),
+        .game_state(game_state),.playing_state(playing_state),.PlayerPositionX(PlayerPositionX),.PlayerPositionY(PlayerPositionY)
     );
 endmodule

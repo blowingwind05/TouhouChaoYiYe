@@ -7,6 +7,7 @@ module ScreenRenderer(
     input [20:0]players,             
     input [7:0] PlayerPositionX, 
     input [7:0] PlayerPositionY, 
+    input [17:0] PlayerBullet[23:0],
     input [7:0] EnemyPositionX, 
     input [7:0] EnemyPositionY,   
     output      [11:0] rgb,
@@ -85,10 +86,10 @@ blk_mem_gen_0_1 texture (
   .addra(txaddr),  
   .douta(txdata) 
 );
-localparam welcome = 0;
-localparam playing = 1;
-localparam fail =2;
-localparam win =3;
+localparam welcome = 2'd0;
+localparam playing = 2'd1;
+localparam fail = 2'd2;
+localparam win = 2'd3;
 always @(posedge pclk) begin
     prev_rfclk <= rfclk;
     case(game_state)
