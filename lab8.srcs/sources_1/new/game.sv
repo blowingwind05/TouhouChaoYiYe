@@ -1,6 +1,6 @@
 module game(
     input clk,rfclk,w,s,a,d,z,x,shift,esc, 
-    output reg [1:0] game_state,
+    output reg [2:0] game_state,
     output reg       playing_state,
     output reg [7:0] PlayerPositionX,
     output reg [7:0] PlayerPositionY
