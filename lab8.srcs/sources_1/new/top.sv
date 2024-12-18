@@ -17,6 +17,7 @@ module Top(
     reg playing_state;
     //game_state
     localparam welcome = 2'd0;
+    localparam setting = 3'd4;
     localparam playing = 2'd1;
     localparam fail = 2'd2;
     localparam win = 2'd3;

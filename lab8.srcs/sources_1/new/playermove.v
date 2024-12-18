@@ -8,10 +8,11 @@ module playermove(//坐标以左下角为原点，左下角坐标1，1 右上角
     );
     reg dow,dos,doa,dod;
     //gamestate
-    localparam welcome = 0;
-    localparam playing = 1;
-    localparam fail =2;
-    localparam win =3;
+    localparam welcome = 3'd0;
+    localparam setting = 3'd4;
+    localparam playing = 3'd1;
+    localparam fail = 3'd2;
+    localparam win = 3'd3;
 always @(posedge rfclk) begin
     if(game_state == playing)begin
         if(shift) begin//slowmode
