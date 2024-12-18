@@ -9,7 +9,7 @@ module Top(
     output      pwm,
     output      gain
 );
-    wire hen,ven,clk_50,rfclk;
+    wire hen,ven,clk_50,rfclk;//wangwang
     wire w,a,s,d,z,x,q,o,r,shift,enter,esc,up,down,left,right;
     wire [14 : 0] raddr;
     wire [11:0] rdata;
