@@ -36,11 +36,13 @@ wire [11 : 0] fldata;
 reg [14 : 0] txaddr;
 wire [15 : 0] txdata;
 integer i;
-localparam reimu = 15'd0;
-localparam yukari = 15'd1600;
-localparam marisa = 15'd3200;
-localparam redstar = 15'd4800;
-localparam bluestar = 15'd4921;
+localparam reimu = 15'd0;//store from 0 to 1599
+localparam yukari = 15'd1600;//store from 1600 to 3199
+localparam marisa = 15'd3200;//store from 3200 to 4799
+localparam reimubullet = 15'd4800;//store from 4800 to 4829
+localparam yakuribullet = 15'd4830;//store from 4830 to 4859
+localparam redstar = 15'd4860;//store from 4860 to 4980
+localparam bluestar = 15'd4981;//store from 4981 to 5101
 DST dst(
     .rstn(rstn),
     .pclk(pclk),

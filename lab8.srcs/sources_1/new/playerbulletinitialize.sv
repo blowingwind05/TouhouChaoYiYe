@@ -22,9 +22,9 @@ module playerbulletinitialize(
     always @(posedge rfclk) begin
         if(!pause)begin
             if(initialize_state == 3'd0)begin//initializing
-                PlayerBulletInitialized[initialize_area*3+0] <= {initialized,PlayerPositionY,PlayerPositionX - 8'd8};
-                PlayerBulletInitialized[initialize_area*3+1] <= {initialized,PlayerPositionY,PlayerPositionX};
-                PlayerBulletInitialized[initialize_area*3+2] <= {initialized,PlayerPositionY,PlayerPositionX + 8'd8};
+                PlayerBulletInitialized[initialize_area*3+0] <= {initialized,PlayerPositionX - 8'd8,PlayerPositionY};
+                PlayerBulletInitialized[initialize_area*3+1] <= {initialized,PlayerPositionX,PlayerPositionY};
+                PlayerBulletInitialized[initialize_area*3+2] <= {initialized,PlayerPositionX + 8'd8,PlayerPositionY};
                 for(i=0;i<24;i=i+1)if(i != initialize_area*3+0 && i != initialize_area*3+1 && i != initialize_area*3+2)PlayerBulletInitialized[i] <= PlayerBullet[i];
             end
             if(initialize_state != 3'd0)for(i=0;i<24;i=i+1)PlayerBulletInitialized[i] <= PlayerBullet[i];
