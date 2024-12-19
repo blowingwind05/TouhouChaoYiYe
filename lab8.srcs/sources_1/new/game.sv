@@ -126,6 +126,13 @@ module game(
             Bombs <= Bombs_setting;
         end
     end
+
+    wire [7:0] Next_PlayerPositionX;
+    wire [7:0] Next_PlayerPositionY;
+    always @(posedge rfclk) begin
+        PlayerPositionX <= Next_PlayerPositionX;
+        PlayerPositionY <= Next_PlayerPositionY;
+    end
 playermove PLAYERMOVE(
     .rfclk(clk1),
     .w(w),
