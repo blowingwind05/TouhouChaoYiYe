@@ -17,7 +17,7 @@ module playerbulletupdate (
         if(count2 == 0) begin
                 integer i;
             for(i=0;i<24;i++) begin
-                Next_PlayerBullet <= PlayerBulletMoved;
+                Next_PlayerBullet[i] <= PlayerBulletMoved[i];
             end
         end
     end
