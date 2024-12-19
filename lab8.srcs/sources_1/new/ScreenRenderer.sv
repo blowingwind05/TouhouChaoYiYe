@@ -17,7 +17,7 @@ module ScreenRenderer(
     );   
 wire hen,ven,rfclk;
 reg vramwe;
-reg [1 : 0] prev_game_state;
+reg [2 : 0] prev_game_state;
 reg prev_rfclk;
 wire [14 : 0] raddr;
 wire [14 : 0] bgaddr;
@@ -60,7 +60,7 @@ DDP ddp(
     .raddr(raddr)
     );
 blk_mem_gen_0 vram (
-  .clka(pclk),    // input wire clka
+  .clka(clk),    // input wire clka
   .wea(vramwe),      // input wire [0 : 0] wea
   .addra(vramwaddr),  // input wire [14 : 0] addra
   .dina(vramwdata),    // input wire [11 : 0] dina
@@ -69,22 +69,22 @@ blk_mem_gen_0 vram (
   .doutb(rdata)  // output wire [11 : 0] doutb
 );
 blk_mem_gen_3 background (
-  .clka(pclk),    // input wire clkb
+  .clka(clk),    // input wire clkb
   .addra(bgaddr),  // input wire [14 : 0] addrb
   .douta(bgdata)  // output wire [11 : 0] doutb
 );
 blk_mem_gen_1 welcomepage (
-  .clka(pclk),    // input wire clkb
+  .clka(clk),    // input wire clkb
   .addra(wcaddr),  // input wire [14 : 0] addrb
   .douta(wcdata)  // output wire [11 : 0] doutb
 );
 blk_mem_gen_2 failpage (
-  .clka(pclk),    // input wire clkb
+  .clka(clk),    // input wire clkb
   .addra(fladdr),  // input wire [14 : 0] addrb
   .douta(fldata)  // output wire [11 : 0] doutb
 );
 blk_mem_gen_0_1 texture (  
-  .clka(pclk),    
+  .clka(clk),    
   .addra(txaddr),  
   .douta(txdata) 
 );

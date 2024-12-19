@@ -126,7 +126,7 @@ module game(
             Bombs <= Bombs_setting;
         end
     end
-playermove PLAYERMOVE(
+playermove PLAYERMOVE(//heihei
     .rfclk(clk1),
     .w(w),
     .s(s),
