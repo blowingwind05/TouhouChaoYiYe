@@ -1,8 +1,8 @@
 module enemymove (
     input rfclk,
     input  [2:0] game_state,
-    input  [7:0] EnemyPositionX;
-    input  [7:0] EnemyPositionY;
+    input  [7:0] EnemyPositionX,
+    input  [7:0] EnemyPositionY,
     output  reg [7:0] Next_EnemyPositionX,
     output  reg [7:0] Next_EnemyPositionY
 );
@@ -16,7 +16,7 @@ module enemymove (
     reg [5:0] count_Y;
     reg direction_X;
     reg direction_Y;
-    reg [7:0] lfsr; //生成伪随机数
+    reg [7:0] lfsr = 8'b11001010; //生成伪随机数
     always @(posedge rfclk) begin
         lfsr <= {lfsr[6:0], lfsr[7] ^ lfsr[5] ^ lfsr[4] ^ lfsr[3]};
     end
@@ -67,10 +67,10 @@ always @(posedge rfclk) begin
                     Next_EnemyPositionY <= 8'd131;
             end
             else begin //direction_Y==0
-                if(EnemyPositionY > 8'd21)
+                if(EnemyPositionY > 8'd110)
                     Next_EnemyPositionY <= EnemyPositionY - 1;
                 else
-                    Next_EnemyPositionY <= 8'd21;
+                    Next_EnemyPositionY <= 8'd110;
             end
         end
         else begin
