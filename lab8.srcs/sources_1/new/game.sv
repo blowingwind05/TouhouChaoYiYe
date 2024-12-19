@@ -13,10 +13,10 @@ module game(
     reg   clk1,clk2,clk3,clk4;
     reg [18:0] count1,count2,cuont3,count4;
     initial begin
-        count1 = 0;
-        count2 = 125000;
-        count3 = 250000;
-        count4 = 375000;
+        count1 = 375000;
+        count2 = 250000;
+        count3 = 125000;
+        count4 = 0;
     end
     always @(posedge clk72m) begin
         if(count1 == 500000) begin
@@ -171,7 +171,7 @@ module game(
         PlayerPositionY <= Next_PlayerPositionY;
     end
 playermove PLAYERMOVE(//heihei
-    .clk1(clk1),
+    .rfclk(clk1),
     .w(w),
     .s(s),
     .a(a),
@@ -184,7 +184,7 @@ playermove PLAYERMOVE(//heihei
     .Next_PlayerPositionY(Next_PlayerPositionY)
 );
 playerbulletinitialize PLAYERBULLETINIT(
-    .clk1(clk1),
+    .rfclk(clk1),
     .pause(game_state != playing || playing_state == paused || !z),
     .PlayerPositionX(PlayerPositionX),
     .PlayerPositionY(PlayerPositionY),
