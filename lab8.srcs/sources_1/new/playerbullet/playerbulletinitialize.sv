@@ -34,7 +34,7 @@ module playerbulletinitialize(
                 initialize_area <= initialize_area + 1;
             end
         end
-        if(pause)begin
+        else begin
             for(i=0;i<24;i=i+1)PlayerBulletInitialized[i] <= PlayerBullet[i];
         end
     end
