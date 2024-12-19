@@ -1,6 +1,7 @@
 module playerbulletmove(
     input rfclk,
     input      [17:0] PlayerBulletInitialized [23:0],
+    input      [9:0]  EnemyHp,
     output reg [17:0] PlayerBulletMoved [23:0]
     );
     localparam sleeping = 2'd0;

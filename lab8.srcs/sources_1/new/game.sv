@@ -264,4 +264,19 @@ playerbulletinitialize PLAYERBULLETINIT(
     .PlayerBullet(PlayerBullet),
     .PlayerBulletInitialized(PlayerBulletInitialized)
 );
+
+    wire [7:0] Next_EnemyPositionX;
+    wire [7:0] Next_EnemyPositionY;
+    always @(posedge clk1) begin
+        EnemyPositionX <= Next_EnemyPositionX;
+        EnemyPositionY <= Next_EnemyPositionY;
+    end
+enemymove ENEMYMOVE(
+    .rfclk(clk1),
+    .game_state(game_state),
+    .EnemyPositionX(EnemyPositionX),
+    .EnemyPositionY(EnemyPositionY),
+    .Next_EnemyPositionX(Next_EnemyPositionX),
+    .Next_EnemyPositionY(Next_EnemyPositionY)
+)
 endmodule
