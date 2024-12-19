@@ -103,62 +103,7 @@ module game(
         right_state = 1'b0;
         right_prev = 1'b0;
     end
-
-    always @(*) begin   //game_state逻辑
-        case(game_state)
-            welcome: begin
-                if(s) begin
-                    next_game_state <= playing;
-                end
-                else if(o)begin
-                    next_game_state <= setting;
-                end
-                else begin
-                    next_game_state <= welcome;
-                end
-            end
-            playing: begin
-                esc_reg <= esc;
-                if(playing_state == unpaused) begin
-                    if(esc == 1'b1 && esc_reg == 1'b0) begin
-                        playing_state <= paused;
-                    end
-                    else begin
-                        playing_state <= unpaused;
-                    end
-                end
-                else begin//paused
-                    if(esc == 1'b1 && esc_reg == 1'b0) begin
-                        playing_state <= unpaused;
-                    end
-                    else begin
-                        playing_state <= paused;
-                    end
-                end
-            end
-            fail: begin
-                if(q) begin
-                    next_game_state <= welcome;
-                end
-                else if(r) begin
-                    next_game_state <= playing;
-                end
-                else begin
-                    next_game_state <= fail;
-                end
-            end
-            win: begin
-            end
-            setting: begin
-                if(q) begin
-                    next_game_state <= welcome;
-                end
-                else begin
-                    next_game_state <= setting;
-                end
-            end
-        endcase
-    end
+        
 
     always @(posedge clk72m) begin
         if(!rstn)begin
@@ -242,6 +187,59 @@ module game(
                 end
             end
         end
+        case(game_state)
+            welcome: begin
+                if(s) begin
+                    game_state <= playing;
+                end
+                else if(o)begin
+                    game_state <= setting;
+                end
+                else begin
+                    game_state <= welcome;
+                end
+            end
+            playing: begin
+                esc_reg <= esc;
+                if(playing_state == unpaused) begin
+                    if(esc == 1'b1 && esc_reg == 1'b0) begin
+                        playing_state <= paused;
+                    end
+                    else begin
+                        playing_state <= unpaused;
+                    end
+                end
+                else begin//paused
+                    if(esc == 1'b1 && esc_reg == 1'b0) begin
+                        playing_state <= unpaused;
+                    end
+                    else begin
+                        playing_state <= paused;
+                    end
+                end
+            end
+            fail: begin
+                if(q) begin
+                    game_state <= welcome;
+                end
+                else if(r) begin
+                    game_state <= playing;
+                end
+                else begin
+                    game_state <= fail;
+                end
+            end
+            win: begin
+            end
+            setting: begin
+                if(q) begin
+                    game_state <= welcome;
+                end
+                else begin
+                    game_state <= setting;
+                end
+            end
+        endcase
     end
 
 
@@ -269,15 +267,26 @@ playermove PLAYERMOVE(//heihei
 
     wire [17:0] Next_PlayerBullet[23:0];
     wire [9:0]  Next_EnemyHp;
-    always @(posedge clk3) begin
-        EnemyHp <= Next_EnemyHp;
-        for(i=0;i<24;i++) begin
-            PlayerBullet[i] <= Next_PlayerBullet[i];
+    reg  [18:0] count;
+    initial begin
+        count = 250000;
+    end
+    always @(posedge clk72m) begin
+        if(count < 1000000)
+            count <= count + 1;
+        else
+            count <= 0;
+    end
+    always @(posedge clk72m) begin
+        if(count == 0) begin
+            EnemyHp <= Next_EnemyHp;
+            for(i=0;i<24;i++) begin
+                PlayerBullet[i] <= Next_PlayerBullet[i];
+            end
         end
     end
 playerbullet PLAYERBULLET (
-    .clk1(clk1),
-    .clk2(clk2),
+    .rfclk(clk72m),
     .pause(esc_reg),
     .PlayerBullet(PlayerBullet),
     .PlayerPositionX(PlayerPositionX),

@@ -1,5 +1,5 @@
 module playerbullet (
-    input      clk1,clk2,pause,
+    input      rfclk,pause,
     input      [17:0] PlayerBullet[23:0],
     input      [7:0]  PlayerPositionX,
     input      [7:0]  PlayerPositionY,
@@ -11,7 +11,7 @@ module playerbullet (
     reg [17:0] PlayerBulletMoved [23:0];
 
 playerbulletinitialize PLAYERBULLETINIT (
-    .rfclk(clk1),
+    .rfclk(rfclk),
     .pause(pause),
     .PlayerPositionX(PlayerPositionX),
     .PlayerPositionY(PlayerPositionY),
@@ -19,7 +19,7 @@ playerbulletinitialize PLAYERBULLETINIT (
     .PlayerBulletInitialized(PlayerBulletInitialized)
 );
 playerbulletmove PLAYERBULLETMOVE (
-    .rfclk(clk2),
+    .rfclk(rfclk),
     .pause(pause),
     .PlayerBulletInitialized(PlayerBulletInitialized),
     .EnemyHp(EnemyHp),
@@ -29,7 +29,7 @@ playerbulletmove PLAYERBULLETMOVE (
     .PlayerBulletMoved(PlayerBulletMoved)
 );
 playerbulletupdate PLAYERBULLETUPDATE (
-    .rfclk(clk2),
+    .rfclk(rfclk),
     .PlayerBulletMoved(PlayerBulletMoved),
     .Next_PlayerBullet(Next_PlayerBullet)
 );
