@@ -21,7 +21,7 @@ always @(posedge rfclk) begin
             end
             if(w) begin
                 dow <= dow + 1;
-                if(dow)begin
+                if(dow && w)begin
                     if(PlayerPositionY < 8'd131)begin
                         Next_PlayerPositionY <= PlayerPositionY + 1;
                     end
@@ -32,7 +32,7 @@ always @(posedge rfclk) begin
             end
             if(s) begin
                 dos <= dos + 1;
-                if(dos)begin
+                if(dos && s)begin
                     if(PlayerPositionY > 8'd21)begin
                         Next_PlayerPositionY <= PlayerPositionY - 1;
                     end
@@ -46,14 +46,14 @@ always @(posedge rfclk) begin
             end
             if(d) begin
                 dod <= dod + 1;
-                if(dod)begin
+                if(dod && d)begin
                     if(PlayerPositionX < 8'd130)Next_PlayerPositionX <= PlayerPositionX + 1;
                     else Next_PlayerPositionX <= 8'd130;
                 end
             end
             if(a) begin
                 doa <= doa + 1;
-                if(doa)begin
+                if(doa && a)begin
                     if(PlayerPositionX > 8'd20)begin
                         Next_PlayerPositionX <= PlayerPositionX - 1;
                     end
