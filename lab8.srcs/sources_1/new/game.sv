@@ -13,7 +13,7 @@ module game(
     output reg [7:0] EnemyPositionX,
     output reg [7:0] EnemyPositionY
     );
-    reg   clk1,clk2,clk3,clk4;
+    reg   clk1,clk2,clk3,clk4;  //clk1--move&bulletinitial，clk2--bulletmove
     reg [18:0] count1,count2,cuont3,count4;
     always @(posedge clk72m) begin
         if(count1 == 500000) begin
