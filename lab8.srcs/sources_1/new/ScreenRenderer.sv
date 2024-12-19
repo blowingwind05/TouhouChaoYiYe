@@ -259,7 +259,7 @@ always @(posedge clk) begin
                         x <= 0;
                     end
                 end
-                3:begin//begin the progress three
+                2:begin//begin the progress three
                     if(x < 13)begin
                         if(rdstaddr < (94+x)*200 + 5 + 90)begin
                             vramwe <= txtdata;
@@ -294,7 +294,7 @@ always @(posedge clk) begin
                         x <= 0;
                     end
                 end
-                4:begin//begin the progress four
+                3:begin//begin the progress four
                     if(x < 15)begin
                         if(rdstaddr < (93+x)*200 + 120 + 40)begin
                             vramwe <= txtdata;
@@ -318,7 +318,7 @@ always @(posedge clk) begin
                         i <= 0;
                     end
                 end
-                5:begin//begin the progress five
+                4:begin//begin the progress five
                     if(i < Players_setting)begin
                         if(x < 11)begin
                             if(rdstaddr < (44+x)*200 + 109 + 11 + 20 * i)begin

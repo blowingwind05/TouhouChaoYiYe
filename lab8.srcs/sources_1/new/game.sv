@@ -226,19 +226,19 @@ module game(
             end 
             else right_state <= 1'b0; 
             if(setting_state == setting_volume)begin
-                if (left_state && volume < 100) begin
-                    volume <= volume + 10; 
+                if (left_state && volume > 0) begin
+                    volume <= volume - 10; 
                 end
-                else if (right_state && volume > 0) begin
-                    volume <= volume - 10;  
+                else if (right_state && volume < 100) begin
+                    volume <= volume + 10;  
                 end
             end
             else begin//setting_Players, 1<=Players_setting<=4
-                if (left_state && Players_setting < 4) begin
-                    Players_setting <= Players_setting + 1; 
+                if (left_state && Players_setting > 1) begin
+                    Players_setting <= Players_setting - 1; 
                 end
-                else if (right_state && Players_setting > 1) begin
-                    Players_setting <= Players_setting - 1;  
+                else if (right_state && Players_setting < 4) begin
+                    Players_setting <= Players_setting + 1;  
                 end
             end
         end
