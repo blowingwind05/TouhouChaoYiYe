@@ -171,7 +171,7 @@ module game(
         PlayerPositionY <= Next_PlayerPositionY;
     end
 playermove PLAYERMOVE(//heihei
-    .clk1(clk1),
+    .rfclk(clk1),
     .w(w),
     .s(s),
     .a(a),
@@ -184,7 +184,7 @@ playermove PLAYERMOVE(//heihei
     .Next_PlayerPositionY(Next_PlayerPositionY)
 );
 playerbulletinitialize PLAYERBULLETINIT(
-    .clk1(clk1),
+    .rfclk(clk1),
     .pause(game_state != playing || playing_state == paused || !z),
     .PlayerPositionX(PlayerPositionX),
     .PlayerPositionY(PlayerPositionY),
