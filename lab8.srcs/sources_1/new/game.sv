@@ -12,6 +12,8 @@ module game(
     );
     reg   clk1,clk2,clk3,clk4;
     reg [2:0]  next_game_state;
+    reg [2:0]  Players_setting;
+    reg [2:0]  Bombs_setting; 
     reg        esc_reg;
     integer    i;
     localparam sleeping = 2'd0;
@@ -43,6 +45,8 @@ module game(
         EnemyPositionY = 8'd120;
         Players = 3'd3;
         Bombs = 3'd3;
+        Players_setting = 3'd3;
+        Bombs_setting = 3'd3;
     end
     always @(*) begin
         case(game_state)
@@ -92,6 +96,14 @@ module game(
                     game_state = playing;
                 end
             end
+            setting: begin
+                if(q) begin
+                    next_game_state <= welcome;
+                end
+                else begin
+                    next_game_state <= setting;
+                end
+            end
         endcase
     end
     always @(posedge rfclk) begin
@@ -110,6 +122,8 @@ module game(
             end
             EnemyPositionX <= 8'd75;
             EnemyPositionY <= 8'd120;
+            Players <= Players_setting;
+            Bombs <= Bombs_setting;
         end
     end
 playermove PLAYERMOVE(

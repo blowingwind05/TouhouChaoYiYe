@@ -29,7 +29,7 @@ reg [14 : 0] wcprogress;
 reg [14 : 0] fladdr;
 reg [14 : 0] flprogress;
 wire [11 : 0] rdata;
-wire [11 : 0] vramwdata;
+reg [11 : 0] vramwdata;
 wire [11 : 0] bgdata;
 wire [11 : 0] wcdata;
 wire [11 : 0] fldata;
