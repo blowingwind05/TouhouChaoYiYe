@@ -11,9 +11,11 @@ module game(
     output reg [2:0] Players,//残机数剩余
     output reg [2:0] Bombs,//炸弹数剩余
     output reg [7:0] EnemyPositionX,
-    output reg [7:0] EnemyPositionY
+    output reg [7:0] EnemyPositionY,
+    output reg [9:0] EnemyHp
     );
-    reg   clk1,clk2,clk3,clk4;  //clk1--move&bulletinitial，clk2--bulletmove
+
+    reg   clk1,clk2,clk3,clk4;
     reg [18:0] count1,count2,cuont3,count4;
     always @(posedge clk72m) begin
         if(count1 == 500000) begin
@@ -45,6 +47,7 @@ module game(
             count4 <= count4+1;
 
     end
+
     reg [2:0]  next_game_state;
     reg [2:0]  Bombs_setting; 
     reg        esc_reg;
@@ -68,6 +71,7 @@ module game(
     localparam setting_volume = 1'b1;
     localparam setting_Players = 1'b0;
     reg left_state, left_prev, right_state, right_prev;
+
     initial begin
         count1 = 375000;
         count2 = 250000;
@@ -100,7 +104,8 @@ module game(
         right_state = 1'b0;
         right_prev = 1'b0;
     end
-    always @(*) begin
+
+    always @(*) begin   //game_state逻辑
         case(game_state)
             welcome: begin
                 if(s) begin
@@ -155,6 +160,7 @@ module game(
             end
         endcase
     end
+
     always @(posedge clk1) begin
         if(!rstn)begin
             count1 = 375000;
@@ -191,6 +197,7 @@ module game(
         else begin
             game_state <= next_game_state;
         end
+
         if(game_state != playing && next_game_state == playing) begin//initialize
             playing_state = unpaused;
             PlayerPositionX <= 8'd75;
@@ -237,6 +244,9 @@ module game(
         end
     end
 
+
+
+
     wire [7:0] Next_PlayerPositionX;
     wire [7:0] Next_PlayerPositionY;
     always @(posedge clk1) begin
@@ -256,14 +266,28 @@ playermove PLAYERMOVE(//heihei
     .Next_PlayerPositionX(Next_PlayerPositionX),
     .Next_PlayerPositionY(Next_PlayerPositionY)
 );
-playerbulletinitialize PLAYERBULLETINIT(
-    .rfclk(clk1),
-    .pause(game_state != playing || playing_state == paused || !z),
+
+    wire [17:0] Next_PlayerBullet[23:0];
+    wire [9:0]  Next_EnemyHp;
+    always @(posedge clk3) begin
+        EnemyHp <= Next_EnemyHp;
+        for(i=0;i<24;i++) begin
+            PlayerBullet[i] <= Next_PlayerBullet[i];
+        end
+    end
+playerbullet PLAYERBULLET (
+    .clk1(clk1),
+    .clk2(clk2),
+    .pause(esc_reg),
+    .PlayerBullet(PlayerBullet),
     .PlayerPositionX(PlayerPositionX),
     .PlayerPositionY(PlayerPositionY),
-    .PlayerBullet(PlayerBullet),
-    .PlayerBulletInitialized(PlayerBulletInitialized)
+    .EnemyHp(EnemyHp),
+    .Next_EnemyHp(Next_EnemyHp),
+    .Next_PlayerBullet(Next_PlayerBullet)
 );
+
+
 
     wire [7:0] Next_EnemyPositionX;
     wire [7:0] Next_EnemyPositionY;
