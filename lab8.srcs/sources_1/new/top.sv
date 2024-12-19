@@ -11,8 +11,11 @@ module Top(
 );
     wire hen,ven,clk_50,clk72m,rfclk;//wangwang
     wire w,a,s,d,z,x,q,o,r,shift,enter,esc,up,down,left,right;
-    wire PlayerPositionX,PlayerPositionY;
-    wire EnemyPositionX,EnemyPositionY;
+    wire [7:0] PlayerPositionX;
+    wire [7:0] PlayerPositionY;
+    wire [7:0] EnemyPositionX;
+    wire [7:0] EnemyPositionY;
+    wire [9:0] EnemyHp;
     wire [6:0] volume;
     wire [2:0] Players_setting;//残机数设置
     wire [17:0]   PlayerBullet[23:0];
@@ -90,6 +93,7 @@ module Top(
         .PlayerBullet(PlayerBullet),
         .Players(Players),//残机数剩余
         .Bombs(Bombs),//炸弹数剩余
-        .EnemyPositionX(EnemyPositionX),.EnemyPositionY(EnemyPositionY)
+        .EnemyPositionX(EnemyPositionX),.EnemyPositionY(EnemyPositionY),
+        .EnemyHp(EnemyHp)
     );
 endmodule

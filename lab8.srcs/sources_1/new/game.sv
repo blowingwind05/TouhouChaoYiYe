@@ -92,6 +92,7 @@ module game(
         end
         EnemyPositionX = 8'd75;
         EnemyPositionY = 8'd120;
+        EnemyHp = 10'd250;
         Players = 3'd3;
         Bombs = 3'd3;
         Players_setting = 3'd3;
@@ -182,6 +183,7 @@ module game(
             end
             EnemyPositionX = 8'd75;
             EnemyPositionY = 8'd120;
+            EnemyHp = 10'd250;
             Players = 3'd3;
             Bombs = 3'd3;
             Players_setting = 3'd3;
