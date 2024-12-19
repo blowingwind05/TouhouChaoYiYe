@@ -160,7 +160,7 @@ module game(
         endcase
     end
 
-    always @(posedge clk1) begin
+    always @(posedge clk72m) begin
         if(!rstn)begin
             count1 = 375000;
             count2 = 250000;
@@ -248,12 +248,12 @@ module game(
 
     wire [7:0] Next_PlayerPositionX;
     wire [7:0] Next_PlayerPositionY;
-    always @(posedge clk1) begin
+    always @(posedge clk72m) begin
         PlayerPositionX <= Next_PlayerPositionX;
         PlayerPositionY <= Next_PlayerPositionY;
     end
 playermove PLAYERMOVE(//heihei
-    .rfclk(clk1),
+    .rfclk(clk72m),
     .w(w),
     .s(s),
     .a(a),
@@ -290,12 +290,12 @@ playerbullet PLAYERBULLET (
 
     wire [7:0] Next_EnemyPositionX;
     wire [7:0] Next_EnemyPositionY;
-    always @(posedge clk1) begin
+    always @(posedge clk72m) begin
         EnemyPositionX <= Next_EnemyPositionX;
         EnemyPositionY <= Next_EnemyPositionY;
     end
 enemymove ENEMYMOVE(
-    .rfclk(clk1),
+    .rfclk(clk72m),
     .game_state(game_state),
     .EnemyPositionX(EnemyPositionX),
     .EnemyPositionY(EnemyPositionY),

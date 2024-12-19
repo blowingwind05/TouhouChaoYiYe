@@ -13,15 +13,70 @@ module playermove(//坐标以左下角为原点，左下角坐标1，1 右上角
     localparam playing = 3'd1;
     localparam fail = 3'd2;
     localparam win = 3'd3;
+    reg [18:0] count1;
+    initial begin
+        count1 = 750000;
+    end
 always @(posedge rfclk) begin
-    if(game_state == playing)begin
-        if(shift) begin//slowmode
-            if(!w && !s)begin
-                Next_PlayerPositionY <= PlayerPositionY;
+    if(count1 < 1000000) count1 <= count1 + 1;
+    else count1 <= 0;
+end
+always @(posedge rfclk) begin
+    if(count1 == 0) begin
+        if(game_state == playing)begin
+            if(shift) begin//slowmode
+                if(!w && !s)begin
+                    Next_PlayerPositionY <= PlayerPositionY;
+                end
+                if(w) begin
+                    dow <= dow + 1;
+                    if(dow && w)begin
+                        if(PlayerPositionY < 8'd131)begin
+                            Next_PlayerPositionY <= PlayerPositionY + 1;
+                        end
+                        else begin
+                            Next_PlayerPositionY <= 8'd131;
+                        end
+                    end
+                end
+                if(s) begin
+                    dos <= dos + 1;
+                    if(dos && s)begin
+                        if(PlayerPositionY > 8'd21)begin
+                            Next_PlayerPositionY <= PlayerPositionY - 1;
+                        end
+                        else begin
+                            Next_PlayerPositionY <= 8'd21;
+                        end
+                    end
+                end
+                if(!d && !a)begin
+                    Next_PlayerPositionX <= PlayerPositionX;
+                end
+                if(d) begin
+                    dod <= dod + 1;
+                    if(dod && d)begin
+                        if(PlayerPositionX < 8'd130)Next_PlayerPositionX <= PlayerPositionX + 1;
+                        else Next_PlayerPositionX <= 8'd130;
+                    end
+                end
+                if(a) begin
+                    doa <= doa + 1;
+                    if(doa && a)begin
+                        if(PlayerPositionX > 8'd20)begin
+                            Next_PlayerPositionX <= PlayerPositionX - 1;
+                        end
+                        else begin
+                            Next_PlayerPositionX <= 8'd20;
+                        end
+                    end
+                end
             end
-            if(w) begin
-                dow <= dow + 1;
-                if(dow && w)begin
+            if(!shift) begin
+                if(!w && !s)begin
+                    Next_PlayerPositionY <= PlayerPositionY;
+                end
+                if(w) begin
                     if(PlayerPositionY < 8'd131)begin
                         Next_PlayerPositionY <= PlayerPositionY + 1;
                     end
@@ -29,31 +84,24 @@ always @(posedge rfclk) begin
                         Next_PlayerPositionY <= 8'd131;
                     end
                 end
-            end
-            if(s) begin
-                dos <= dos + 1;
-                if(dos && s)begin
-                    if(PlayerPositionY > 8'd21)begin
-                        Next_PlayerPositionY <= PlayerPositionY - 1;
+                    if(s) begin
+                        if(PlayerPositionY > 8'd21)begin
+                            Next_PlayerPositionY <= PlayerPositionY - 1;
+                        end
+                        else begin
+                            Next_PlayerPositionY <= 8'd21;
+                        end
                     end
-                    else begin
-                        Next_PlayerPositionY <= 8'd21;
-                    end
+                if(!d && !a)begin
+                    Next_PlayerPositionX <= PlayerPositionX;
                 end
-            end
-            if(!d && !a)begin
-                Next_PlayerPositionX <= PlayerPositionX;
-            end
-            if(d) begin
-                dod <= dod + 1;
-                if(dod && d)begin
-                    if(PlayerPositionX < 8'd130)Next_PlayerPositionX <= PlayerPositionX + 1;
-                    else Next_PlayerPositionX <= 8'd130;
+                if(d) begin
+                    if(PlayerPositionX < 8'd130)
+                    Next_PlayerPositionX <= PlayerPositionX + 1;
+                    else
+                        Next_PlayerPositionX <= 8'd130;
                 end
-            end
-            if(a) begin
-                doa <= doa + 1;
-                if(doa && a)begin
+                if(a) begin
                     if(PlayerPositionX > 8'd20)begin
                         Next_PlayerPositionX <= PlayerPositionX - 1;
                     end
@@ -63,48 +111,10 @@ always @(posedge rfclk) begin
                 end
             end
         end
-        if(!shift) begin
-            if(!w && !s)begin
-                Next_PlayerPositionY <= PlayerPositionY;
-            end
-            if(w) begin
-                if(PlayerPositionY < 8'd131)begin
-                    Next_PlayerPositionY <= PlayerPositionY + 1;
-                end
-                else begin
-                    Next_PlayerPositionY <= 8'd131;
-                end
-            end
-                if(s) begin
-                    if(PlayerPositionY > 8'd21)begin
-                        Next_PlayerPositionY <= PlayerPositionY - 1;
-                    end
-                    else begin
-                        Next_PlayerPositionY <= 8'd21;
-                    end
-                end
-            if(!d && !a)begin
-                Next_PlayerPositionX <= PlayerPositionX;
-            end
-            if(d) begin
-                if(PlayerPositionX < 8'd130)
-                Next_PlayerPositionX <= PlayerPositionX + 1;
-                else
-                    Next_PlayerPositionX <= 8'd130;
-            end
-            if(a) begin
-                if(PlayerPositionX > 8'd20)begin
-                    Next_PlayerPositionX <= PlayerPositionX - 1;
-                end
-                else begin
-                    Next_PlayerPositionX <= 8'd20;
-                end
-            end
+        else begin//game_state != playing
+            Next_PlayerPositionX <= PlayerPositionX;
+            Next_PlayerPositionY <= PlayerPositionY;
         end
-    end
-    else begin//game_state != playing
-        Next_PlayerPositionX <= PlayerPositionX;
-        Next_PlayerPositionY <= PlayerPositionY;
     end
 end
 endmodule

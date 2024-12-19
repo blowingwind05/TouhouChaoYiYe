@@ -16,15 +16,21 @@ module enemymove (
     reg [5:0] count_Y;
     reg direction_X;
     reg direction_Y;
+    reg [18:0] count1;
     initial begin
         count_X = 0;
         count_Y = 0;
+        cuont1 = 750000;
     end
     reg [7:0] lfsr = 8'b11001010; //生成伪随机数
     always @(posedge rfclk) begin
         lfsr <= {lfsr[6:0], lfsr[7] ^ lfsr[5] ^ lfsr[4] ^ lfsr[3]};
     end
 always @(posedge rfclk) begin
+    if(count1 < 1000000)
+        count1 <= count1 + 1;
+    else
+        count1 <= 0;
     if(count_X < 6'd49)
         count_X <= count_X + 1;
     else
@@ -39,45 +45,47 @@ always @(posedge rfclk) begin   //随机更新方向控制
         direction_Y <= lfsr[1];
 end
 always @(posedge rfclk) begin
-    if(game_state == playing) begin
-        if(count_X == 0) begin
-            if(direction_X) begin
-                if(EnemyPositionX < 8'd130)
-                    Next_EnemyPositionX <= EnemyPositionX + 1;
-                else
-                    Next_EnemyPositionX <= 8'd130;
+    if(count1 == 0) begin
+        if(game_state == playing) begin
+            if(count_X == 0) begin
+                if(direction_X) begin
+                    if(EnemyPositionX < 8'd130)
+                        Next_EnemyPositionX <= EnemyPositionX + 1;
+                    else
+                        Next_EnemyPositionX <= 8'd130;
+                end
+                else begin  //direction_X==0
+                    if(EnemyPositionX > 8'd20)
+                        Next_EnemyPositionX <= EnemyPositionX - 1;
+                    else
+                        Next_EnemyPositionX <= 8'd20;
+                end
             end
-            else begin  //direction_X==0
-                if(EnemyPositionX > 8'd20)
-                    Next_EnemyPositionX <= EnemyPositionX - 1;
-                else
-                    Next_EnemyPositionX <= 8'd20;
+            else begin
+                Next_EnemyPositionX <= EnemyPositionX;
+            end
+            if(count_Y == 0) begin
+                if(direction_Y) begin
+                    if(EnemyPositionY < 8'd131)
+                        Next_EnemyPositionY <= EnemyPositionY + 1;
+                    else
+                        Next_EnemyPositionY <= 8'd131;
+                end
+                else begin //direction_Y==0
+                    if(EnemyPositionY > 8'd110)
+                        Next_EnemyPositionY <= EnemyPositionY - 1;
+                    else
+                        Next_EnemyPositionY <= 8'd110;
+                end
+            end
+            else begin
+                Next_EnemyPositionY <= EnemyPositionY;
             end
         end
-        else begin
+        else begin  //game_state != playing
             Next_EnemyPositionX <= EnemyPositionX;
-        end
-        if(count_Y == 0) begin
-            if(direction_Y) begin
-                if(EnemyPositionY < 8'd131)
-                    Next_EnemyPositionY <= EnemyPositionY + 1;
-                else
-                    Next_EnemyPositionY <= 8'd131;
-            end
-            else begin //direction_Y==0
-                if(EnemyPositionY > 8'd110)
-                    Next_EnemyPositionY <= EnemyPositionY - 1;
-                else
-                    Next_EnemyPositionY <= 8'd110;
-            end
-        end
-        else begin
             Next_EnemyPositionY <= EnemyPositionY;
         end
-    end
-    else begin  //game_state != playing
-        Next_EnemyPositionX <= EnemyPositionX;
-        Next_EnemyPositionY <= EnemyPositionY;
     end
 end
 endmodule
