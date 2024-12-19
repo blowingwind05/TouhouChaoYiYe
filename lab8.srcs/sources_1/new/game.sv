@@ -295,8 +295,6 @@ playerbullet PLAYERBULLET (
     .Next_EnemyHp(Next_EnemyHp),
     .Next_PlayerBullet(Next_PlayerBullet)
 );
-
-
     wire [7:0] Next_EnemyPositionX;
     wire [7:0] Next_EnemyPositionY;
     always @(posedge clk72m) begin

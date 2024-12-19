@@ -20,7 +20,9 @@ module enemymove (
     initial begin
         count_X = 0;
         count_Y = 0;
-        cuont1 = 750000;
+        count1 = 750000;
+        Next_EnemyPositionX = 8'd0;
+        Next_EnemyPositionY = 8'd0;
     end
     reg [7:0] lfsr = 8'b11001010; //生成伪随机数
     always @(posedge rfclk) begin
@@ -31,21 +33,19 @@ always @(posedge rfclk) begin
         count1 <= count1 + 1;
     else
         count1 <= 0;
-    if(count_X < 6'd49)
-        count_X <= count_X + 1;
-    else
-        count_X <= 0;
-    if(count_Y < 6'd49)
-        count_Y <= count_Y + 1;
-    else
-        count_Y <= 0;
-end
-always @(posedge rfclk) begin   //随机更新方向控制
-        direction_X <= lfsr[0];
-        direction_Y <= lfsr[1];
 end
 always @(posedge rfclk) begin
+    direction_X <= lfsr[0];
+    direction_Y <= lfsr[1];
     if(count1 == 0) begin
+        if(count_X < 6'd49)
+            count_X <= count_X + 1;
+        else
+            count_X <= 0;
+        if(count_Y < 6'd49)
+            count_Y <= count_Y + 1;
+        else
+        count_Y <= 0;
         if(game_state == playing) begin
             if(count_X == 0) begin
                 if(direction_X) begin
