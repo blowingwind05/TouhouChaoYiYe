@@ -246,7 +246,6 @@ module game(
 
 
 
-
     wire [7:0] Next_PlayerPositionX;
     wire [7:0] Next_PlayerPositionY;
     always @(posedge clk1) begin
@@ -267,6 +266,7 @@ playermove PLAYERMOVE(//heihei
     .Next_PlayerPositionY(Next_PlayerPositionY)
 );
 
+
     wire [17:0] Next_PlayerBullet[23:0];
     wire [9:0]  Next_EnemyHp;
     always @(posedge clk3) begin
@@ -286,7 +286,6 @@ playerbullet PLAYERBULLET (
     .Next_EnemyHp(Next_EnemyHp),
     .Next_PlayerBullet(Next_PlayerBullet)
 );
-
 
 
     wire [7:0] Next_EnemyPositionX;

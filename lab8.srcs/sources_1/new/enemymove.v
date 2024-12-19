@@ -16,6 +16,10 @@ module enemymove (
     reg [5:0] count_Y;
     reg direction_X;
     reg direction_Y;
+    initial begin
+        count_X = 0;
+        count_Y = 0;
+    end
     reg [7:0] lfsr = 8'b11001010; //生成伪随机数
     always @(posedge rfclk) begin
         lfsr <= {lfsr[6:0], lfsr[7] ^ lfsr[5] ^ lfsr[4] ^ lfsr[3]};
@@ -31,14 +35,8 @@ always @(posedge rfclk) begin
         count_Y <= 0;
 end
 always @(posedge rfclk) begin   //随机更新方向控制
-        if(lfsr[0])
-            direction_X <= 1;
-        else
-            direction_X <= 0;
-        if(lfsr[1])
-            direction_Y <= 1;
-        else
-            direction_Y <= 0;
+        direction_X <= lfsr[0];
+        direction_Y <= lfsr[1];
 end
 always @(posedge rfclk) begin
     if(game_state == playing) begin
