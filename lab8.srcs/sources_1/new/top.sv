@@ -32,6 +32,7 @@ module Top(
 
     clk_wiz_0 clk_wiz_0(
     .clk_in1(clk),
+    .reset(1'b0),
     .clk_out1(clk_50)
     );
     ScreenRenderer RENDERER(

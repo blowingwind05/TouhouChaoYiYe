@@ -133,7 +133,7 @@ module game(
         PlayerPositionX <= Next_PlayerPositionX;
         PlayerPositionY <= Next_PlayerPositionY;
     end
-playermove PLAYERMOVE(
+playermove PLAYERMOVE(//heihei
     .rfclk(clk1),
     .w(w),
     .s(s),
