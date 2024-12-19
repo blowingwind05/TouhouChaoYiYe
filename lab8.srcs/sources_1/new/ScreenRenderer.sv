@@ -88,7 +88,7 @@ DDP ddp(
     .raddr(raddr)
     );
 blk_mem_gen_0 vram (
-  .clka(clk),    // input wire clka
+  .clka(pclk),    // input wire clka
   .wea(vramwe),      // input wire [0 : 0] wea
   .addra(vramwaddr),  // input wire [14 : 0] addra
   .dina(vramwdata),    // input wire [11 : 0] dina
@@ -97,27 +97,27 @@ blk_mem_gen_0 vram (
   .doutb(rdata)  // output wire [11 : 0] doutb
 );
 blk_mem_gen_3 background (
-  .clka(clk),    // input wire clkb
+  .clka(pclk),    // input wire clkb
   .addra(bgaddr),  // input wire [14 : 0] addrb
   .douta(bgdata)  // output wire [11 : 0] doutb
 );
 blk_mem_gen_1 welcomepage (
-  .clka(clk),    // input wire clkb
+  .clka(pclk),    // input wire clkb
   .addra(wcaddr),  // input wire [14 : 0] addrb
   .douta(wcdata)  // output wire [11 : 0] doutb
 );
 blk_mem_gen_2 failpage (
-  .clka(clk),    // input wire clkb
+  .clka(pclk),    // input wire clkb
   .addra(fladdr),  // input wire [14 : 0] addrb
   .douta(fldata)  // output wire [11 : 0] doutb
 );
 blk_mem_gen_0_1 texture (  
-  .clka(clk),    
+  .clka(pclk),    
   .addra(txaddr),  
   .douta(txdata) 
 );
 blk_mem_gen_4 text(
-    .clka(clk),
+    .clka(pclk),
     .addra(txtaddr),
     .douta(txtdata)
 );
@@ -130,7 +130,7 @@ localparam win = 2'd3;
 //setting_state
 localparam setting_volume = 1'b1;
 localparam setting_Players = 1'b0;
-always @(posedge clk) begin
+always @(posedge pclk) begin
     prev_rfclk <= rfclk;
     case(game_state)
     welcome:begin
