@@ -2,57 +2,13 @@ module MUSIC(
     input clk,
     input start,
     input rstn,
-    input btn1,btn2,
-    input [2:1]song,         
+    input [6:0]volume,
+    input [2:0]song,         
     input [2:0]speedup,
     output reg B,
     output reg G
 );
-reg btn1_state;   // 按钮1当前状态
-reg btn1_prev;    // 按钮1上一个状态
-reg btn2_state;   // 按钮2当前状态
-reg btn2_prev;    // 按钮2上一个状态
-reg [6:0] volume;
-initial begin
-    volume = 7'd50;  // volume初始为50
-    btn1_state = 1'b0;
-    btn1_prev = 1'b0;
-    btn2_state = 1'b0;
-    btn2_prev = 1'b0;
-end
-
-// 去抖动逻辑和按钮状态更新
-always @(posedge clk) begin
-    // 按钮1的去抖动与状态更新
-    btn1_prev <= btn1;
-    if (btn1 == 1'b1 && btn1_prev == 1'b0) begin
-        btn1_state <= 1'b1;  // 按钮1按下
-    end 
-    else btn1_state <= 1'b0; 
-
-    // 按钮2的去抖动与状态更新
-    btn2_prev <= btn2;
-    if (btn2 == 1'b1 && btn2_prev == 1'b0) begin
-        btn2_state <= 1'b1;  // 按钮2按下
-    end 
-    else btn2_state <= 1'b0; 
-end
-
-// 增减volume的逻辑
-always @(posedge clk) begin
-    if(~rstn)begin
-        volume <= 7'd50;
-    end
-    else begin
-        if (btn1_state && volume < 100) begin
-            volume <= volume + 10;  // 按钮1按下且volume < 100时，增加10
-        end
-        else if (btn2_state && volume > 0) begin
-            volume <= volume - 10;  // 按钮2按下且volume > 0时，减小10
-        end
-    end
-end
-    reg [15:0]  var2;
+reg [15:0]  var2;
 always @(*) begin
     case (volume)
         7'd0: var2 = 8192; 

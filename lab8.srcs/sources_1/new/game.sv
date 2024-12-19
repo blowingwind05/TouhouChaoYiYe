@@ -1,7 +1,10 @@
 module game(
-    input clk72m,rstn,w,s,a,d,o,z,x,r,q,shift,esc, 
+    input clk72m,rstn,w,s,a,d,o,z,x,r,q,shift,esc,up,down,left,right, 
     output reg [2:0] game_state,
     output reg       playing_state,
+    output reg       setting_state,
+    output reg [6:0] volume,
+    output reg [2:0] Players_setting,
     output reg [7:0] PlayerPositionX,
     output reg [7:0] PlayerPositionY,
     output reg [17:0] PlayerBullet[23:0],
@@ -12,12 +15,6 @@ module game(
     );
     reg   clk1,clk2,clk3,clk4;
     reg [18:0] count1,count2,cuont3,count4;
-    initial begin
-        count1 = 375000;
-        count2 = 250000;
-        count3 = 125000;
-        count4 = 0;
-    end
     always @(posedge clk72m) begin
         if(count1 == 500000) begin
             count1 <= 0;
@@ -49,30 +46,43 @@ module game(
 
     end
     reg [2:0]  next_game_state;
-    reg [2:0]  Players_setting;
     reg [2:0]  Bombs_setting; 
     reg        esc_reg;
+    reg        updown_reg;
     integer    i;
+    //bullet_state
     localparam sleeping = 2'd0;
     localparam initialized = 2'd1;
     localparam moving = 2'd2;
     localparam destroyed = 2'd3;
+    //game_state
     localparam welcome = 3'd0;
     localparam playing = 3'd1;
     localparam fail = 3'd2;
     localparam win = 3'd3;
     localparam setting = 3'd4;
+    //playing_state
     localparam paused = 1'b1;
     localparam unpaused = 1'b0;
+    //setting_state
+    localparam setting_volume = 1'b1;
+    localparam setting_Players = 1'b0;
+    reg left_state, left_prev, right_state, right_prev;
     initial begin
+        count1 = 375000;
+        count2 = 250000;
+        count3 = 125000;
+        count4 = 0;
         clk1 = 1'b0;
         clk2 = 1'b0;
         clk3 = 1'b0;
         clk4 = 1'b0;
         pause = 1'b0;
         esc_reg = 1'b0;
+        updown_reg = 1'b0;
         game_state = welcome;
         playing_state = unpaused;
+        setting_state = setting_Players;
         PlayerPositionX = 8'd75;
         PlayerPositionY = 8'd30;
         for(i=0;i<24;i=i+1)begin
@@ -84,6 +94,11 @@ module game(
         Bombs = 3'd3;
         Players_setting = 3'd3;
         Bombs_setting = 3'd3;
+        volume = 7'd50;  // volume初始为50
+        left_state = 1'b0;
+        left_prev = 1'b0;
+        right_state = 1'b0;
+        right_prev = 1'b0;
     end
     always @(*) begin
         case(game_state)
@@ -129,9 +144,6 @@ module game(
                 end
             end
             win: begin
-                if(z) begin
-                    game_state = playing;
-                end
             end
             setting: begin
                 if(q) begin
@@ -145,7 +157,36 @@ module game(
     end
     always @(posedge clk1) begin
         if(!rstn)begin
-            game_state <= welcome;
+            count1 = 375000;
+            count2 = 250000;
+            count3 = 125000;
+            count4 = 0;
+            clk1 = 1'b0;
+            clk2 = 1'b0;
+            clk3 = 1'b0;
+            clk4 = 1'b0;
+            pause = 1'b0;
+            esc_reg = 1'b0;
+            updown_reg = 1'b0;
+            game_state = welcome;
+            playing_state = unpaused;
+            setting_state = setting_Players;
+            PlayerPositionX = 8'd75;
+            PlayerPositionY = 8'd30;
+            for(i=0;i<24;i=i+1)begin
+                PlayerBullet[i] = 18'b0;
+            end
+            EnemyPositionX = 8'd75;
+            EnemyPositionY = 8'd120;
+            Players = 3'd3;
+            Bombs = 3'd3;
+            Players_setting = 3'd3;
+            Bombs_setting = 3'd3;
+            volume = 7'd50;  // volume初始为50
+            left_state = 1'b0;
+            left_prev = 1'b0;
+            right_state = 1'b0;
+            right_prev = 1'b0;
         end
         else begin
             game_state <= next_game_state;
@@ -161,6 +202,38 @@ module game(
             EnemyPositionY <= 8'd120;
             Players <= Players_setting;
             Bombs <= Bombs_setting;
+        end
+        if(game_state == setting)begin
+            updown_reg <= up || down;//updown_reg用于防止连续按键
+            if((up || down) && !updown_reg)begin
+                setting_state <= (setting_state == setting_volume ? setting_Players : setting_volume);
+            end
+            left_prev <= left;
+            if (left == 1'b1 && left_prev == 1'b0) begin
+                left_state <= 1'b1;  
+            end 
+            else left_state <= 1'b0; 
+            right_prev <= right;
+            if (right == 1'b1 && right_prev == 1'b0) begin
+                right_state <= 1'b1;  
+            end 
+            else right_state <= 1'b0; 
+            if(setting_state == setting_volume)begin
+                if (left_state && volume < 100) begin
+                    volume <= volume + 10; 
+                end
+                else if (right_state && volume > 0) begin
+                    volume <= volume - 10;  
+                end
+            end
+            else begin//setting_Players, 1<=Players_setting<=4
+                if (left_state && Players_setting < 4) begin
+                    Players_setting <= Players_setting + 1; 
+                end
+                else if (right_state && Players_setting > 1) begin
+                    Players_setting <= Players_setting - 1;  
+                end
+            end
         end
     end
 
@@ -191,5 +264,4 @@ playerbulletinitialize PLAYERBULLETINIT(
     .PlayerBullet(PlayerBullet),
     .PlayerBulletInitialized(PlayerBulletInitialized)
 );
-
 endmodule

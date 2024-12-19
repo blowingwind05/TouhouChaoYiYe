@@ -3,8 +3,8 @@ module playerbulletinitialize(
     input pause,
     input [7:0] PlayerPositionX,
     input [7:0] PlayerPositionY,
-    input [17:0] PlayerBullet[23:0],
-    output reg [17:0] PlayerBulletInitialized[23:0]
+    input [17:0] PlayerBullet[23:0],//bullet_state,position_x,position_y
+    output reg [17:0] PlayerBulletInitialized[23:0]//bullet_state,position_x,position_y
     );
     reg [2:0]   initialize_area;
     reg [2:0]   initialize_state;//0:initializing,1~6:waiting
