@@ -302,5 +302,5 @@ enemymove ENEMYMOVE(
     .EnemyPositionY(EnemyPositionY),
     .Next_EnemyPositionX(Next_EnemyPositionX),
     .Next_EnemyPositionY(Next_EnemyPositionY)
-)
+);
 endmodule
