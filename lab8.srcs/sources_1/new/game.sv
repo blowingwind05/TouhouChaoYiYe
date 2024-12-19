@@ -16,7 +16,7 @@ module game(
     );
 
     reg   clk1,clk2,clk3,clk4;
-    reg [18:0] count1,count2,cuont3,count4;
+    reg [18:0] count1,count2,count3,count4;
     always @(posedge clk72m) begin
         if(count1 == 500000) begin
             count1 <= 0;
