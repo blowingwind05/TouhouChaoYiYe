@@ -9,7 +9,7 @@ module Top(
     output      pwm,
     output      gain
 );
-    wire hen,ven,clk_50,rfclk;//wangwang
+    wire hen,ven,clk_50,clk72m,rfclk;//wangwang
     wire w,a,s,d,z,x,q,o,r,shift,enter,esc,up,down,left,right;
     wire PlayerPositionX,PlayerPositionY;
     wire EnemyPositionX,EnemyPositionY;
@@ -33,7 +33,8 @@ module Top(
     clk_wiz_0 clk_wiz_0(
     .clk_in1(clk),
     .reset(1'b0),
-    .clk_out1(clk_50)
+    .clk_out1(clk_50),
+    .clk_out2(clk72m)
     );
     ScreenRenderer RENDERER(
         .pclk(clk_50),
@@ -72,7 +73,7 @@ module Top(
     .w(w),.a(a),.s(s),.d(d),.z(z),.x(x),.q(q),.o(o),.r(r),.shift(shift),.enter(enter),.esc(esc),.up(up),.down(down),.left(left),.right(right)
     );
     game GAME(
-        .clk(clk),.rfclk(rfclk),.rstn(rstn),
+        .clk72m(clk72m),.rstn(rstn),
         .w(w),.a(a),.s(s),.d(d),.z(z),.x(x),.q(q),.o(o),.r(r),.shift(shift),.enter(enter),.esc(esc),.up(up),.down(down),.left(left),.right(right),
         .game_state(game_state),
         .playing_state(playing_state),

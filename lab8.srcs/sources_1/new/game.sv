@@ -1,5 +1,5 @@
 module game(
-    input clk,rfclk,rstn,w,s,a,d,o,z,x,r,q,shift,esc, 
+    input clk72m,rstn,w,s,a,d,o,z,x,r,q,shift,esc, 
     output reg [2:0] game_state,
     output reg       playing_state,
     output reg [7:0] PlayerPositionX,
@@ -11,6 +11,43 @@ module game(
     output reg [7:0] EnemyPositionY
     );
     reg   clk1,clk2,clk3,clk4;
+    reg [18:0] count1,count2,cuont3,count4;
+    initial begin
+        count1 = 0;
+        count2 = 125000;
+        count3 = 250000;
+        count4 = 375000;
+    end
+    always @(posedge clk72m) begin
+        if(count1 == 500000) begin
+            count1 <= 0;
+            clk1 <= ~clk1;
+        end
+        else
+            count1 <= count1+1;
+
+        if(count2 == 500000) begin
+            count2 <= 0;
+            clk2 <= ~clk2;
+        end
+        else
+            count2 <= count2+1;
+
+        if(count3 == 500000) begin
+            count3 <= 0;
+            clk3 <= ~clk3;
+        end
+        else
+            count3 <= count3+1;
+
+        if(count4 == 500000) begin
+            count4 <= 0;
+            clk4 <= ~clk4;
+        end
+        else
+            count4 <= count4+1;
+
+    end
     reg [2:0]  next_game_state;
     reg [2:0]  Players_setting;
     reg [2:0]  Bombs_setting; 
@@ -106,7 +143,7 @@ module game(
             end
         endcase
     end
-    always @(posedge rfclk) begin
+    always @(posedge clk1) begin
         if(!rstn)begin
             game_state <= welcome;
         end
@@ -129,12 +166,12 @@ module game(
 
     wire [7:0] Next_PlayerPositionX;
     wire [7:0] Next_PlayerPositionY;
-    always @(posedge rfclk) begin
+    always @(posedge clk1) begin
         PlayerPositionX <= Next_PlayerPositionX;
         PlayerPositionY <= Next_PlayerPositionY;
     end
 playermove PLAYERMOVE(//heihei
-    .rfclk(clk1),
+    .clk1(clk1),
     .w(w),
     .s(s),
     .a(a),
@@ -147,7 +184,7 @@ playermove PLAYERMOVE(//heihei
     .Next_PlayerPositionY(Next_PlayerPositionY)
 );
 playerbulletinitialize PLAYERBULLETINIT(
-    .rfclk(clk1),
+    .clk1(clk1),
     .pause(game_state != playing || playing_state == paused || !z),
     .PlayerPositionX(PlayerPositionX),
     .PlayerPositionY(PlayerPositionY),
