@@ -5,7 +5,8 @@ module ScreenRenderer(
     input [2:0] game_state,
     input       playing_state,
     input       shift,
-    input [20:0]players,             
+    input [2:0] Players,//残机数剩余
+    input [2:0] Bombs,//炸弹数剩余            
     input [7:0] PlayerPositionX, 
     input [7:0] PlayerPositionY, 
     input [17:0] PlayerBullet[23:0],
