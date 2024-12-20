@@ -94,34 +94,30 @@ module game(
 
     always @(posedge clk72m) begin
         if(!rstn)begin
-            count1 = 1000000;
-            count2 = 750000;
-            count3 = 500000;
-            count4 = 250000;
-            esc_reg = 1'b0;
-            updown_reg = 1'b0;
-            game_state = welcome;
-            playing_state = unpaused;
-            setting_state = setting_Players;
-            PlayerPositionX = 8'd75;
-            PlayerPositionY = 8'd30;
-            EnemyPositionX = 8'd75;
-            EnemyPositionY = 8'd120;
-            EnemyHp = 10'd250;
-            Players = 3'd4;
-            Bombs = 3'd3;
-            Players_setting = 3'd3;
-            Bombs_setting = 3'd3;
-            volume = 7'd50;  // volume初始为50
-            left_state = 1'b0;
-            left_prev = 1'b0;
-            right_state = 1'b0;
-            right_prev = 1'b0;
+            count1 <= 1000000;
+            count2 <= 750000;
+            count3 <= 500000;
+            count4 <= 250000;
+            esc_reg <= 1'b0;
+            updown_reg <= 1'b0;
+            game_state <= welcome;
+            playing_state <= unpaused;
+            setting_state <= setting_Players;
+            PlayerPositionX <= 8'd75;
+            PlayerPositionY <= 8'd30;
+            EnemyPositionX <= 8'd75;
+            EnemyPositionY <= 8'd120;
+            EnemyHp <= 10'd250;
+            Players <= 3'd4;
+            Bombs <= 3'd3;
+            Players_setting <= 3'd3;
+            Bombs_setting <= 3'd3;
+            volume <= 7'd50;  // volume初始为50
+            left_state <= 1'b0;
+            left_prev <= 1'b0;
+            right_state <= 1'b0;
+            right_prev <= 1'b0;
         end
-        else begin
-            game_state <= next_game_state;
-        end
-
         if(game_state != playing && next_game_state == playing) begin//initialize
             playing_state = unpaused;
             PlayerPositionX <= 8'd75;

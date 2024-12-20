@@ -23,7 +23,7 @@ reg vramwe;
 reg [2 : 0] prev_game_state;
 reg prev_rfclk;
 wire [14 : 0] raddr;
-wire [14 : 0] bgaddr;
+reg [14 : 0]  bgaddr;
 reg  [14 : 0] vramwaddr;
 reg [14 : 0] rdaddr;
 reg [14 : 0] rdprogress;
@@ -232,7 +232,7 @@ always @(posedge pclk) begin
             if(flprogress < 200*150)begin
                 vramwe <= 1;
                 fladdr <= fladdr + 1;
-                wflprogress <= flprogress + 1;
+                flprogress <= flprogress + 1;
                 vramwaddr <= fladdr;
                 vramwdata <= fldata;
             end
@@ -304,7 +304,7 @@ always @(posedge pclk) begin
                             vramwe <= txtdata;
                             txtaddr <= txtaddr + 1;
                             rdstaddr <= rdstaddr + 1; 
-                            vramwdata <= (setting_state == setting_Players) ? {12{txtdata}} : {1'b0, txtdata, txtdata, txtdata, 1'b0, txtdata, txtdata, txtdata, 1'b0, txtdata, txtdata, txtdata};
+                            vramwdata <= (setting_state == setting_volume) ? {12{txtdata}} : {1'b0, txtdata, txtdata, txtdata, 1'b0, txtdata, txtdata, txtdata, 1'b0, txtdata, txtdata, txtdata};
                             vramwaddr <= rdstaddr;
                         end
                         else begin//回车换行
@@ -350,7 +350,7 @@ always @(posedge pclk) begin
                     end
                     else begin//end the progress four
                         vramwe <= 0;
-                        rdstaddr <= (44+x) * 200 + 109;
+                        rdstaddr <= (44) * 200 + 109;
                         rdstprogress <= rdstprogress + 1;
                         txaddr <= redstar - 40;
                         x <= 0;
@@ -375,7 +375,7 @@ always @(posedge pclk) begin
                         end
                         else begin//end the part
                             vramwe <= 0;
-                            rdstaddr <= 0;
+                            rdstaddr <= (44)*200 +109 + 20 * (i + 1);
                             x <= 0;
                             i <= i + 1;
                             txaddr <= redstar - 40;
