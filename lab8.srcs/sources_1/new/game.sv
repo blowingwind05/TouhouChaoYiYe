@@ -70,7 +70,6 @@ module game(
         count2 = 750000;
         count3 = 500000;
         count4 = 250000;
-        pause = 1'b0;
         esc_reg = 1'b0;
         updown_reg = 1'b0;
         game_state = welcome;
@@ -102,7 +101,6 @@ module game(
             count2 = 750000;
             count3 = 500000;
             count4 = 250000;
-            pause = 1'b0;
             esc_reg = 1'b0;
             updown_reg = 1'b0;
             game_state = welcome;
