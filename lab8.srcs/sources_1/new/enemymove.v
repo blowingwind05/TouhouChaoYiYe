@@ -1,5 +1,5 @@
 module enemymove (
-    input clk72m,
+    input clk5m,
     input  count,
     input  rstn,
     input  pause,
@@ -26,10 +26,10 @@ module enemymove (
         Next_EnemyPositionY = EnemyPositionY;
     end
     reg [7:0] lfsr = 8'b11001010; //生成伪随机数
-    always @(posedge clk72m) begin
+    always @(posedge clk5m) begin
         lfsr <= {lfsr[6:0], lfsr[7] ^ lfsr[5] ^ lfsr[4] ^ lfsr[3]};
     end
-always @(posedge clk72m) begin
+always @(posedge clk5m) begin
     direction_X <= lfsr[0];
     direction_Y <= lfsr[1];
     if(!rstn) begin
@@ -38,7 +38,7 @@ always @(posedge clk72m) begin
         Next_EnemyPositionX <= EnemyPositionX;
         Next_EnemyPositionY <= EnemyPositionY;
     end
-    else if(count == 1000000) begin
+    else if(count == 17'd69444) begin
         if(count_X < 6'd49)
             count_X <= count_X + 1;
         else

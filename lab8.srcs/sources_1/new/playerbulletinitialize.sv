@@ -1,5 +1,5 @@
 module playerbulletinitialize(
-    input clk72m,
+    input clk5m,
     input count1,
     input rstn,
     input pause,
@@ -21,13 +21,13 @@ module playerbulletinitialize(
         for(i=0;i<24;i=i+1)
             PlayerBulletInitialized[i] = 18'b0;
     end
-    always @(posedge clk72m) begin
+    always @(posedge clk5m) begin
         if(!rstn)begin
             initialize_area <= 3'd0;
             initialize_state <= 3'd0;
             for(i=0;i<24;i=i+1)PlayerBulletInitialized[i] <= 18'b0;
         end
-        else if(count1 == 1000000) begin
+        else if(count1 == 17'd69444) begin
             if(!pause)begin
                 if(initialize_state == 3'd0)begin//initializing
                     PlayerBulletInitialized[initialize_area*3+0] <= {initialized,PlayerPositionX - 8'd8,PlayerPositionY};

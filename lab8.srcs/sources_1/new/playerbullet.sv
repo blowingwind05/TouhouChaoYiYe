@@ -1,5 +1,5 @@
 module playerbullet (
-    input      clk72m,rstn,pause,count1,count2,count3,
+    input      clk5m,rstn,pause,count1,count2,count3,
     input      [7:0]  PlayerPositionX,
     input      [7:0]  PlayerPositionY,
     input      [9:0]  EnemyHp,
@@ -15,7 +15,7 @@ initial begin
     end
 end
 playerbulletinitialize PLAYERBULLETINIT (
-    .clk72m(clk72m),
+    .clk5m(clk5m),
     .count1(count1),
     .rstn(rstn),
     .pause(pause),
@@ -25,7 +25,7 @@ playerbulletinitialize PLAYERBULLETINIT (
     .PlayerBulletInitialized(PlayerBulletInitialized)
 );
 playerbulletmove PLAYERBULLETMOVE (
-    .clk72m(clk72m),
+    .clk5m(clk5m),
     .count2(count2),
     .rstn(rstn),
     .pause(pause),
@@ -36,14 +36,14 @@ playerbulletmove PLAYERBULLETMOVE (
     .Next_EnemyHp(Next_EnemyHp),
     .PlayerBulletMoved(PlayerBulletMoved)
 );
-always @(posedge clk72m)begin
+always @(posedge clk5m)begin
     if(!rstn)begin
         integer i;
         for(i=0;i<24;i=i+1)begin
             PlayerBullet[i] <= 18'b0;
         end
     end
-    else if(count3 == 1000000)begin
+    else if(count3 == 17'd69444)begin
         for(i=0;i<24;i=i+1)begin
             PlayerBullet[i] <= PlayerBulletMoved[i];
         end

@@ -1,5 +1,5 @@
 module playerbulletmove(
-    input clk72m,pause,count2,rstn,
+    input clk5m,pause,count2,rstn,
     input      [17:0] PlayerBulletInitialized [23:0],
     input      [9:0]  EnemyHp,
     input      [7:0]  EnemyPositionX,
@@ -18,7 +18,7 @@ module playerbulletmove(
         end
         Next_EnemyHp <= EnemyHp;
     end
-    always@(posedge clk72m)begin
+    always@(posedge clk5m)begin
         if(!rstn)begin
             integer i;
             for(i=0;i<24;i=i+1)begin
@@ -26,7 +26,7 @@ module playerbulletmove(
             end
             Next_EnemyHp <= EnemyHp;
         end
-        else if(count2 == 1000000) begin
+        else if(count2 == 17'd69444) begin
             if(!pause) begin
                 integer i;
                 for(i=0;i<24;i=i+1)begin
