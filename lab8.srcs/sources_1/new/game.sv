@@ -177,6 +177,7 @@ module game(
                 end
             end
             playing: begin
+                game_state <= playing;
                 esc_reg <= esc;
                 if(playing_state == unpaused) begin
                     if(esc == 1'b1 && esc_reg == 1'b0) begin
