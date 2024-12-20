@@ -41,7 +41,7 @@ module game(
             count4 <= count4 + 1;
     end
 
-    reg [2:0]  next_game_state;
+    reg [2:0]  prev_game_state;
     reg [2:0]  Bombs_setting; 
     reg        esc_reg;
     reg        updown_reg;
@@ -118,16 +118,6 @@ module game(
             right_state <= 1'b0;
             right_prev <= 1'b0;
         end
-        if(game_state != playing && next_game_state == playing) begin//initialize
-            playing_state = unpaused;
-            PlayerPositionX <= 8'd75;
-            PlayerPositionY <= 8'd30;
-            EnemyHp <= 10'd250;
-            EnemyPositionX <= 8'd75;
-            EnemyPositionY <= 8'd120;
-            Players <= Players_setting ;
-            Bombs <= Bombs_setting;
-        end
         if(game_state == setting)begin
             updown_reg <= up || down;//updown_reg用于防止连续按键
             if((up || down) && !updown_reg)begin
@@ -160,10 +150,24 @@ module game(
                 end
             end
         end
+        if(game_state == playing)begin
+            prev_game_state <= playing;
+            if(prev_game_state != playing) begin//initialize
+                playing_state = unpaused;
+                PlayerPositionX <= 8'd75;
+                PlayerPositionY <= 8'd30;
+                EnemyHp <= 10'd250;
+                EnemyPositionX <= 8'd75;
+                EnemyPositionY <= 8'd120;
+                Players <= Players_setting ;
+                Bombs <= Bombs_setting;
+            end
+        end
         case(game_state)
             welcome: begin
                 if(s) begin
                     game_state <= playing;
+                    prev_game_state <= welcome;
                 end
                 else if(o)begin
                     game_state <= setting;
