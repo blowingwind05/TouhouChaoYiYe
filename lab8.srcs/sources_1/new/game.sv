@@ -7,7 +7,7 @@ module game(
     output reg [2:0] Players_setting,//残机数设置
     output reg [7:0] PlayerPositionX,
     output reg [7:0] PlayerPositionY,
-    output reg [17:0] PlayerBullet[23:0],
+    output     [17:0] PlayerBullet[23:0],
     output reg [2:0] Players,//残机数剩余
     output reg [2:0] Bombs,//炸弹数剩余
     output reg [7:0] EnemyPositionX,
@@ -77,9 +77,6 @@ module game(
         setting_state = setting_Players;
         PlayerPositionX = 8'd75;
         PlayerPositionY = 8'd30;
-        for(i=0;i<24;i=i+1)begin
-            PlayerBullet[i] = 18'b0;
-        end
         EnemyPositionX = 8'd75;
         EnemyPositionY = 8'd120;
         EnemyHp = 10'd250;
@@ -108,9 +105,6 @@ module game(
             setting_state = setting_Players;
             PlayerPositionX = 8'd75;
             PlayerPositionY = 8'd30;
-            for(i=0;i<24;i=i+1)begin
-                PlayerBullet[i] = 18'b0;
-            end
             EnemyPositionX = 8'd75;
             EnemyPositionY = 8'd120;
             EnemyHp = 10'd250;
@@ -132,9 +126,6 @@ module game(
             playing_state = unpaused;
             PlayerPositionX <= 8'd75;
             PlayerPositionY <= 8'd30;
-            for(i=0;i<24;i=i+1)begin
-                PlayerBullet[i] <= 18'b0;
-            end
             EnemyHp <= 10'd250;
             EnemyPositionX <= 8'd75;
             EnemyPositionY <= 8'd120;
