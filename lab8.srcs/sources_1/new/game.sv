@@ -118,7 +118,8 @@ module game(
             right_state <= 1'b0;
             right_prev <= 1'b0;
         end
-        if(game_state == setting)begin
+        else begin 
+            if(game_state == setting)begin
             updown_reg <= up || down;//updown_reg用于防止连续按键
             if((up || down) && !updown_reg)begin
                 setting_state <= (setting_state == setting_volume ? setting_Players : setting_volume);
@@ -226,15 +227,14 @@ module game(
                 end
             end
         endcase
+        if(count3 == 1000000)begin
+            PlayerPositionX <= Next_PlayerPositionX;
+            PlayerPositionY <= Next_PlayerPositionY;
+        end
+    end
     end
     wire [7:0] Next_PlayerPositionX;
     wire [7:0] Next_PlayerPositionY;
-    always @(posedge clk72m) begin
-        if(count3 == 1000000)begin
-        PlayerPositionX <= Next_PlayerPositionX;
-        PlayerPositionY <= Next_PlayerPositionY;
-        end
-    end
 playermove PLAYERMOVE(//heihei
     .clk72m(clk72m),
     .count(count1),
