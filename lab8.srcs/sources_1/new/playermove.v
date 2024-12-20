@@ -26,9 +26,6 @@ always @(posedge clk72m) begin
     else if(count == 1000000) begin
         if(game_state == playing)begin
             if(shift) begin//slowmode
-                if(!w && !s)begin
-                    Next_PlayerPositionY <= PlayerPositionY;
-                end
                 if(w) begin
                     dow <= dow + 1;
                     if(dow && w)begin
@@ -40,7 +37,7 @@ always @(posedge clk72m) begin
                         end
                     end
                 end
-                if(s) begin
+                else if(s) begin
                     dos <= dos + 1;
                     if(dos && s)begin
                         if(PlayerPositionY > 8'd21)begin
@@ -51,8 +48,8 @@ always @(posedge clk72m) begin
                         end
                     end
                 end
-                if(!d && !a)begin
-                    Next_PlayerPositionX <= PlayerPositionX;
+                else begin
+                    Next_PlayerPositionY <= PlayerPositionY;
                 end
                 if(d) begin
                     dod <= dod + 1;
@@ -61,7 +58,7 @@ always @(posedge clk72m) begin
                         else Next_PlayerPositionX <= 8'd130;
                     end
                 end
-                if(a) begin
+                else if(a) begin
                     doa <= doa + 1;
                     if(doa && a)begin
                         if(PlayerPositionX > 8'd20)begin
@@ -72,11 +69,11 @@ always @(posedge clk72m) begin
                         end
                     end
                 end
-            end
-            if(!shift) begin
-                if(!w && !s)begin
-                    Next_PlayerPositionY <= PlayerPositionY;
+                else begin
+                    Next_PlayerPositionX <= PlayerPositionX;
                 end
+            end
+            else begin
                 if(w) begin
                     if(PlayerPositionY < 8'd131)begin
                         Next_PlayerPositionY <= PlayerPositionY + 1;
@@ -85,16 +82,16 @@ always @(posedge clk72m) begin
                         Next_PlayerPositionY <= 8'd131;
                     end
                 end
-                    if(s) begin
-                        if(PlayerPositionY > 8'd21)begin
-                            Next_PlayerPositionY <= PlayerPositionY - 1;
-                        end
-                        else begin
-                            Next_PlayerPositionY <= 8'd21;
-                        end
+                else if(s) begin
+                    if(PlayerPositionY > 8'd21)begin
+                        Next_PlayerPositionY <= PlayerPositionY - 1;
                     end
-                if(!d && !a)begin
-                    Next_PlayerPositionX <= PlayerPositionX;
+                    else begin
+                        Next_PlayerPositionY <= 8'd21;
+                    end
+                end
+                else begin
+                    Next_PlayerPositionY <= PlayerPositionY;
                 end
                 if(d) begin
                     if(PlayerPositionX < 8'd130)
@@ -102,13 +99,16 @@ always @(posedge clk72m) begin
                     else
                         Next_PlayerPositionX <= 8'd130;
                 end
-                if(a) begin
+                else if(a) begin
                     if(PlayerPositionX > 8'd20)begin
                         Next_PlayerPositionX <= PlayerPositionX - 1;
                     end
                     else begin
                         Next_PlayerPositionX <= 8'd20;
                     end
+                end
+                else begin
+                    Next_PlayerPositionX <= PlayerPositionX;
                 end
             end
         end
