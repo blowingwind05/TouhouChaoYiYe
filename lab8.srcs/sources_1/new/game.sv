@@ -5,6 +5,8 @@ module game(
     output reg       setting_state,
     output reg [6:0] volume,
     output reg [2:0] Players_setting,//残机数设置
+    output reg [7:0] PlayerPositionX,
+    output reg [7:0] PlayerPositionY,
     output reg [17:0] PlayerBullet[23:0],
     output reg [2:0] Players,//残机数剩余
     output reg [2:0] Bombs,//炸弹数剩余

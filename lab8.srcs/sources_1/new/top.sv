@@ -51,6 +51,7 @@ module Top(
         .game_state(game_state),
         .playing_state(playing_state),
         .setting_state(setting_state),
+        .shift(shift),
         .volume(volume),
         .PlayerPositionX(PlayerPositionX),
         .PlayerPositionY(PlayerPositionY),
