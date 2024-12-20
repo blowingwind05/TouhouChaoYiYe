@@ -1,5 +1,8 @@
 module enemymove (
-    input rfclk,
+    input clk72m,
+    input  count,
+    input  rstn,
+    input  pause,
     input  [2:0] game_state,
     input  [7:0] EnemyPositionX,
     input  [7:0] EnemyPositionY,
@@ -16,28 +19,26 @@ module enemymove (
     reg [5:0] count_Y;
     reg direction_X;
     reg direction_Y;
-    reg [18:0] count1;
     initial begin
         count_X = 0;
         count_Y = 0;
-        count1 = 750000;
-        Next_EnemyPositionX = 8'd0;
-        Next_EnemyPositionY = 8'd0;
+        Next_EnemyPositionX = EnemyPositionX;
+        Next_EnemyPositionY = EnemyPositionY;
     end
     reg [7:0] lfsr = 8'b11001010; //生成伪随机数
-    always @(posedge rfclk) begin
+    always @(posedge clk72m) begin
         lfsr <= {lfsr[6:0], lfsr[7] ^ lfsr[5] ^ lfsr[4] ^ lfsr[3]};
     end
-always @(posedge rfclk) begin
-    if(count1 < 1000000)
-        count1 <= count1 + 1;
-    else
-        count1 <= 0;
-end
-always @(posedge rfclk) begin
+always @(posedge clk72m) begin
     direction_X <= lfsr[0];
     direction_Y <= lfsr[1];
-    if(count1 == 0) begin
+    if(!rstn) begin
+        count_X <= 0;
+        count_Y <= 0;
+        Next_EnemyPositionX <= EnemyPositionX;
+        Next_EnemyPositionY <= EnemyPositionY;
+    end
+    else if(count == 1000000) begin
         if(count_X < 6'd49)
             count_X <= count_X + 1;
         else
@@ -46,7 +47,7 @@ always @(posedge rfclk) begin
             count_Y <= count_Y + 1;
         else
         count_Y <= 0;
-        if(game_state == playing) begin
+        if(game_state == playing && !pause) begin
             if(count_X == 0) begin
                 if(direction_X) begin
                     if(EnemyPositionX < 8'd130)
@@ -82,7 +83,7 @@ always @(posedge rfclk) begin
                 Next_EnemyPositionY <= EnemyPositionY;
             end
         end
-        else begin  //game_state != playing
+        else begin  //game_state != playing or pause
             Next_EnemyPositionX <= EnemyPositionX;
             Next_EnemyPositionY <= EnemyPositionY;
         end

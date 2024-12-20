@@ -12,38 +12,31 @@ module game(
     output reg [7:0] EnemyPositionY,
     output reg [9:0] EnemyHp
     );
-
-    reg   clk1,clk2,clk3,clk4;
-    reg [18:0] count1,count2,count3,count4;
+    reg [19:0] count1,count2,count3,count4;
     always @(posedge clk72m) begin
-        if(count1 == 500000) begin
+        if(count1 == 1000000) begin
             count1 <= 0;
-            clk1 <= ~clk1;
         end
         else
-            count1 <= count1+1;
+            count1 <= count1 + 1;
 
-        if(count2 == 500000) begin
+        if(count2 == 1000000) begin
             count2 <= 0;
-            clk2 <= ~clk2;
         end
         else
-            count2 <= count2+1;
+            count2 <= count2 + 1;
 
-        if(count3 == 500000) begin
+        if(count3 == 1000000) begin
             count3 <= 0;
-            clk3 <= ~clk3;
         end
         else
-            count3 <= count3+1;
+            count3 <= count3 + 1;
 
-        if(count4 == 500000) begin
+        if(count4 == 1000000) begin
             count4 <= 0;
-            clk4 <= ~clk4;
         end
         else
-            count4 <= count4+1;
-
+            count4 <= count4 + 1;
     end
 
     reg [2:0]  next_game_state;
@@ -71,14 +64,10 @@ module game(
     reg left_state, left_prev, right_state, right_prev;
 
     initial begin
-        count1 = 375000;
-        count2 = 250000;
-        count3 = 125000;
-        count4 = 0;
-        clk1 = 1'b0;
-        clk2 = 1'b0;
-        clk3 = 1'b0;
-        clk4 = 1'b0;
+        count1 = 1000000;
+        count2 = 750000;
+        count3 = 500000;
+        count4 = 250000;
         pause = 1'b0;
         esc_reg = 1'b0;
         updown_reg = 1'b0;
@@ -93,7 +82,7 @@ module game(
         EnemyPositionX = 8'd75;
         EnemyPositionY = 8'd120;
         EnemyHp = 10'd250;
-        Players = 3'd3;
+        Players = 3'd4;
         Bombs = 3'd3;
         Players_setting = 3'd3;
         Bombs_setting = 3'd3;
@@ -107,14 +96,10 @@ module game(
 
     always @(posedge clk72m) begin
         if(!rstn)begin
-            count1 = 375000;
-            count2 = 250000;
-            count3 = 125000;
-            count4 = 0;
-            clk1 = 1'b0;
-            clk2 = 1'b0;
-            clk3 = 1'b0;
-            clk4 = 1'b0;
+            count1 = 1000000;
+            count2 = 750000;
+            count3 = 500000;
+            count4 = 250000;
             pause = 1'b0;
             esc_reg = 1'b0;
             updown_reg = 1'b0;
@@ -129,7 +114,7 @@ module game(
             EnemyPositionX = 8'd75;
             EnemyPositionY = 8'd120;
             EnemyHp = 10'd250;
-            Players = 3'd3;
+            Players = 3'd4;
             Bombs = 3'd3;
             Players_setting = 3'd3;
             Bombs_setting = 3'd3;
@@ -150,9 +135,10 @@ module game(
             for(i=0;i<24;i=i+1)begin
                 PlayerBullet[i] <= 18'b0;
             end
+            EnemyHp <= 10'd250;
             EnemyPositionX <= 8'd75;
             EnemyPositionY <= 8'd120;
-            Players <= Players_setting;
+            Players <= Players_setting ;
             Bombs <= Bombs_setting;
         end
         if(game_state == setting)begin
@@ -217,6 +203,15 @@ module game(
                         playing_state <= paused;
                     end
                 end
+                if(EnemyHp == 0) begin
+                    game_state <= win;
+                end
+                else if(Players == 7) begin//Players此时为-1（溢出），游戏失败
+                    game_state <= fail;
+                end
+                else begin
+                    game_state <= playing;
+                end
             end
             fail: begin
                 if(q) begin
@@ -241,17 +236,18 @@ module game(
             end
         endcase
     end
-
-
-
     wire [7:0] Next_PlayerPositionX;
     wire [7:0] Next_PlayerPositionY;
     always @(posedge clk72m) begin
+        if(count3 == 1000000)begin
         PlayerPositionX <= Next_PlayerPositionX;
         PlayerPositionY <= Next_PlayerPositionY;
+        end
     end
 playermove PLAYERMOVE(//heihei
-    .rfclk(clk72m),
+    .clk72m(clk72m),
+    .count(count1),
+    .rstn(rstn),
     .w(w),
     .s(s),
     .a(a),
@@ -263,46 +259,38 @@ playermove PLAYERMOVE(//heihei
     .Next_PlayerPositionX(Next_PlayerPositionX),
     .Next_PlayerPositionY(Next_PlayerPositionY)
 );
-
-
     wire [17:0] Next_PlayerBullet[23:0];
     wire [9:0]  Next_EnemyHp;
-    reg  [18:0] count;
-    initial begin
-        count = 250000;
-    end
-    always @(posedge clk72m) begin
-        if(count < 1000000)
-            count <= count + 1;
-        else
-            count <= 0;
-    end
-    always @(posedge clk72m) begin
-        if(count == 0) begin
-            EnemyHp <= Next_EnemyHp;
-            for(i=0;i<24;i++) begin
-                PlayerBullet[i] <= Next_PlayerBullet[i];
-            end
-        end
-    end
 playerbullet PLAYERBULLET (
-    .rfclk(clk72m),
-    .pause(esc_reg),
-    .PlayerBullet(PlayerBullet),
+    .clk72m(clk72m),
+    .rstn(rstn),
+    .count1(count1),
+    .count2(count2),
+    .count3(count3),
+    .pause(playing_state),
     .PlayerPositionX(PlayerPositionX),
     .PlayerPositionY(PlayerPositionY),
     .EnemyHp(EnemyHp),
     .Next_EnemyHp(Next_EnemyHp),
-    .Next_PlayerBullet(Next_PlayerBullet)
-);
+    .PlayerBullet(PlayerBullet)
+); 
+    always @(posedge clk72m) begin
+        if(count3 == 1000000)begin
+            EnemyHp <= Next_EnemyHp;
+        end
+    end
     wire [7:0] Next_EnemyPositionX;
     wire [7:0] Next_EnemyPositionY;
     always @(posedge clk72m) begin
-        EnemyPositionX <= Next_EnemyPositionX;
-        EnemyPositionY <= Next_EnemyPositionY;
+        if(count2 == 1000000)begin
+            EnemyPositionX <= Next_EnemyPositionX;
+            EnemyPositionY <= Next_EnemyPositionY;
+        end
     end
 enemymove ENEMYMOVE(
-    .rfclk(clk72m),
+    .clk72m(clk72m),
+    .count(count1),
+    .pause(playing_state),
     .game_state(game_state),
     .EnemyPositionX(EnemyPositionX),
     .EnemyPositionY(EnemyPositionY),

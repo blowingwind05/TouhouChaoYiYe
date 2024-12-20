@@ -1,5 +1,7 @@
 module playerbulletinitialize(
-    input rfclk,
+    input clk72m,
+    input count1,
+    input rstn,
     input pause,
     input [7:0] PlayerPositionX,
     input [7:0] PlayerPositionY,
@@ -8,7 +10,6 @@ module playerbulletinitialize(
     );
     reg [2:0]   initialize_area;
     reg [2:0]   initialize_state;//0:initializing,1~6:waiting
-    reg [18:0]  count1;
     integer     i;
     localparam sleeping = 2'd0;
     localparam initialized = 2'd1;
@@ -17,18 +18,16 @@ module playerbulletinitialize(
     initial begin
         initialize_area = 3'd0;
         initialize_state = 3'd0;
-        count1 = 750000;
         for(i=0;i<24;i=i+1)
             PlayerBulletInitialized[i] = 18'b0;
     end
-    always @(posedge rfclk) begin
-        if(count1 < 1000000)
-            count1 <= count1 + 1;
-        else
-            count1 <= 0;
-    end
-    always @(posedge rfclk) begin
-        if(count1 == 0) begin
+    always @(posedge clk72m) begin
+        if(!rstn)begin
+            initialize_area <= 3'd0;
+            initialize_state <= 3'd0;
+            for(i=0;i<24;i=i+1)PlayerBulletInitialized[i] <= 18'b0;
+        end
+        else if(count1 == 1000000) begin
             if(!pause)begin
                 if(initialize_state == 3'd0)begin//initializing
                     PlayerBulletInitialized[initialize_area*3+0] <= {initialized,PlayerPositionX - 8'd8,PlayerPositionY};

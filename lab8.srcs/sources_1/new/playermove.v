@@ -1,5 +1,5 @@
 module playermove(//坐标以左下角为原点，左下角坐标1，1 右上角150，150
-    input w,s,a,d,shift,rfclk, 
+    input w,s,a,d,shift,clk72m,count,rstn,
     input [2:0] game_state,
     input [7:0] PlayerPositionX,
     input [7:0] PlayerPositionY,
@@ -13,16 +13,17 @@ module playermove(//坐标以左下角为原点，左下角坐标1，1 右上角
     localparam playing = 3'd1;
     localparam fail = 3'd2;
     localparam win = 3'd3;
-    reg [18:0] count1;
+    reg [19:0] count1;
     initial begin
-        count1 = 750000;
+        Next_PlayerPositionX = 8'd75;
+        Next_PlayerPositionY = 8'd30;
     end
-always @(posedge rfclk) begin
-    if(count1 < 1000000) count1 <= count1 + 1;
-    else count1 <= 0;
-end
-always @(posedge rfclk) begin
-    if(count1 == 0) begin
+always @(posedge clk72m) begin
+    if(!rstn)begin
+        Next_PlayerPositionX <= 8'd75;
+        Next_PlayerPositionY <= 8'd30;
+    end
+    else if(count == 1000000) begin
         if(game_state == playing)begin
             if(shift) begin//slowmode
                 if(!w && !s)begin

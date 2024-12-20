@@ -10,8 +10,8 @@ module ScreenRenderer(
     input       shift,
     input [2:0] Players,//残机数剩余
     input [2:0] Bombs,//炸弹数剩余            
-    input [7:0] PlayerPositionX, 
-    input [7:0] PlayerPositionY, 
+    input [7:0] PlayerPositionX, //range from 1 to 150
+    input [7:0] PlayerPositionY, //range from 1 to 150
     input [17:0] PlayerBullet[23:0],//bullet_state,position_x,position_y
     input [7:0] EnemyPositionX, 
     input [7:0] EnemyPositionY,   
@@ -167,18 +167,142 @@ always @(posedge pclk) begin
                 vramwe <= 0;
                 rdprogress <= 0;
                 rdaddr <= 0;
+                bgaddr <= 0;
             end
             else begin
-                if(rdprogress < 200*150)begin
-                    vramwe <= 1;
-                    rdprogress <= rdprogress + 1;
-                    rdaddr <= rdaddr + 1; 
-                    vramwaddr <= rdaddr;
+                case(rdprogress)
+                0:begin//begin the progress one
+                    if(rdaddr < 200*150)begin
+                        vramwe <= 1;
+                        rdaddr <= rdaddr + 1; 
+                        bgaddr <= bgaddr + 1;
+                        vramwaddr <= rdaddr;
+                        vramwdata <= bgdata;//render the background
+                    end
+                    else begin//end the progress one
+                        vramwe <= 0;
+                        rdstaddr <= 43*200 + 5;
+                        rdprogress <= rdprogress + 2;
+                        txtaddr <= Players_pic;
+                        x <= 0;
+                    end
                 end
-                else begin
-                    vramwe <= 0;
-                    rdaddr <= 0;
+                2:begin//begin the progress two
+                    if(x < 13)begin
+                        if(rdstaddr < (43+x)*200 + 5 + 90)begin
+                            vramwe <= txtdata;
+                            txtaddr <= txtaddr + 1;
+                            rdstaddr <= rdstaddr + 1; 
+                            vramwdata <= (setting_state == setting_Players) ? {12{txtdata}} : {1'b0, txtdata, txtdata, txtdata, 1'b0, txtdata, txtdata, txtdata, 1'b0, txtdata, txtdata, txtdata};
+                            vramwaddr <= rdstaddr;
+                        end
+                        else begin//回车换行
+                            vramwe <= 0;
+                            rdaddr <= (43+x+1)*200 +5;
+                            x <= x + 1;
+                        end
+                    end
+                    else begin//end the progress two
+                        vramwe <= 0;
+                        rdstaddr <= 94*200 + 5;
+                        rdstprogress <= rdstprogress + 1;
+                        txtaddr <= volume_pic;
+                        x <= 0;
+                    end
                 end
+                2:begin//begin the progress three
+                    if(x < 13)begin
+                        if(rdstaddr < (94+x)*200 + 5 + 90)begin
+                            vramwe <= txtdata;
+                            txtaddr <= txtaddr + 1;
+                            rdstaddr <= rdstaddr + 1; 
+                            vramwdata <= (setting_state == setting_Players) ? {12{txtdata}} : {1'b0, txtdata, txtdata, txtdata, 1'b0, txtdata, txtdata, txtdata, 1'b0, txtdata, txtdata, txtdata};
+                            vramwaddr <= rdstaddr;
+                        end
+                        else begin//回车换行
+                            vramwe <= 0;
+                            rdstaddr <= (94+x+1)*200 +5;
+                            x <= x + 1;
+                        end
+                    end
+                    else begin//end the progress three
+                        vramwe <= 0;
+                        rdstaddr <= 93*200 + 120;
+                        rdstprogress <= rdstprogress + 1;
+                        case(volume)
+                            00: txtaddr <= zerozero;
+                            10: txtaddr <= ten;
+                            20: txtaddr <= twenty;
+                            30: txtaddr <= thirty;
+                            40: txtaddr <= forty;
+                            50: txtaddr <= fifty;
+                            60: txtaddr <= sixty;
+                            70: txtaddr <= seventy;
+                            80: txtaddr <= eighty;
+                            90: txtaddr <= ninety;
+                            100: txtaddr <= hundred;
+                        endcase
+                        x <= 0;
+                    end
+                end
+                3:begin//begin the progress four
+                    if(x < 15)begin
+                        if(rdstaddr < (93+x)*200 + 120 + 40)begin
+                            vramwe <= txtdata;
+                            txtaddr <= txtaddr + 1;
+                            rdstaddr <= rdstaddr + 1; 
+                            vramwdata <= {12{txtdata}};
+                            vramwaddr <= rdstaddr;
+                        end
+                        else begin//回车换行
+                            vramwe <= 0;
+                            rdstaddr <= (93+x+1)*200 +120;
+                            x <= x + 1;
+                        end
+                    end
+                    else begin//end the progress four
+                        vramwe <= 0;
+                        rdstaddr <= (44+x) * 200 + 109;
+                        rdstprogress <= rdstprogress + 1;
+                        txaddr <= redstar - 40;
+                        x <= 0;
+                        i <= 0;
+                    end
+                end
+                4:begin//begin the progress five
+                    if(i < Players_setting)begin
+                        if(x < 11)begin
+                            if(rdstaddr < (44+x)*200 + 109 + 11 + 20 * i)begin
+                                vramwe <= txdata[0];
+                                txaddr <= txaddr + 1;
+                                rdstaddr <= rdstaddr + 1; 
+                                vramwdata <= txdata[15:4];
+                                vramwaddr <= rdstaddr;
+                            end
+                            else begin//回车换行
+                                vramwe <= 0;
+                                rdstaddr <= (44+x+1)*200 +109 + 20 * i;
+                                x <= x + 1;
+                            end
+                        end
+                        else begin//end the part
+                            vramwe <= 0;
+                            rdstaddr <= 0;
+                            x <= 0;
+                            i <= i + 1;
+                            txaddr <= redstar - 40;
+                        end
+                    end
+                    else begin//end the progress five
+                        vramwe <= 0;
+                        rdstaddr <= 0;
+                        rdstprogress <= rdstprogress + 1;
+                        x <= 0;
+                        i <= 0;
+                    end
+                end
+                default:;//do nothing
+                endcase
             end
         end
     end
