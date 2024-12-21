@@ -1,6 +1,6 @@
 module enemymove (
     input clk5m,
-    input  count,
+    input  [16:0] count1,
     input  rstn,
     input  pause,
     input  [2:0] game_state,
@@ -38,7 +38,7 @@ always @(posedge clk5m) begin
         Next_EnemyPositionX <= EnemyPositionX;
         Next_EnemyPositionY <= EnemyPositionY;
     end
-    else if(count == 17'd69444) begin
+    else if(count1 == 17'd69444) begin
         if(count_X < 6'd49)
             count_X <= count_X + 1;
         else

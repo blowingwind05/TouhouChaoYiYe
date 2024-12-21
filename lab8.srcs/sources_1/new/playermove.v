@@ -3,7 +3,7 @@ module playermove(//坐标以左下角为原点，左下角坐标1，1 右上角
     input [2:0] game_state,
     input [7:0] PlayerPositionX,
     input [7:0] PlayerPositionY,
-    input [19:0] count,
+    input [16:0] count,
     output reg [7:0] Next_PlayerPositionX,
     output reg [7:0] Next_PlayerPositionY
     );

@@ -1,6 +1,6 @@
 module playerbulletinitialize(
     input clk5m,
-    input count1,
+    input [16:0] count1,
     input rstn,
     input pause,
     input [7:0] PlayerPositionX,

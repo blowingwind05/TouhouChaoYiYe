@@ -14,7 +14,7 @@ module game(
     output reg [7:0] EnemyPositionY,
     output reg [9:0] EnemyHp
     );
-    reg [19:0] count1,count2,count3,count4;
+    reg [16:0] count1,count2,count3,count4;
     reg game_rstn;
     reg [2:0]  prev_game_state;
     reg [2:0]  Bombs_setting; 
@@ -285,7 +285,7 @@ playerbullet PLAYERBULLET (
 
 enemymove ENEMYMOVE(
     .clk5m(clk5m),
-    .count(count1),
+    .count1(count1),
     .rstn(rstn),
     .pause(playing_state),
     .game_state(game_state),
