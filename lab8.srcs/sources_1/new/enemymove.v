@@ -30,8 +30,8 @@ module enemymove (
         lfsr <= {lfsr[6:0], lfsr[7] ^ lfsr[5] ^ lfsr[4] ^ lfsr[3]};
     end
 always @(posedge clk5m) begin
-    direction_X <= lfsr[0];
-    direction_Y <= lfsr[1];
+    direction_X <= lfsr[3];
+    direction_Y <= lfsr[5];
     if(!rstn) begin
         count_X <= 0;
         count_Y <= 0;

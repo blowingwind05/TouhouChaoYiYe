@@ -181,8 +181,14 @@ module game(
                 end
                 else begin
                     game_rstn = 1'b1;
+                    if(count3 == 17'd69444)begin
+                        PlayerPositionX <= Next_PlayerPositionX;
+                        PlayerPositionY <= Next_PlayerPositionY;
+                        EnemyHp <= Next_EnemyHp;
+                        EnemyPositionX <= Next_EnemyPositionX;
+                        EnemyPositionY <= Next_EnemyPositionY;
+                    end
                 end
-                game_state <= playing;
                 esc_reg <= esc;
                 if(playing_state == unpaused) begin
                     if(esc == 1'b1 && esc_reg == 1'b0) begin
@@ -203,6 +209,9 @@ module game(
                 if(playing_state == paused)begin
                     if(q)begin
                         game_state <= welcome;
+                    end
+                    else begin
+                        game_state <= playing;
                     end
                 end
                 else if(EnemyHp == 0) begin
@@ -237,17 +246,6 @@ module game(
                 end
             end
         endcase
-        if(count3 == 17'd69444)begin
-            PlayerPositionX <= Next_PlayerPositionX;
-            PlayerPositionY <= Next_PlayerPositionY;
-        end
-        if(count3 == 17'd69444)begin
-            EnemyHp <= Next_EnemyHp;
-        end
-        if(count3 == 17'd69444)begin
-            EnemyPositionX <= Next_EnemyPositionX;
-            EnemyPositionY <= Next_EnemyPositionY;
-        end
     end
     end
     wire [7:0] Next_PlayerPositionX;
@@ -255,7 +253,7 @@ module game(
 playermove PLAYERMOVE(//heihei
     .clk5m(clk5m),
     .count(count1),
-    .rstn(rstn),
+    .rstn(rstn&&game_rstn),
     .w(w),
     .s(s),
     .a(a),
@@ -283,9 +281,6 @@ playerbullet PLAYERBULLET (
     .Next_EnemyHp(Next_EnemyHp),
     .PlayerBullet(PlayerBullet)
 ); 
-    always @(posedge clk5m) begin
-        
-    end
     wire [7:0] Next_EnemyPositionX;
     wire [7:0] Next_EnemyPositionY;
 

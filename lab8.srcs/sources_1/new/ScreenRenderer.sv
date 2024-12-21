@@ -215,9 +215,32 @@ always @(posedge pclk) begin
                     end
                     else begin//end the progress three
                         vramwe <= 0;
+                        rdaddr <= (8'd131 - EnemyPositionY)*8'd200 + EnemyPositionX - 8'd20;
+                        rdprogress <= rdprogress + 5;
+                        txaddr <= marisa;
+                        x <= 0;
+                    end
+                end
+                7:begin
+                    if(x < 40)begin
+                        if(rdaddr < (8'd131 - EnemyPositionY + x)*8'd200 + EnemyPositionX + 8'd20)begin
+                            vramwe <= txdata[0];
+                            txaddr <= txaddr + 1;
+                            rdaddr <= rdaddr + 1; 
+                            vramwdata <= txdata[15:4];
+                            vramwaddr <= rdaddr;
+                        end
+                        else begin//回车换行
+                            vramwe <= 0;
+                            rdaddr <= (8'd132 - EnemyPositionY + x)*8'd200 + EnemyPositionX - 8'd20;
+                            x <= x + 1;
+                        end
+                    end
+                    else begin//end the progress eight
+                        vramwe <= 0;
                         rdaddr <= (8'd35)*8'd200 + 8'd15;
                         txtaddr <= pause_pic;
-                        rdprogress <= rdprogress + 6;
+                        rdprogress <= rdprogress + 1;
                         x <= 0;
                     end
                 end
@@ -387,7 +410,7 @@ always @(posedge pclk) begin
                         vramwe <= 0;
                         rdstaddr <= (44) * 200 + 109;
                         rdstprogress <= rdstprogress + 1;
-                        txaddr <= redstar - 40;
+                        txaddr <= redstar;
                         x <= 0;
                         i <= 0;
                     end
@@ -413,7 +436,7 @@ always @(posedge pclk) begin
                             rdstaddr <= (44)*200 +109 + 20 * (i + 1);
                             x <= 0;
                             i <= i + 1;
-                            txaddr <= redstar - 40;
+                            txaddr <= redstar;
                         end
                     end
                     else begin//end the progress five
