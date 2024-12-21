@@ -189,14 +189,14 @@ always @(posedge pclk) begin
                 end
                 1:begin
                     vramwe <= 0;
-                        rdaddr <= (150 - PlayerPositionY - 19)*200 + PlayerPositionX - 20;
+                        rdaddr <= (8'd131 - PlayerPositionY)*8'd200 + PlayerPositionX - 8'd20;
                         rdprogress <= rdprogress + 1;
                         txaddr <= shift ? yukari : reimu;
                         x <= 0;
                 end
                 2:begin//begin the progress three
                     if(x < 40)begin
-                        if(rdstaddr < (150 - PlayerPositionY - 19)*200 + PlayerPositionX - 20 + 40)begin
+                        if(rdaddr < (8'd131 - PlayerPositionY + x)*8'd200 + PlayerPositionX + 8'd20)begin
                             vramwe <= txdata[0];
                             txaddr <= txaddr + 1;
                             rdaddr <= rdaddr + 1; 
@@ -205,13 +205,13 @@ always @(posedge pclk) begin
                         end
                         else begin//回车换行
                             vramwe <= 0;
-                            rdaddr <= (150 - PlayerPositionY - 19 + x + 1)*200 + PlayerPositionX - 20;
+                            rdaddr <= (8'd132 - PlayerPositionY + x)*8'd200 + PlayerPositionX - 8'd20;
                             x <= x + 1;
                         end
                     end
                     else begin//end the progress three
                         vramwe <= 0;
-                        rdaddr <= 93*200 + 120;
+                        rdaddr <= 0;
                         rdprogress <= rdprogress + 1;
                         x <= 0;
                     end
