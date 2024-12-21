@@ -38,6 +38,7 @@ always @(posedge clk5m) begin
         Next_EnemyPositionY <= 8'd131;
     end
     else if(count1 == 17'd69444) begin
+        if(game_state == playing && !pause) begin
         if(EnemyPositionY == 8'd131 && EnemyPositionX > 8'd40)begin
                 if(count_X == 0)begin
                     Next_EnemyPositionX <= EnemyPositionX - 1'b1;
@@ -75,6 +76,7 @@ always @(posedge clk5m) begin
         else begin
             count_Y <= 0;
         end
+    end
         //if(game_state == playing && !pause) begin
             //if(count_X == 0) begin
                 //direction_X <= {lfsr[3],lfsr[6]};
