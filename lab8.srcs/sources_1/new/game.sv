@@ -49,6 +49,7 @@ module game(
         esc_reg = 1'b0;
         updown_reg = 1'b0;
         game_state = welcome;
+        prev_game_state = welcome;
         playing_state = unpaused;
         setting_state = setting_Players;
         PlayerPositionX = 8'd75;
@@ -78,6 +79,7 @@ module game(
             esc_reg <= 1'b0;
             updown_reg <= 1'b0;
             game_state <= welcome;
+            prev_game_state <= welcome;
             playing_state <= unpaused;
             setting_state <= setting_Players;
             PlayerPositionX <= 8'd75;
@@ -151,23 +153,6 @@ module game(
                 end
             end
         end
-        if(game_state == playing)begin
-            prev_game_state <= playing;
-            if(prev_game_state != playing) begin//initialize
-                game_rstn = 1'b0;
-                playing_state = unpaused;
-                PlayerPositionX <= 8'd75;
-                PlayerPositionY <= 8'd30;
-                EnemyHp <= 10'd250;
-                EnemyPositionX <= 8'd75;
-                EnemyPositionY <= 8'd120;
-                Players <= Players_setting ;
-                Bombs <= Bombs_setting;
-            end
-            else begin
-                game_rstn = 1'b1;
-            end
-        end
         case(game_state)
             welcome: begin
                 if(s) begin
@@ -182,6 +167,21 @@ module game(
                 end
             end
             playing: begin
+                prev_game_state <= playing;
+                if(prev_game_state != playing) begin//initialize
+                    game_rstn = 1'b0;
+                    playing_state = unpaused;
+                    PlayerPositionX <= 8'd75;
+                    PlayerPositionY <= 8'd30;
+                    EnemyHp <= 10'd250;
+                    EnemyPositionX <= 8'd75;
+                    EnemyPositionY <= 8'd120;
+                    Players <= Players_setting ;
+                    Bombs <= Bombs_setting;
+                end
+                else begin
+                    game_rstn = 1'b1;
+                end
                 game_state <= playing;
                 esc_reg <= esc;
                 if(playing_state == unpaused) begin
@@ -200,7 +200,12 @@ module game(
                         playing_state <= paused;
                     end
                 end
-                if(EnemyHp == 0) begin
+                if(playing_state == paused)begin
+                    if(q)begin
+                        game_state <= welcome;
+                    end
+                end
+                else if(EnemyHp == 0) begin
                     game_state <= win;
                 end
                 else if(Players == 7) begin//Players此时为-1（溢出），游戏失败
@@ -271,6 +276,7 @@ playerbullet PLAYERBULLET (
     .count2(count2),
     .count3(count3),
     .pause(playing_state),
+    .shoot(z),
     .PlayerPositionX(PlayerPositionX),
     .PlayerPositionY(PlayerPositionY),
     .EnemyHp(EnemyHp),

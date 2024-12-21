@@ -69,6 +69,7 @@ localparam ninety = 15'd5400;//store from 5400 to 5999
 localparam hundred = 15'd6000;//store from 6000 to 6599
 localparam Players_pic = 15'd6600;//store from 6600 to 7769
 localparam volume_pic = 15'd7770;//store from 7770 to 8939
+localparam pause_pic = 15'd8940;//store from 8940 to 14459
 DST dst(
     .rstn(rstn),
     .pclk(pclk),
@@ -130,6 +131,9 @@ localparam win = 2'd3;
 //setting_state
 localparam setting_volume = 1'b1;
 localparam setting_Players = 1'b0;
+//playing_state
+localparam paused = 1'b1;
+localparam unpaused = 1'b0;
 always @(posedge pclk) begin
     prev_rfclk <= rfclk;
     case(game_state)
@@ -189,14 +193,14 @@ always @(posedge pclk) begin
                 end
                 1:begin
                     vramwe <= 0;
-                        rdaddr <= (150 - PlayerPositionY - 19)*200 + PlayerPositionX - 20;
+                        rdaddr <= (8'd131 - PlayerPositionY)*8'd200 + PlayerPositionX - 8'd20;
                         rdprogress <= rdprogress + 1;
                         txaddr <= shift ? yukari : reimu;
                         x <= 0;
                 end
                 2:begin//begin the progress three
                     if(x < 40)begin
-                        if(rdstaddr < (150 - PlayerPositionY - 19)*200 + PlayerPositionX - 20 + 40)begin
+                        if(rdaddr < (8'd131 - PlayerPositionY + x)*8'd200 + PlayerPositionX + 8'd20)begin
                             vramwe <= txdata[0];
                             txaddr <= txaddr + 1;
                             rdaddr <= rdaddr + 1; 
@@ -205,13 +209,44 @@ always @(posedge pclk) begin
                         end
                         else begin//回车换行
                             vramwe <= 0;
-                            rdaddr <= (150 - PlayerPositionY - 19 + x + 1)*200 + PlayerPositionX - 20;
+                            rdaddr <= (8'd132 - PlayerPositionY + x)*8'd200 + PlayerPositionX - 8'd20;
                             x <= x + 1;
                         end
                     end
                     else begin//end the progress three
                         vramwe <= 0;
-                        rdaddr <= 93*200 + 120;
+                        rdaddr <= (8'd35)*8'd200 + 8'd15;
+                        txtaddr <= pause_pic;
+                        rdprogress <= rdprogress + 6;
+                        x <= 0;
+                    end
+                end
+                8:begin
+                    if(playing_state == paused)begin
+                        if(x<46)begin
+                            if(rdaddr < (8'd35 + x)*8'd200 + 8'd135)begin
+                                vramwe <= txtdata;
+                                txtaddr <= txtaddr + 1;
+                                rdaddr <= rdaddr + 1; 
+                                vramwdata <= {12{txtdata}};
+                                vramwaddr <= rdaddr;
+                            end
+                            else begin//回车换行
+                                vramwe <= 0;
+                                rdaddr <= (8'd36 + x)*8'd200 + 8'd15;
+                                x <= x + 1;
+                            end
+                        end
+                        else begin//end the progress nine
+                            vramwe <= 0;
+                            rdaddr <= 0;
+                            rdprogress <= rdprogress + 1;
+                            x <= 0;
+                        end
+                    end
+                    else begin//jump the render of the text
+                        vramwe <= 0;
+                        rdaddr <= 0;
                         rdprogress <= rdprogress + 1;
                         x <= 0;
                     end
