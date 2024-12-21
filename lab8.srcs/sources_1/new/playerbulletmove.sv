@@ -1,5 +1,6 @@
 module playerbulletmove(
-    input clk5m,pause,count2,rstn,
+    input clk5m,pause,rstn,
+    input      [16:0] count2,
     input      [17:0] PlayerBulletInitialized [23:0],
     input      [9:0]  EnemyHp,
     input      [7:0]  EnemyPositionX,
