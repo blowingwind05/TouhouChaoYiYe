@@ -7,8 +7,8 @@ module game(
     output reg [2:0] Players_setting,//残机数设置
     output reg [7:0] PlayerPositionX,
     output reg [7:0] PlayerPositionY,
-    output    [17:0] PlayerBullet[23:0],
-    output    [17:0] EnemySniperBullet[15:0],
+    output     [17:0] PlayerBullet[23:0],
+    output     [17:0] EnemySniperBullet[15:0],
     output reg [2:0] Players,//残机数剩余
     output reg [2:0] Bombs,//炸弹数剩余
     output reg [7:0] EnemyPositionX,
@@ -122,6 +122,7 @@ module game(
             end
             else
                 count4 <= count4 + 1;
+
             if(game_state == setting)begin
                 updown_reg <= up || down;//updown_reg用于防止连续按键
                 if((up || down) && !updown_reg)begin
@@ -154,61 +155,17 @@ module game(
                     end
                 end
             end
-            else begin//setting_Players, 1<=Players_setting<=4
-                if (left_state && Players_setting > 1) begin
-                    Players_setting <= Players_setting - 1; 
-                end
-                else if (right_state && Players_setting < 4) begin
-                    Players_setting <= Players_setting + 1;  
-                end
-            end
-        end
-        case(game_state)
-            welcome: begin
-                if(s) begin
-                    game_state <= playing;
-                    prev_game_state <= welcome;
-                end
-                else if(o)begin
-                    game_state <= setting;
-                end
-                else begin
-                    game_state <= welcome;
-                end
-            end
-            playing: begin
-                prev_game_state <= playing;
-                if(prev_game_state != playing) begin//initialize
-                    game_rstn = 1'b0;
-                    playing_state = unpaused;
-                    PlayerPositionX <= 8'd75;
-                    PlayerPositionY <= 8'd30;
-                    EnemyHp <= 10'd250;
-                    EnemyPositionX <= 8'd75;
-                    EnemyPositionY <= 8'd120;
-                    Players <= Players_setting ;
-                    Bombs <= Bombs_setting;
-                end
-                else begin
-                    game_rstn = 1'b1;
-                    if(count3 == 17'd69444)begin
-                        PlayerPositionX <= Next_PlayerPositionX;
-                        PlayerPositionY <= Next_PlayerPositionY;
-                        EnemyHp <= Next_EnemyHp;
-                        EnemyPositionX <= Next_EnemyPositionX;
-                        EnemyPositionY <= Next_EnemyPositionY;
+            case(game_state)
+                welcome: begin
+                    if(s) begin
+                        game_state <= playing;
+                        prev_game_state <= welcome;
                     end
-                end
-                esc_reg <= esc;
-                if(playing_state == unpaused) begin
-                    if(esc == 1'b1 && esc_reg == 1'b0) begin
-                        playing_state <= paused;
+                    else if(o)begin
+                        game_state <= setting;
                     end
                     else begin
                         game_state <= welcome;
-                    end
-                    else begin
-                        game_state <= playing;
                     end
                 end
                 playing: begin
@@ -226,8 +183,15 @@ module game(
                     end
                     else begin
                         game_rstn = 1'b1;
+                        if(count3 == 17'd69444)begin
+                            PlayerPositionX <= Next_PlayerPositionX;
+                            PlayerPositionY <= Next_PlayerPositionY;
+                            Players <= Next_Players;
+                            EnemyPositionX <= Next_EnemyPositionX;
+                            EnemyPositionY <= Next_EnemyPositionY;
+                            EnemyHp <= Next_EnemyHp;
+                        end
                     end
-                    game_state <= playing;
                     esc_reg <= esc;
                     if(playing_state == unpaused) begin
                         if(esc == 1'b1 && esc_reg == 1'b0) begin
@@ -248,6 +212,9 @@ module game(
                     if(playing_state == paused)begin
                         if(q)begin
                             game_state <= welcome;
+                        end
+                        else begin
+                            game_state <= playing;
                         end
                     end
                     else if(EnemyHp == 0) begin
@@ -282,26 +249,7 @@ module game(
                     end
                 end
             endcase
-            if(count3 == 17'd69444)begin
-                PlayerPositionX <= Next_PlayerPositionX;
-                PlayerPositionY <= Next_PlayerPositionY;
-            end
-            if(count3 == 17'd69444)begin
-                EnemyHp <= Next_EnemyHp;
-            end
-            if(count3 == 17'd69444)begin
-                EnemyPositionX <= Next_EnemyPositionX;
-                EnemyPositionY <= Next_EnemyPositionY;
-            end
-            if(count3 == 17'd69444)begin
-                Players <= Next_Players;
-            end
-<<<<<<< HEAD
         end
-=======
-        endcase
-    end
->>>>>>> 70aaf880c5d9a47fdab24f37f96343ae135367eb
     end
     wire [7:0] Next_PlayerPositionX;
     wire [7:0] Next_PlayerPositionY;
@@ -350,7 +298,7 @@ enemymove ENEMYMOVE(
     .Next_EnemyPositionY(Next_EnemyPositionY)
 );
     wire [2:0] Next_Players;
-enemysniper NENMYSNIPER(
+enemysniper ENEMYSNIPER(
     .clk5m(clk5m),
     .rstn(rstn),
     .pause(playing_state),
