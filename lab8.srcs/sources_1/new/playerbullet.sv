@@ -45,6 +45,7 @@ always @(posedge clk5m)begin
         end
     end
     else if(count3 == 17'd69444)begin
+        integer i;
         for(i=0;i<24;i=i+1)begin
             PlayerBullet[i] <= PlayerBulletMoved[i];
         end
