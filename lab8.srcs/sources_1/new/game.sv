@@ -7,7 +7,8 @@ module game(
     output reg [2:0] Players_setting,//残机数设置
     output reg [7:0] PlayerPositionX,
     output reg [7:0] PlayerPositionY,
-    output     [17:0] PlayerBullet[23:0],
+    output    [17:0] PlayerBullet[23:0],
+    output    [17:0] EnemySniperBullet[15:0],
     output reg [2:0] Players,//残机数剩余
     output reg [2:0] Bombs,//炸弹数剩余
     output reg [7:0] EnemyPositionX,
@@ -122,133 +123,136 @@ module game(
             else
                 count4 <= count4 + 1;
             if(game_state == setting)begin
-            updown_reg <= up || down;//updown_reg用于防止连续按键
-            if((up || down) && !updown_reg)begin
-                setting_state <= (setting_state == setting_volume ? setting_Players : setting_volume);
-            end
-            left_prev <= left;
-            if (left == 1'b1 && left_prev == 1'b0) begin
-                left_state <= 1'b1;  
-            end 
-            else left_state <= 1'b0; 
-            right_prev <= right;
-            if (right == 1'b1 && right_prev == 1'b0) begin
-                right_state <= 1'b1;  
-            end 
-            else right_state <= 1'b0; 
-            if(setting_state == setting_volume)begin
-                if (left_state && volume > 0) begin
-                    volume <= volume - 10; 
+                updown_reg <= up || down;//updown_reg用于防止连续按键
+                if((up || down) && !updown_reg)begin
+                    setting_state <= (setting_state == setting_volume ? setting_Players : setting_volume);
                 end
-                else if (right_state && volume < 100) begin
-                    volume <= volume + 10;  
+                left_prev <= left;
+                if (left == 1'b1 && left_prev == 1'b0) begin
+                    left_state <= 1'b1;  
+                end 
+                else left_state <= 1'b0; 
+                right_prev <= right;
+                if (right == 1'b1 && right_prev == 1'b0) begin
+                    right_state <= 1'b1;  
+                end 
+                else right_state <= 1'b0; 
+                if(setting_state == setting_volume)begin
+                    if (left_state && volume > 0) begin
+                        volume <= volume - 10; 
+                    end
+                    else if (right_state && volume < 100) begin
+                        volume <= volume + 10;  
+                    end
                 end
-            end
-            else begin//setting_Players, 1<=Players_setting<=4
-                if (left_state && Players_setting > 1) begin
-                    Players_setting <= Players_setting - 1; 
-                end
-                else if (right_state && Players_setting < 4) begin
-                    Players_setting <= Players_setting + 1;  
-                end
-            end
-        end
-        case(game_state)
-            welcome: begin
-                if(s) begin
-                    game_state <= playing;
-                    prev_game_state <= welcome;
-                end
-                else if(o)begin
-                    game_state <= setting;
-                end
-                else begin
-                    game_state <= welcome;
+                else begin//setting_Players, 1<=Players_setting<=4
+                    if (left_state && Players_setting > 1) begin
+                        Players_setting <= Players_setting - 1; 
+                    end
+                    else if (right_state && Players_setting < 4) begin
+                        Players_setting <= Players_setting + 1;  
+                    end
                 end
             end
-            playing: begin
-                prev_game_state <= playing;
-                if(prev_game_state != playing) begin//initialize
-                    game_rstn = 1'b0;
-                    playing_state = unpaused;
-                    PlayerPositionX <= 8'd75;
-                    PlayerPositionY <= 8'd30;
-                    EnemyHp <= 10'd250;
-                    EnemyPositionX <= 8'd75;
-                    EnemyPositionY <= 8'd120;
-                    Players <= Players_setting ;
-                    Bombs <= Bombs_setting;
-                end
-                else begin
-                    game_rstn = 1'b1;
-                end
-                game_state <= playing;
-                esc_reg <= esc;
-                if(playing_state == unpaused) begin
-                    if(esc == 1'b1 && esc_reg == 1'b0) begin
-                        playing_state <= paused;
+            case(game_state)
+                welcome: begin
+                    if(s) begin
+                        game_state <= playing;
+                        prev_game_state <= welcome;
+                    end
+                    else if(o)begin
+                        game_state <= setting;
                     end
                     else begin
-                        playing_state <= unpaused;
-                    end
-                end
-                else begin//paused
-                    if(esc == 1'b1 && esc_reg == 1'b0) begin
-                        playing_state <= unpaused;
-                    end
-                    else begin
-                        playing_state <= paused;
-                    end
-                end
-                if(playing_state == paused)begin
-                    if(q)begin
                         game_state <= welcome;
                     end
                 end
-                else if(EnemyHp == 0) begin
-                    game_state <= win;
-                end
-                else if(Players == 7) begin//Players此时为-1（溢出），游戏失败
-                    game_state <= fail;
-                end
-                else begin
+                playing: begin
+                    prev_game_state <= playing;
+                    if(prev_game_state != playing) begin//initialize
+                        game_rstn = 1'b0;
+                        playing_state = unpaused;
+                        PlayerPositionX <= 8'd75;
+                        PlayerPositionY <= 8'd30;
+                        EnemyHp <= 10'd250;
+                        EnemyPositionX <= 8'd75;
+                        EnemyPositionY <= 8'd120;
+                        Players <= Players_setting ;
+                        Bombs <= Bombs_setting;
+                    end
+                    else begin
+                        game_rstn = 1'b1;
+                    end
                     game_state <= playing;
+                    esc_reg <= esc;
+                    if(playing_state == unpaused) begin
+                        if(esc == 1'b1 && esc_reg == 1'b0) begin
+                            playing_state <= paused;
+                        end
+                        else begin
+                            playing_state <= unpaused;
+                        end
+                    end
+                    else begin//paused
+                        if(esc == 1'b1 && esc_reg == 1'b0) begin
+                            playing_state <= unpaused;
+                        end
+                        else begin
+                            playing_state <= paused;
+                        end
+                    end
+                    if(playing_state == paused)begin
+                        if(q)begin
+                            game_state <= welcome;
+                        end
+                    end
+                    else if(EnemyHp == 0) begin
+                        game_state <= win;
+                    end
+                    else if(Players == 7) begin//Players此时为-1（溢出），游戏失败
+                        game_state <= fail;
+                    end
+                    else begin
+                        game_state <= playing;
+                    end
                 end
+                fail: begin
+                    if(q) begin
+                        game_state <= welcome;
+                    end
+                    else if(r) begin
+                        game_state <= playing;
+                    end
+                    else begin
+                        game_state <= fail;
+                    end
+                end
+                win: begin
+                end
+                setting: begin
+                    if(q) begin
+                        game_state <= welcome;
+                    end
+                    else begin
+                        game_state <= setting;
+                    end
+                end
+            endcase
+            if(count3 == 17'd69444)begin
+                PlayerPositionX <= Next_PlayerPositionX;
+                PlayerPositionY <= Next_PlayerPositionY;
             end
-            fail: begin
-                if(q) begin
-                    game_state <= welcome;
-                end
-                else if(r) begin
-                    game_state <= playing;
-                end
-                else begin
-                    game_state <= fail;
-                end
+            if(count3 == 17'd69444)begin
+                EnemyHp <= Next_EnemyHp;
             end
-            win: begin
+            if(count3 == 17'd69444)begin
+                EnemyPositionX <= Next_EnemyPositionX;
+                EnemyPositionY <= Next_EnemyPositionY;
             end
-            setting: begin
-                if(q) begin
-                    game_state <= welcome;
-                end
-                else begin
-                    game_state <= setting;
-                end
+            if(count3 == 17'd69444)begin
+                Players <= Next_Players;
             end
-        endcase
-        if(count3 == 17'd69444)begin
-            PlayerPositionX <= Next_PlayerPositionX;
-            PlayerPositionY <= Next_PlayerPositionY;
         end
-        if(count3 == 17'd69444)begin
-            EnemyHp <= Next_EnemyHp;
-        end
-        if(count3 == 17'd69444)begin
-            EnemyPositionX <= Next_EnemyPositionX;
-            EnemyPositionY <= Next_EnemyPositionY;
-        end
-    end
     end
     wire [7:0] Next_PlayerPositionX;
     wire [7:0] Next_PlayerPositionY;
@@ -267,7 +271,6 @@ playermove PLAYERMOVE(//heihei
     .Next_PlayerPositionX(Next_PlayerPositionX),
     .Next_PlayerPositionY(Next_PlayerPositionY)
 );
-    wire [17:0] Next_PlayerBullet[23:0];
     wire [9:0]  Next_EnemyHp;
 playerbullet PLAYERBULLET (
     .clk5m(clk5m),
@@ -283,9 +286,6 @@ playerbullet PLAYERBULLET (
     .Next_EnemyHp(Next_EnemyHp),
     .PlayerBullet(PlayerBullet)
 ); 
-    always @(posedge clk5m) begin
-        
-    end
     wire [7:0] Next_EnemyPositionX;
     wire [7:0] Next_EnemyPositionY;
 
@@ -299,5 +299,19 @@ enemymove ENEMYMOVE(
     .EnemyPositionY(EnemyPositionY),
     .Next_EnemyPositionX(Next_EnemyPositionX),
     .Next_EnemyPositionY(Next_EnemyPositionY)
+);
+    wire [2:0] Next_Players;
+enemysniper NENMYSNIPER(
+    .clk5m(clk5m),
+    .rstn(rstn),
+    .pause(playing_state),
+    .count1(count1),
+    .count2(count2),
+    .count3(count3),
+    .PlayerPositionX(PlayerPositionX),
+    .PlayerPositionY(PlayerPositionY),
+    .Players(Players),
+    .Next_Players(Next_Players),
+    .SniperBullet(EnemySniperBullet)
 );
 endmodule
