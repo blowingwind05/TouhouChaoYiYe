@@ -69,6 +69,7 @@ localparam ninety = 15'd5400;//store from 5400 to 5999
 localparam hundred = 15'd6000;//store from 6000 to 6599
 localparam Players_pic = 15'd6600;//store from 6600 to 7769
 localparam volume_pic = 15'd7770;//store from 7770 to 8939
+localparam pause_pic = 15'd8940;//store from 8940 to 14459
 DST dst(
     .rstn(rstn),
     .pclk(pclk),
@@ -130,6 +131,9 @@ localparam win = 2'd3;
 //setting_state
 localparam setting_volume = 1'b1;
 localparam setting_Players = 1'b0;
+//playing_state
+localparam paused = 1'b1;
+localparam unpaused = 1'b0;
 always @(posedge pclk) begin
     prev_rfclk <= rfclk;
     case(game_state)
@@ -210,6 +214,37 @@ always @(posedge pclk) begin
                         end
                     end
                     else begin//end the progress three
+                        vramwe <= 0;
+                        rdaddr <= (8'd35)*8'd200 + 8'd15;
+                        txtaddr <= pause_pic;
+                        rdprogress <= rdprogress + 6;
+                        x <= 0;
+                    end
+                end
+                8:begin
+                    if(playing_state == paused)begin
+                        if(x<46)begin
+                            if(rdaddr < (8'd35 + x)*8'd200 + 8'd135)begin
+                                vramwe <= txtdata;
+                                txtaddr <= txtaddr + 1;
+                                rdaddr <= rdaddr + 1; 
+                                vramwdata <= {12{txtdata}};
+                                vramwaddr <= rdaddr;
+                            end
+                            else begin//回车换行
+                                vramwe <= 0;
+                                rdaddr <= (8'd36 + x)*8'd200 + 8'd15;
+                                x <= x + 1;
+                            end
+                        end
+                        else begin//end the progress nine
+                            vramwe <= 0;
+                            rdaddr <= 0;
+                            rdprogress <= rdprogress + 1;
+                            x <= 0;
+                        end
+                    end
+                    else begin//jump the render of the text
                         vramwe <= 0;
                         rdaddr <= 0;
                         rdprogress <= rdprogress + 1;
