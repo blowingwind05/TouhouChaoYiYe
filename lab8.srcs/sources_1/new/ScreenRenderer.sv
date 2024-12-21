@@ -194,21 +194,30 @@ always @(posedge pclk) begin
                 end
                 1:begin
                     if(i < 5'd24)begin
-                        if(x < 8'd6)begin
-                            if(rdaddr < (8'd150 - PlayerBullet[i][7:0] + x)*8'd200 + PlayerBullet[i][15:8] + 8'd2)begin
-                                vramwe <= txdata[0];
-                                txaddr <= txaddr + 1;
-                                rdaddr <= rdaddr + 1; 
-                                vramwdata <= txdata[15:4];
-                                vramwaddr <= rdaddr;
+                        if(PlayerBullet[i][17:16] == 2'd1 || PlayerBullet[i][17:16] == 2'd2)begin
+                            if(x < 8'd6)begin
+                                if(rdaddr < (8'd150 - PlayerBullet[i][7:0] + x)*8'd200 + PlayerBullet[i][15:8] + 8'd2)begin
+                                    vramwe <= txdata[0];
+                                    txaddr <= txaddr + 1;
+                                    rdaddr <= rdaddr + 1; 
+                                    vramwdata <= txdata[15:4];
+                                    vramwaddr <= rdaddr;
+                                end
+                                else begin//回车换行
+                                    vramwe <= 0;
+                                    rdaddr <= (8'd151 - PlayerBullet[i][7:0] + x)*8'd200 + PlayerBullet[i][15:8] - 8'd3;
+                                    x <= x + 1;
+                                end
                             end
-                            else begin//回车换行
+                            else begin
                                 vramwe <= 0;
-                                rdaddr <= (8'd151 - PlayerBullet[i][7:0] + x)*8'd200 + PlayerBullet[i][15:8] - 8'd3;
-                                x <= x + 1;
+                                rdaddr <= (8'd150 - PlayerBullet[i+1][7:0])*8'd200 + PlayerBullet[i+1][15:8] - 8'd3;
+                                txaddr <= shift ? yukaribullet: reimubullet;
+                                i <= i + 1;
+                                x <= 0;
                             end
                         end
-                        else begin
+                        else begin//jump the render of bullet i
                             vramwe <= 0;
                             rdaddr <= (8'd150 - PlayerBullet[i+1][7:0])*8'd200 + PlayerBullet[i+1][15:8] - 8'd3;
                             txaddr <= shift ? yukaribullet: reimubullet;
