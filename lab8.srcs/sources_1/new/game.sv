@@ -200,7 +200,12 @@ module game(
                         playing_state <= paused;
                     end
                 end
-                if(EnemyHp == 0) begin
+                if(playing_state == paused)begin
+                    if(q)begin
+                        game_state <= welcome;
+                    end
+                end
+                else if(EnemyHp == 0) begin
                     game_state <= win;
                 end
                 else if(Players == 7) begin//Players此时为-1（溢出），游戏失败
