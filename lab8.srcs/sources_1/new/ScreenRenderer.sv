@@ -52,7 +52,7 @@ localparam reimu = 15'd0;//store from 0 to 1599
 localparam yukari = 15'd1600;//store from 1600 to 3199
 localparam marisa = 15'd3200;//store from 3200 to 4799
 localparam reimubullet = 15'd4800;//store from 4800 to 4829
-localparam yakuribullet = 15'd4830;//store from 4830 to 4859
+localparam yukaribullet = 15'd4830;//store from 4830 to 4859
 localparam redstar = 15'd4860;//store from 4860 to 4980
 localparam bluestar = 15'd4981;//store from 4981 to 5101
 //text location
@@ -185,18 +185,44 @@ always @(posedge pclk) begin
                     end
                     else begin//end the progress one
                         vramwe <= 0;
-                        rdaddr <= 0;
+                        rdaddr <= (8'd150 - PlayerBullet[0][7:0])*8'd200 + PlayerBullet[0][15:8] - 8'd3;
                         rdprogress <= rdprogress + 1;
-                        txaddr <= 0;
+                        txaddr <= shift ? yukaribullet: reimubullet;
                         x <= 0;
+                        i <= 0;
                     end
                 end
                 1:begin
-                    vramwe <= 0;
+                    if(i < 5'd24)begin
+                        if(x < 8'd6)begin
+                            if(rdaddr < (8'd150 - PlayerBullet[i][7:0] + x)*8'd200 + PlayerBullet[i][15:8] + 8'd2)begin
+                                vramwe <= txdata[0];
+                                txaddr <= txaddr + 1;
+                                rdaddr <= rdaddr + 1; 
+                                vramwdata <= txdata[15:4];
+                                vramwaddr <= rdaddr;
+                            end
+                            else begin//回车换行
+                                vramwe <= 0;
+                                rdaddr <= (8'd151 - PlayerBullet[i][7:0] + x)*8'd200 + PlayerBullet[i][15:8] - 8'd3;
+                                x <= x + 1;
+                            end
+                        end
+                        else begin
+                            vramwe <= 0;
+                            rdaddr <= (8'd150 - PlayerBullet[i+1][7:0])*8'd200 + PlayerBullet[i+1][15:8] - 8'd3;
+                            txaddr <= shift ? yukaribullet: reimubullet;
+                            i <= i + 1;
+                            x <= 0;
+                        end
+                    end
+                    else begin//end the progress two
+                        vramwe <= 0;
                         rdaddr <= (8'd131 - PlayerPositionY)*8'd200 + PlayerPositionX - 8'd20;
                         rdprogress <= rdprogress + 1;
                         txaddr <= shift ? yukari : reimu;
                         x <= 0;
+                    end
                 end
                 2:begin//begin the progress three
                     if(x < 40)begin
