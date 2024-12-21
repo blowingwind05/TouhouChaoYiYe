@@ -4,7 +4,7 @@ module enemysnipermove (
     input      [7:0]  PlayerPositionX,
     input      [7:0]  PlayerPositionY,
     input      [2:0]  Players,
-    input  reg [17:0] SniperBulletInitialized [15:0],
+    input      [17:0] SniperBulletInitialized [15:0],
     output reg [2:0]  Next_Players,
     output reg [17:0] SniperBulletMoved [15:0]
 );
@@ -15,7 +15,7 @@ localparam destroyed = 2'd3;
 integer i;
 initial begin
     for(i=0;i<16;i=i+1) begin
-        SniperBulletMoved[i] <= {sleeping, 16'd0};
+        SniperBulletMoved[i] = {sleeping, 16'd0};
     end
     Next_Players = Players;
 end

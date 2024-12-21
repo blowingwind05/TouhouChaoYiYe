@@ -2,14 +2,9 @@ module oddbullet (
     input      clk5m,rstn,pause,en,
     input      [16:0] count1,
     input      [7:0]  PlayerPositionX,
-    input      [7:0]  PlayerPositionY,
     input      [17:0] OddBullet[24:0],
     output reg [17:0] OddBulletInitialized[24:0]
 );
-    //30:32:33(1) (y)
-    //15:8 (x)
-    //count 5280;
-    //176(30),165(32),160(33)
     localparam sleeping = 2'd0;
     localparam initialized = 2'd1;
     localparam moving = 2'd2;
