@@ -1,5 +1,5 @@
 module playerbullet (
-    input      clk5m,rstn,pause,
+    input      clk5m,rstn,pause,shoot,
     input      [16:0] count1,count2,count3,
     input      [7:0]  PlayerPositionX,
     input      [7:0]  PlayerPositionY,
@@ -19,7 +19,7 @@ playerbulletinitialize PLAYERBULLETINIT (
     .clk5m(clk5m),
     .count1(count1),
     .rstn(rstn),
-    .pause(pause),
+    .pause(pause||!shoot),
     .PlayerPositionX(PlayerPositionX),
     .PlayerPositionY(PlayerPositionY),
     .PlayerBullet(PlayerBullet),

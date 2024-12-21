@@ -276,6 +276,7 @@ playerbullet PLAYERBULLET (
     .count2(count2),
     .count3(count3),
     .pause(playing_state),
+    .shoot(z),
     .PlayerPositionX(PlayerPositionX),
     .PlayerPositionY(PlayerPositionY),
     .EnemyHp(EnemyHp),
