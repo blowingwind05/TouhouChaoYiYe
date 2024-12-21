@@ -1,13 +1,53 @@
 module enemysniper (
-    input   clk5m,rstn,
-    input   [16:0] count1,
-    input   [7:0] PlayerPositionX,
-    input   [9:0] EnemyHp,
-    output  [17:0] SniperBullet [14:0]//一串自机狙5发子弹
+    input      clk5m,rstn,pause,
+    input      [16:0] count1,count2,count3,
+    input      [7:0]  PlayerPositionX,
+    input      [7:0]  PlayerPositionY,
+    input      [9:0]  Players,
+    output reg [9:0]  Next_Players,
+    output reg [17:0] SniperBullet [15:0]
 );
-localparam sleeping = 2'd0;
-localparam initialized = 2'd1;
-localparam moving = 2'd2;
-localparam destroyed = 2'd3;
+    wire [17:0] SniperBulletInitialized [15:0];
+    wire [17:0] SniperBulletMoved [15:0];
+    integer i;
 
+initial begin
+    for(i=0;i<16;i=i+1) begin
+        SniperBullet[i] <= 18'b0;
+    end
+end
+
+enemysniperinitialize ENEMYSNIPERINITIALIZE(
+    .clk5m(clk5m),
+    .rstn(rstn),
+    .pause(pause),
+    .count1(count1),
+    .PlayerPositionX(PlayerPositionX),
+    .SniperBullet(SniperBullet),
+    .SniperBulletInitialized(SniperBulletInitialized)
+);
+enemysnipermove ENEMYSNIPERMOVE (
+    .clk5m(clk5m),
+    .rstn(rstn),
+    .pause(pause),
+    .count2(count2),
+    .PlayerPositionX(PlayerPositionX),
+    .PlayerPositionY(PlayerPositionY),
+    .Players(Players),
+    .Next_Players(Next_Players),
+    .SniperBulletInitialized(SniperBulletInitialized),
+    .SniperBulletMoved(SniperBulletMoved)
+);
+always @(posedge clk5m) begin
+    if(!rstn) begin
+        for(i=0;i<16;i=i+1) begin
+            SniperBullet[i] <= 18'd0;
+        end
+    end
+    else if(count3 == 17'd69444) begin
+        for(i=0;i<16;i=i+1) begin
+            SniperBullet[i] <= SniperBulletMoved[i];
+        end
+    end
+end
 endmodule
