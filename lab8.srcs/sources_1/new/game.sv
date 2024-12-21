@@ -56,7 +56,7 @@ module game(
         PlayerPositionX = 8'd75;
         PlayerPositionY = 8'd30;
         EnemyPositionX = 8'd75;
-        EnemyPositionY = 8'd120;
+        EnemyPositionY = 8'd131;
         EnemyHp = 10'd250;
         Players = 3'd4;
         Bombs = 3'd3;
@@ -86,7 +86,7 @@ module game(
             PlayerPositionX <= 8'd75;
             PlayerPositionY <= 8'd30;
             EnemyPositionX <= 8'd75;
-            EnemyPositionY <= 8'd120;
+            EnemyPositionY <= 8'd131;
             EnemyHp <= 10'd250;
             Players <= 3'd4;
             Bombs <= 3'd3;
@@ -177,7 +177,7 @@ module game(
                         PlayerPositionY <= 8'd30;
                         EnemyHp <= 10'd250;
                         EnemyPositionX <= 8'd75;
-                        EnemyPositionY <= 8'd120;
+                        EnemyPositionY <= 8'd131;
                         Players <= Players_setting ;
                         Bombs <= Bombs_setting;
                     end
