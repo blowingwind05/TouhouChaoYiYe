@@ -16,6 +16,7 @@ module Top(
     wire [7:0] EnemyPositionX;
     wire [7:0] EnemyPositionY;
     wire [15:0] EnemyHp;
+    wire [15:0] Score;
     wire [6:0] volume;
     wire [2:0] Players_setting;//残机数设置
     wire [17:0]   PlayerBullet[23:0];
@@ -60,6 +61,7 @@ module Top(
         .Players_setting(Players_setting),//残机数设置
         .EnemyPositionX(EnemyPositionX),
         .EnemyPositionY(EnemyPositionY),
+        .Score(Score),
         .rgb(rgb),
         .hs(hs),
         .vs(rfclk)
@@ -94,6 +96,7 @@ module Top(
         .PlayerBullet(PlayerBullet),
         .Players(Players),//残机数剩余
         .Bombs(Bombs),//炸弹数剩余
+        .Score(Score),
         .EnemyPositionX(EnemyPositionX),.EnemyPositionY(EnemyPositionY),
         .EnemyHp(EnemyHp)
     );

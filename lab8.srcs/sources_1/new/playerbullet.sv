@@ -6,7 +6,9 @@ module playerbullet (
     input      [7:0]  EnemyPositionX,
     input      [7:0]  EnemyPositionY,
     input      [15:0]  EnemyHp,
+    input      [15:0]  Score,
     output reg [15:0]  Next_EnemyHp,
+    output reg [15:0]  Next_Score,
     output reg [17:0] PlayerBullet[23:0]
 );
     wire [17:0] PlayerBulletInitialized [23:0];
@@ -34,9 +36,11 @@ playerbulletmove PLAYERBULLETMOVE (
     .pause(pause),
     .PlayerBulletInitialized(PlayerBulletInitialized),
     .EnemyHp(EnemyHp),
+    .Score(Score),
     .EnemyPositionX(EnemyPositionX),
     .EnemyPositionY(EnemyPositionY),
     .Next_EnemyHp(Next_EnemyHp),
+    .Next_Score(Next_Score),
     .PlayerBulletMoved(PlayerBulletMoved)
 );
 always @(posedge clk5m)begin

@@ -4,7 +4,7 @@
 <!-- Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.                   -->
 <!-- Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.   -->
 
-<Project Product="Vivado" Version="7" Minor="67" Path="D:/UserPrograms/VGA/project/TouhouChaoYiYe/lab8.xpr">
+<Project Product="Vivado" Version="7" Minor="67" Path="C:/Users/cheng/Desktop/desktop/verilog/lab8/lab8.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="74cff8bd581640dc9f8397ae9e14ec57"/>
@@ -216,6 +216,13 @@
         </FileInfo>
       </File>
       <File Path="$PSRCDIR/sources_1/new/playerbulletmove.sv">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/scoretodigit.sv">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>

@@ -9,7 +9,8 @@ module ScreenRenderer(
     input [6:0] volume,
     input       shift,
     input [2:0] Players,//残机数剩余
-    input [2:0] Bombs,//炸弹数剩余            
+    input [2:0] Bombs,//炸弹数剩余   
+    input [15:0] Score,         
     input [7:0] PlayerPositionX, //range from 1 to 150
     input [7:0] PlayerPositionY, //range from 1 to 150
     input [17:0] PlayerBullet[23:0],//bullet_state,position_x,position_y
@@ -70,6 +71,16 @@ localparam hundred = 15'd6000;//store from 6000 to 6599
 localparam Players_pic = 15'd6600;//store from 6600 to 7769
 localparam volume_pic = 15'd7770;//store from 7770 to 8939
 localparam pause_pic = 15'd8940;//store from 8940 to 14459
+localparam zero = 15'd14460;//store from 14460 to 14487
+localparam one = 15'd14488;//store from 14488 to 14515
+localparam two = 15'd14516;//store from 14516 to 14543
+localparam three = 15'd14544;//store from 14544 to 14571
+localparam four = 15'd14572;//store from 14572 to 14599
+localparam five = 15'd14600;//store from 14600 to 14627
+localparam six = 15'd14628;//store from 14628 to 14655
+localparam seven = 15'd14656;//store from 14656 to 14683
+localparam eight = 15'd14684;//store from 14684 to 14711
+localparam nine = 15'd14712;//store from 14712 to 14739
 DST dst(
     .rstn(rstn),
     .pclk(pclk),
@@ -134,6 +145,12 @@ localparam setting_Players = 1'b0;
 //playing_state
 localparam paused = 1'b1;
 localparam unpaused = 1'b0;
+wire [3:0] digit[5:0];
+scoretodigit SCORETODIGIT(
+    .clk(clk),
+    .Score(Score),
+    .digit(digit)
+);
 always @(posedge pclk) begin
     prev_rfclk <= rfclk;
     case(game_state)
@@ -370,12 +387,60 @@ always @(posedge pclk) begin
                     end
                     else begin//end the progress eleven
                         vramwe <= 0;
-                        txaddr <= bluestar;
-                        rdaddr <= 8'd54 * 8'd200 + 8'd154;
+                        txtaddr <= zero;
+                        rdaddr <= 8'd16 * 8'd200 + 8'd159;
                         rdprogress <= rdprogress + 1;
                         x <= 0;
                         i <= 0;
                     end
+                end
+                11:begin
+                    if(i < 6)begin
+                        if(x < 7)begin
+                            if(rdaddr < (8'd16+x)*8'd200 + 8'd163 + 6 * i)begin
+                                vramwe <= txtdata;
+                                txtaddr <= txtaddr + 1;
+                                rdaddr <= rdaddr + 1; 
+                                vramwdata <= {12{txtdata}};
+                                vramwaddr <= rdaddr;
+                            end
+                            else begin//回车换行
+                                vramwe <= 0;
+                                rdaddr <= (8'd17+x)*8'd200 + 8'd159 + 6 * i;
+                                x <= x + 1;
+                            end
+                        end
+                        else begin//end the part
+                            vramwe <= 0;
+                            rdaddr <= (8'd16)*8'd200 + 8'd159 + 6 * (i + 1);
+                            x <= 0;
+                            i <= i + 1;
+                            if(i < 5)begin
+                                case(digit[4 - i])
+                                    0: txtaddr <= zero;
+                                    1: txtaddr <= one;
+                                    2: txtaddr <= two;
+                                    3: txtaddr <= three;
+                                    4: txtaddr <= four;
+                                    5: txtaddr <= five;
+                                    6: txtaddr <= six;
+                                    7: txtaddr <= seven;
+                                    8: txtaddr <= eight;
+                                    9: txtaddr <= nine;
+                                endcase
+                            end
+                            else begin
+                                txtaddr <= zero;
+                            end
+                        end
+                    end
+                    else begin//end the progress twelve
+                        vramwe <= 0;
+                        rdaddr <= 0;
+                        rdprogress <= rdprogress + 1;
+                        x <= 0;
+                        i <= 0;
+                    end   
                 end
                 default:;//do nothing
                 endcase

@@ -13,7 +13,8 @@ module game(
     output reg [2:0] Bombs,//炸弹数剩余
     output reg [7:0] EnemyPositionX,
     output reg [7:0] EnemyPositionY,
-    output reg [15:0] EnemyHp
+    output reg [15:0] EnemyHp,
+    output reg [15:0] Score
     );
     reg [16:0] count1,count2,count3,count4;
     reg game_rstn;
@@ -58,6 +59,7 @@ module game(
         EnemyPositionX = 8'd75;
         EnemyPositionY = 8'd131;
         EnemyHp = 16'd6000;
+        Score = 16'd0;
         Players = 3'd4;
         Bombs = 3'd3;
         Players_setting = 3'd3;
@@ -88,6 +90,7 @@ module game(
             EnemyPositionX <= 8'd75;
             EnemyPositionY <= 8'd131;
             EnemyHp <= 16'd6000;
+            Score <= 16'd0;
             Players <= 3'd4;
             Bombs <= 3'd3;
             Players_setting <= 3'd3;
@@ -178,6 +181,7 @@ module game(
                         EnemyHp <= 16'd6000;
                         EnemyPositionX <= 8'd75;
                         EnemyPositionY <= 8'd131;
+                        Score <= 16'd0;
                         Players <= Players_setting ;
                         Bombs <= Bombs_setting;
                     end
@@ -190,6 +194,7 @@ module game(
                             EnemyPositionX <= Next_EnemyPositionX;
                             EnemyPositionY <= Next_EnemyPositionY;
                             EnemyHp <= Next_EnemyHp;
+                            Score <= Next_Score + 1;
                         end
                     end
                     esc_reg <= esc;
@@ -269,6 +274,7 @@ playermove PLAYERMOVE(//heihei
     .Next_PlayerPositionY(Next_PlayerPositionY)
 );
     wire [15:0]  Next_EnemyHp;
+    wire [15:0]  Next_Score;
 playerbullet PLAYERBULLET (
     .clk5m(clk5m),
     .rstn(rstn&&game_rstn),
@@ -281,9 +287,11 @@ playerbullet PLAYERBULLET (
     .PlayerPositionY(PlayerPositionY),
     .EnemyPositionX(EnemyPositionX),
     .EnemyPositionY(EnemyPositionY),
+    .Score(Score),
     .EnemyHp(EnemyHp),
     .Next_EnemyHp(Next_EnemyHp),
-    .PlayerBullet(PlayerBullet)
+    .PlayerBullet(PlayerBullet),
+    .Next_Score(Next_Score)
 ); 
     wire [7:0] Next_EnemyPositionX;
     wire [7:0] Next_EnemyPositionY;
