@@ -2,10 +2,10 @@ module playerbulletmove(
     input clk5m,pause,rstn,
     input      [16:0] count2,
     input      [17:0] PlayerBulletInitialized [23:0],
-    input      [9:0]  EnemyHp,
+    input      [15:0]  EnemyHp,
     input      [7:0]  EnemyPositionX,
     input      [7:0]  EnemyPositionY,
-    output reg [9:0]  Next_EnemyHp,
+    output reg [15:0]  Next_EnemyHp,
     output reg [17:0] PlayerBulletMoved [23:0]
     );
     localparam sleeping = 2'd0;
