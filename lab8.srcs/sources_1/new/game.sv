@@ -11,6 +11,9 @@ module game(
     output     [17:0] EnemySniperBullet[15:0],
     output reg [2:0] Players,//残机数剩余
     output reg [2:0] Bombs,//炸弹数剩余
+    output reg [7:0] BombPositionY,
+    output           Bomb_Activated,
+    output           Bomb_Type,
     output reg [7:0] EnemyPositionX,
     output reg [7:0] EnemyPositionY,
     output reg [15:0] EnemyHp,
@@ -195,6 +198,7 @@ module game(
                             EnemyPositionY <= Next_EnemyPositionY;
                             EnemyHp <= Next_EnemyHp;
                             Score <= Next_Score;
+                            Bombs <= Next_Bombs;
                         end
                     end
                     esc_reg <= esc;
@@ -295,7 +299,23 @@ playerbullet PLAYERBULLET (
 ); 
     wire [7:0] Next_EnemyPositionX;
     wire [7:0] Next_EnemyPositionY;
-
+    wire [2:0] Next_Bombs;
+    wire [7:0] Destroy_Line;
+bomb BOMB(
+    .clk5m(clk5m),
+    .count(count1),
+    .x(x),
+    .shift(shift),
+    .rstn(rstn),
+    .game_state(game_state),
+    .playing_state(playing_state),
+    .Bombs(Bombs),
+    .Next_Bombs(Next_Bombs),
+    .Bomb_Activated(Bomb_Activated),
+    .Bomb_Type(Bomb_Type),
+    .BombPositionY(BombPositionY),
+    .Destroy_Line(Destroy_Line)
+);
 enemymove ENEMYMOVE(
     .clk5m(clk5m),
     .count1(count1),

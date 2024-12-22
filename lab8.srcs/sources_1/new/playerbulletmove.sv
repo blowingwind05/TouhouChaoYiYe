@@ -15,6 +15,7 @@ module playerbulletmove(
     localparam moving = 2'd2;
     localparam destroyed = 2'd3;
     integer j;
+    reg [2:0]  counter;
     initial begin
         integer i;
         for(i=0;i<24;i=i+1)begin
@@ -22,6 +23,7 @@ module playerbulletmove(
         end
         Next_EnemyHp <= EnemyHp;
         Next_Score <= Score;
+        counter <= 3'd0;
     end
     always@(posedge clk5m)begin
         if(!rstn)begin
@@ -31,12 +33,16 @@ module playerbulletmove(
             end
             Next_EnemyHp <= EnemyHp;
             Next_Score <= Score;
+            counter <= 3'd0;
         end
         else if(count2 >= 17'd69420) begin
             if(!pause) begin
                 if(count2 == 17'd69420)begin
                     j<=1;
-                    Next_Score <= Score + 1;
+                    counter <= counter + 1;
+                    if(counter == 3'd7)begin
+                        Next_Score <= Score + 1;
+                    end
                 end
                 if(count2 == 17'd69420 + j)begin
                     if(PlayerBulletInitialized[j-1][17:16] == initialized || PlayerBulletInitialized[j-1][17:16] == moving)begin

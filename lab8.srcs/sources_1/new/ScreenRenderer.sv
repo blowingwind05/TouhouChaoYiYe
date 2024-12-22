@@ -56,6 +56,8 @@ localparam reimubullet = 15'd4800;//store from 4800 to 4829
 localparam yukaribullet = 15'd4830;//store from 4830 to 4859
 localparam redstar = 15'd4860;//store from 4860 to 4980
 localparam bluestar = 15'd4981;//store from 4981 to 5101
+localparam reimubomb = 15'd5102;//store from 5102 to 11701
+localparam yukaribomb = 15'd11702;//store from 11702 to 18301
 //text location
 localparam zerozero = 15'd0;//store from 0 to 599
 localparam ten = 15'd600;//store from 600 to 1199

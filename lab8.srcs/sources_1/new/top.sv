@@ -22,6 +22,9 @@ module Top(
     wire [17:0]   PlayerBullet[23:0];
     wire [2:0]    Players;//残机数剩余
     wire [2:0]    Bombs;//炸弹数剩余
+    wire [7:0]    BombPositionY;
+    wire          Bomb_Activated;
+    wire          Bomb_Type;
     wire [14 : 0] raddr;
     wire [11:0]   rdata;
     wire [2:0]    game_state;
@@ -58,6 +61,10 @@ module Top(
         .PlayerPositionY(PlayerPositionY),
         .PlayerBullet(PlayerBullet),
         .Players(Players),//残机数剩余
+        .Bombs(Bombs),
+        .BombPositionY(BombPositionY),
+        .Bomb_Type(Bomb_Type),
+        .Bomb_Activated(Bomb_Activated),
         .Players_setting(Players_setting),//残机数设置
         .EnemyPositionX(EnemyPositionX),
         .EnemyPositionY(EnemyPositionY),
@@ -96,6 +103,9 @@ module Top(
         .PlayerBullet(PlayerBullet),
         .Players(Players),//残机数剩余
         .Bombs(Bombs),//炸弹数剩余
+        .BombPositionY(BombPositionY),
+        .Bomb_Activated(Bomb_Activated),
+        .Bomb_Type(Bomb_Type),
         .Score(Score),
         .EnemyPositionX(EnemyPositionX),.EnemyPositionY(EnemyPositionY),
         .EnemyHp(EnemyHp)
