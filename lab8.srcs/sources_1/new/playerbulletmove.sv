@@ -39,7 +39,7 @@ module playerbulletmove(
                             Next_EnemyHp <= EnemyHp - 1;
                             PlayerBulletMoved[j-1] <= {destroyed,16'b0};
                         end
-                        else if(PlayerBulletInitialized[j][7:0] > 8'd147) 
+                        else if(PlayerBulletInitialized[j-1][7:0] > 8'd147) 
                             PlayerBulletMoved[j-1] <= {destroyed,16'b0};
                         else 
                             PlayerBulletMoved[j-1] <= {moving,PlayerBulletInitialized[j-1][15:0] + 8'd3};
