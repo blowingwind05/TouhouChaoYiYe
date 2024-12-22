@@ -14,7 +14,7 @@ module playerbullet (
 initial begin
     integer i;
     for(i=0;i<24;i=i+1)begin
-        PlayerBullet[i] <= 18'b0;
+        PlayerBullet[i] = 18'b0;
     end
 end
 playerbulletinitialize PLAYERBULLETINIT (

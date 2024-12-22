@@ -3,8 +3,8 @@ module enemysniper (
     input      [16:0] count1,count2,count3,
     input      [7:0]  PlayerPositionX,
     input      [7:0]  PlayerPositionY,
-    input      [9:0]  Players,
-    output reg [9:0]  Next_Players,
+    input      [2:0]  Players,
+    output reg [2:0]  Next_Players,
     output reg [17:0] SniperBullet [15:0]
 );
     wire [17:0] SniperBulletInitialized [15:0];
@@ -13,7 +13,7 @@ module enemysniper (
 
 initial begin
     for(i=0;i<16;i=i+1) begin
-        SniperBullet[i] <= 18'b0;
+        SniperBullet[i] = 18'b0;
     end
 end
 
