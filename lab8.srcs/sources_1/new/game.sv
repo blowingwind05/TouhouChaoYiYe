@@ -13,7 +13,7 @@ module game(
     output reg [2:0] Bombs,//炸弹数剩余
     output reg [7:0] EnemyPositionX,
     output reg [7:0] EnemyPositionY,
-    output reg [9:0] EnemyHp
+    output reg [15:0] EnemyHp
     );
     reg [16:0] count1,count2,count3,count4;
     reg game_rstn;
@@ -57,7 +57,7 @@ module game(
         PlayerPositionY = 8'd30;
         EnemyPositionX = 8'd75;
         EnemyPositionY = 8'd131;
-        EnemyHp = 10'd250;
+        EnemyHp = 16'd6000;
         Players = 3'd4;
         Bombs = 3'd3;
         Players_setting = 3'd3;
@@ -87,7 +87,7 @@ module game(
             PlayerPositionY <= 8'd30;
             EnemyPositionX <= 8'd75;
             EnemyPositionY <= 8'd131;
-            EnemyHp <= 10'd250;
+            EnemyHp <= 16'd6000;
             Players <= 3'd4;
             Bombs <= 3'd3;
             Players_setting <= 3'd3;
@@ -175,7 +175,7 @@ module game(
                         playing_state = unpaused;
                         PlayerPositionX <= 8'd75;
                         PlayerPositionY <= 8'd30;
-                        EnemyHp <= 10'd250;
+                        EnemyHp <= 16'd6000;
                         EnemyPositionX <= 8'd75;
                         EnemyPositionY <= 8'd131;
                         Players <= Players_setting ;
@@ -268,7 +268,7 @@ playermove PLAYERMOVE(//heihei
     .Next_PlayerPositionX(Next_PlayerPositionX),
     .Next_PlayerPositionY(Next_PlayerPositionY)
 );
-    wire [9:0]  Next_EnemyHp;
+    wire [15:0]  Next_EnemyHp;
 playerbullet PLAYERBULLET (
     .clk5m(clk5m),
     .rstn(rstn&&game_rstn),

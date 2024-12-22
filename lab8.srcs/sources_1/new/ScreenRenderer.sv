@@ -304,9 +304,77 @@ always @(posedge pclk) begin
                     end
                     else begin//jump the render of the text
                         vramwe <= 0;
-                        rdaddr <= 0;
+                        txaddr <= redstar;
+                        rdaddr <= 8'd33 * 8'd200 + 8'd154;
                         rdprogress <= rdprogress + 1;
                         x <= 0;
+                        i <= 0;
+                    end
+                end
+                9:begin
+                    if(i < Players)begin
+                        if(x < 11)begin
+                            if(rdaddr < (33+x)*8'd200 + 8'd165 + 11 * i)begin
+                                vramwe <= txdata[0];
+                                txaddr <= txaddr + 1;
+                                rdaddr <= rdaddr + 1; 
+                                vramwdata <= txdata[15:4];
+                                vramwaddr <= rdaddr;
+                            end
+                            else begin//回车换行
+                                vramwe <= 0;
+                                rdaddr <= (8'd34+x)*8'd200 + 8'd154 + 11 * i;
+                                x <= x + 1;
+                            end
+                        end
+                        else begin//end the part
+                            vramwe <= 0;
+                            rdaddr <= (8'd33)*8'd200 + 8'd154 + 11 * (i + 1);
+                            x <= 0;
+                            i <= i + 1;
+                            txaddr <= redstar;
+                        end
+                    end
+                    else begin//end the progress ten
+                        vramwe <= 0;
+                        txaddr <= bluestar;
+                        rdaddr <= 8'd54 * 8'd200 + 8'd154;
+                        rdprogress <= rdprogress + 1;
+                        x <= 0;
+                        i <= 0;
+                    end
+                end
+                10:begin
+                    if(i < Bombs)begin
+                        if(x < 11)begin
+                            if(rdaddr < (8'd54+x)*8'd200 + 8'd165 + 11 * i)begin
+                                vramwe <= txdata[0];
+                                txaddr <= txaddr + 1;
+                                rdaddr <= rdaddr + 1; 
+                                vramwdata <= txdata[15:4];
+                                vramwaddr <= rdaddr;
+                            end
+                            else begin//回车换行
+                                vramwe <= 0;
+                                rdaddr <= (8'd55+x)*8'd200 + 8'd154 + 11 * i;
+                                x <= x + 1;
+                            end
+                        end
+                        else begin//end the part
+                            vramwe <= 0;
+                            rdaddr <= (8'd54)*8'd200 + 8'd154 + 11 * (i + 1);
+                            x <= 0;
+                            i <= i + 1;
+                            txaddr <= bluestar;
+                        end
+                    end
+                    else begin//end the progress eleven
+                        vramwe <= 0;
+                        txaddr <= bluestar;
+                        rdaddr <= 8'd54 * 8'd200 + 8'd154;
+                        rdprogress <= rdprogress + 1;
+                        x <= 0;
+                        i <= 0;
                     end
                 end
                 default:;//do nothing
