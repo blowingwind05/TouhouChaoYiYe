@@ -40,7 +40,7 @@ module oddbullet (
             if(!pause) begin
                 for(i=0;i<25;i=i+1) begin
                     if(OddBulletInitialized[i][17:16] == initialized || OddBulletInitialized[i][17:16] == moving) begin
-                        if(OddBulletInitialized[i][17:16] == moving && OddBulletInitialized[i][15:8]>(PlayerPositionX-8'd10) && OddBulletInitialized[i][15:8]<(PlayerPositionX+8'd10) && OddBulletInitialized[i][7:0]>(PlayerPositionY-8'd10) && OddBulletInitialized[i][7:0]<(PlayerPositionY+8'd10)) begin
+                        if(OddBulletInitialized[i][17:16] == moving && OddBulletInitialized[i][15:8]>(PlayerPositionX-8'd3) && OddBulletInitialized[i][15:8]<(PlayerPositionX+8'd3) && OddBulletInitialized[i][7:0]>(PlayerPositionY-8'd3) && OddBulletInitialized[i][7:0]<(PlayerPositionY+8'd3)) begin
                             Next_Players <= Players - 1;
                             OddBulletMoved[i] <= {destroyed,16'd0};
                         end
