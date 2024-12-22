@@ -4,9 +4,9 @@ module evenbulletmove (
     input      [7:0]  PlayerPositionX,
     input      [7:0]  PlayerPositionY,
     input      [2:0]  Players,
-    input      [17:0] EvenBulletInitialized[23:0],
+    input      [17:0] EvenBulletInitialized[47:0],
     output reg [2:0]  Next_Players,
-    output reg [17:0] EvenBulletMoved[23:0]
+    output reg [17:0] EvenBulletMoved[47:0]
 );
 //y:3帧移动2像素
 //x:3:1(9帧移动1像素)
@@ -19,7 +19,7 @@ reg  [19:0]  move_countY;
 reg  [19:0]  move_countX1;
 reg  [19:0]  move_countX2;
 initial begin
-    for(i=0;i<24;i=i+1) begin
+    for(i=0;i<48;i=i+1) begin
         EvenBulletMoved[i] = {sleeping,16'd0};
     end
     Next_Players = Players;
@@ -29,7 +29,7 @@ initial begin
 end
 always @(posedge clk5m) begin
     if(!rstn) begin
-        for(i=0;i<24;i=i+1) begin
+        for(i=0;i<48;i=i+1) begin
             EvenBulletMoved[i] = {sleeping,16'd0};
         end
         Next_Players = Players;
@@ -39,7 +39,7 @@ always @(posedge clk5m) begin
     end
     else if(count2 == 17'd69444) begin
         if(!pause && en) begin
-            for(i=0;i<24;i=i+1) begin
+            for(i=0;i<48;i=i+1) begin
                 if(EvenBulletInitialized[i][17:16] == initialized || EvenBulletInitialized[i][17:16] == moving) begin
                     if(EvenBulletInitialized[i][17:16] == moving && EvenBulletInitialized[i][15:8]>(PlayerPositionX-8'd3) && EvenBulletInitialized[i][15:8]<(PlayerPositionX+8'd3) && EvenBulletInitialized[i][7:0]>(PlayerPositionY-8'd3) && EvenBulletInitialized[i][7:0]<(PlayerPositionY+8'd3)) begin
                         Next_Players <= Players;

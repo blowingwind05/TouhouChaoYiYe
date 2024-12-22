@@ -1,9 +1,9 @@
 module evenbulletinitialize (
-    input      clk5m,rstn,pause,en,
+    input      clk5m,rstn,pause,en,speed,
     input      [16:0] count1,
     input      [7:0]  PlayerPositionX,
-    input      [17:0] EvenBullet[23:0],
-    output reg [17:0] EvenBulletInitialized[23:0]
+    input      [17:0] EvenBullet[47:0],
+    output reg [17:0] EvenBulletInitialized[47:0]
 );
 localparam sleeping = 2'd0;
 localparam initialized = 2'd1;
@@ -15,14 +15,14 @@ integer i;
 initial begin
     initializ_count = 7'd0;
     initialize_area = 3'd0;
-    for(i=0;i<20;i=i+1)
+    for(i=0;i<48;i=i+1)
         EvenBulletInitialized[i] = 18'b0;
 end
 always @(posedge clk5m) begin
     if(!rstn) begin
         initializ_count = 7'd0;
         initialize_area = 3'd0;
-        for(i=0;i<20;i=i+1)
+        for(i=0;i<48;i=i+1)
             EvenBulletInitialized[i] = 18'b0;
     end
     else if(count1 == 17'd69444) begin
@@ -34,7 +34,7 @@ always @(posedge clk5m) begin
                 EvenBulletInitialized[initialize_area*4+1] <= {initialized,PlayerPositionX,8'd120};
                 EvenBulletInitialized[initialize_area*4+2] <= {initialized,PlayerPositionX,8'd120};
                 EvenBulletInitialized[initialize_area*4+3] <= {initialized,PlayerPositionX,8'd120};
-                for(i=0;i<24;i=i+1) begin
+                for(i=0;i<48;i=i+1) begin
                     if(i!=initialize_area*4+0 && i!=initialize_area*4+1 && i!=initialize_area*4+2 && i!=initialize_area*4+3)
                         EvenBulletInitialized[i] <= EvenBullet[i];
                 end
