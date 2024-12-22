@@ -26,7 +26,7 @@ module enemysniperinitialize (
         if(!rstn) begin
             initialize_area = 2'd0;
             initialize_num = 2'd0;
-            for(i=0;i<15;i=i+1)
+            for(i=0;i<16;i=i+1)
                 SniperBulletInitialized[i] = 18'b0;
         end
         else if(count1 == 17'd69444) begin
@@ -38,7 +38,7 @@ module enemysniperinitialize (
                     for(i=0;i<16;i=i+1) if(i != initialize_area*4+initialize_num) SniperBulletInitialized[i] <= SniperBullet[i];
                     initialize_num <= initialize_num + 1;
                 end
-                if(initialize_num == 3) begin
+                if(initialize_num == 2'd3) begin
                     initialize_area <= initialize_area + 1;
                     PlayerPositionX_reg <= PlayerPositionX;
                 end
