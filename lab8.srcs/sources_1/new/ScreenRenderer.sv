@@ -314,9 +314,11 @@ always @(posedge pclk) begin
                         end
                         else begin//end the progress nine
                             vramwe <= 0;
-                            rdaddr <= 0;
+                            txaddr <= redstar;
+                            rdaddr <= 8'd33 * 8'd200 + 8'd154;
                             rdprogress <= rdprogress + 1;
                             x <= 0;
+                            i <= 0;
                         end
                     end
                     else begin//jump the render of the text

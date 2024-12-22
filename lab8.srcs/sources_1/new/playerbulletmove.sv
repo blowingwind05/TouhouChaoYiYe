@@ -36,6 +36,7 @@ module playerbulletmove(
             if(!pause) begin
                 if(count2 == 17'd69420)begin
                     j<=1;
+                    Next_Score <= Score + 1;
                 end
                 if(count2 == 17'd69420 + j)begin
                     if(PlayerBulletInitialized[j-1][17:16] == initialized || PlayerBulletInitialized[j-1][17:16] == moving)begin
