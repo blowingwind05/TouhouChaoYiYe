@@ -279,6 +279,8 @@ playerbullet PLAYERBULLET (
     .shoot(z),
     .PlayerPositionX(PlayerPositionX),
     .PlayerPositionY(PlayerPositionY),
+    .EnemyPositionX(EnemyPositionX),
+    .EnemyPositionY(EnemyPositionY),
     .EnemyHp(EnemyHp),
     .Next_EnemyHp(Next_EnemyHp),
     .PlayerBullet(PlayerBullet)

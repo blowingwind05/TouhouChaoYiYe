@@ -3,6 +3,8 @@ module playerbullet (
     input      [16:0] count1,count2,count3,
     input      [7:0]  PlayerPositionX,
     input      [7:0]  PlayerPositionY,
+    input      [7:0]  EnemyPositionX,
+    input      [7:0]  EnemyPositionY,
     input      [9:0]  EnemyHp,
     output reg [9:0]  Next_EnemyHp,
     output reg [17:0] PlayerBullet[23:0]
