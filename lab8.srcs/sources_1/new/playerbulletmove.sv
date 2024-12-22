@@ -43,18 +43,24 @@ module playerbulletmove(
                     if(counter == 3'd7)begin
                         Next_Score <= Score + 1;
                     end
+                    else begin
+                        Next_Score <= Score;
+                    end
+                    Next_EnemyHp <= EnemyHp;
                 end
                 if(count2 == 17'd69420 + j)begin
                     if(PlayerBulletInitialized[j-1][17:16] == initialized || PlayerBulletInitialized[j-1][17:16] == moving)begin
                         if(PlayerBulletInitialized[j-1][17:16] == moving && PlayerBulletInitialized[j-1][15:8] > (EnemyPositionX-8'd19) && PlayerBulletInitialized[j-1][15:8] < (EnemyPositionX+8'd20) && PlayerBulletInitialized[j-1][7:0] >= (EnemyPositionY-8'd23) && PlayerBulletInitialized[j-1][7:0] < (EnemyPositionY+8'd19)) begin
-                            Next_EnemyHp <= EnemyHp - 1;
-                            Next_Score <= Score + 1;
+                            Next_EnemyHp <= Next_EnemyHp - 1;
+                            Next_Score <= Next_Score + 1;
                             PlayerBulletMoved[j-1] <= {destroyed,16'b0};
                         end
-                        else if(PlayerBulletInitialized[j-1][7:0] > 8'd147) 
+                        else if(PlayerBulletInitialized[j-1][7:0] > 8'd147)begin 
                             PlayerBulletMoved[j-1] <= {destroyed,16'b0};
-                        else 
+                        end
+                        else begin
                             PlayerBulletMoved[j-1] <= {moving,PlayerBulletInitialized[j-1][15:0] + 8'd3};
+                        end
                     end
                     j <= j + 1;
                 end

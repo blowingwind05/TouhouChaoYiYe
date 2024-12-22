@@ -1,8 +1,9 @@
 module bomb(
-    input clk5m,count,x,shift,rstn,
+    input clk5m,x,shift,rstn,
     input [2:0] game_state,
     input playing_state,
     input [2:0] Bombs,
+    input [19:0] count,
     output reg [2:0] Next_Bombs,
     output reg [7:0] BombPositionY,
     output reg Bomb_Activated,

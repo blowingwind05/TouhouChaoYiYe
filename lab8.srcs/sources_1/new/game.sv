@@ -200,6 +200,12 @@ module game(
                             Score <= Next_Score;
                             Bombs <= Next_Bombs;
                         end
+                        if(count1 == 17'd69444)begin
+                            if(Bomb_Activated)begin
+                                Score <= Score + 1;
+                                EnemyHp <= EnemyHp - 1;
+                            end
+                        end
                     end
                     esc_reg <= esc;
                     if(playing_state == unpaused) begin
@@ -306,7 +312,7 @@ bomb BOMB(
     .count(count1),
     .x(x),
     .shift(shift),
-    .rstn(rstn),
+    .rstn(rstn&&game_rstn),
     .game_state(game_state),
     .playing_state(playing_state),
     .Bombs(Bombs),
@@ -319,7 +325,7 @@ bomb BOMB(
 enemymove ENEMYMOVE(
     .clk5m(clk5m),
     .count1(count1),
-    .rstn(rstn),
+    .rstn(rstn&&game_rstn),
     .pause(playing_state),
     .game_state(game_state),
     .EnemyPositionX(EnemyPositionX),
@@ -330,7 +336,7 @@ enemymove ENEMYMOVE(
     wire [2:0] Next_Players;
 enemysniper ENEMYSNIPER(
     .clk5m(clk5m),
-    .rstn(rstn),
+    .rstn(rstn&&game_rstn),
     .pause(playing_state),
     .count1(count1),
     .count2(count2),

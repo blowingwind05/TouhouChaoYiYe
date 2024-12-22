@@ -9,7 +9,10 @@ module ScreenRenderer(
     input [6:0] volume,
     input       shift,
     input [2:0] Players,//残机数剩余
-    input [2:0] Bombs,//炸弹数剩余   
+    input [2:0] Bombs,//炸弹数剩余  
+    input [7:0] BombPositionY,
+    input       Bomb_Activated,
+    input       Bomb_Type, 
     input [15:0] Score,         
     input [7:0] PlayerPositionX, //range from 1 to 150
     input [7:0] PlayerPositionY, //range from 1 to 150
@@ -290,6 +293,46 @@ always @(posedge pclk) begin
                             x <= x + 1;
                         end
                     end
+                    else begin
+                        vramwe <= 0;
+                        if(Bomb_Activated)begin
+                            if(BombPositionY <= 8'd150)begin
+                                rdaddr <= (8'd150 - BombPositionY)*8'd200;
+                                txaddr <= Bomb_Type ? yukaribomb : reimubomb;
+                                rdprogress <= rdprogress + 1;
+                                x <= 0;
+                            end
+                            else begin
+                                rdaddr <= (8'd35)*8'd200 + 8'd15;
+                                txtaddr <= pause_pic;
+                                rdprogress <= rdprogress + 2;//jump the render of the bomb
+                                x <= 0;
+                            end
+                        end
+                        else begin
+                            vramwe <= 0;
+                            rdaddr <= (8'd35)*8'd200 + 8'd15;
+                            txtaddr <= pause_pic;
+                            rdprogress <= rdprogress + 2;//jump the render of the bomb
+                            x <= 0;
+                        end
+                    end
+                end
+                8:begin
+                    if(x < (BombPositionY > 44 ? 44 : BombPositionY))begin
+                        if(rdaddr < (8'd150 - BombPositionY + x) * 8'd200 + 8'd150)begin
+                            vramwe <= txdata[0];
+                            txaddr <= txaddr + 1;
+                            rdaddr <= rdaddr + 1; 
+                            vramwdata <= txdata[15:4];
+                            vramwaddr <= rdaddr;
+                        end
+                        else begin//回车换行
+                            vramwe <= 0;
+                            rdaddr <= (8'd151 - BombPositionY + x) * 8'd200;
+                            x <= x + 1;
+                        end
+                    end
                     else begin//end the progress eight
                         vramwe <= 0;
                         rdaddr <= (8'd35)*8'd200 + 8'd15;
@@ -298,7 +341,7 @@ always @(posedge pclk) begin
                         x <= 0;
                     end
                 end
-                8:begin
+                9:begin
                     if(playing_state == paused)begin
                         if(x<46)begin
                             if(rdaddr < (8'd35 + x)*8'd200 + 8'd135)begin
@@ -332,7 +375,7 @@ always @(posedge pclk) begin
                         i <= 0;
                     end
                 end
-                9:begin
+                10:begin
                     if(i < Players)begin
                         if(x < 11)begin
                             if(rdaddr < (33+x)*8'd200 + 8'd165 + 11 * i)begin
@@ -365,7 +408,7 @@ always @(posedge pclk) begin
                         i <= 0;
                     end
                 end
-                10:begin
+                11:begin
                     if(i < Bombs)begin
                         if(x < 11)begin
                             if(rdaddr < (8'd54+x)*8'd200 + 8'd165 + 11 * i)begin
@@ -398,7 +441,7 @@ always @(posedge pclk) begin
                         i <= 0;
                     end
                 end
-                11:begin
+                12:begin
                     if(i < 6)begin
                         if(x < 7)begin
                             if(rdaddr < (8'd16+x)*8'd200 + 8'd163 + 6 * i)begin
@@ -438,7 +481,7 @@ always @(posedge pclk) begin
                             end
                         end
                     end
-                    else begin//end the progress twelve
+                    else begin
                         vramwe <= 0;
                         rdaddr <= 0;
                         rdprogress <= rdprogress + 1;
