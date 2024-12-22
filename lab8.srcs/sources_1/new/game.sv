@@ -194,7 +194,7 @@ module game(
                             EnemyPositionX <= Next_EnemyPositionX;
                             EnemyPositionY <= Next_EnemyPositionY;
                             EnemyHp <= Next_EnemyHp;
-                            Score <= Next_Score + 1;
+                            Score <= Next_Score;
                         end
                     end
                     esc_reg <= esc;
