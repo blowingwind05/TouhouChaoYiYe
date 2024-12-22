@@ -12,12 +12,13 @@ module playerbulletmove(
     localparam initialized = 2'd1;
     localparam moving = 2'd2;
     localparam destroyed = 2'd3;
+    integer j;
     initial begin
         integer i;
         for(i=0;i<24;i=i+1)begin
-            PlayerBulletMoved[i] = {sleeping,16'b0};
+            PlayerBulletMoved[i] <= {sleeping,16'b0};
         end
-        Next_EnemyHp = EnemyHp;
+        Next_EnemyHp <= EnemyHp;
     end
     always@(posedge clk5m)begin
         if(!rstn)begin
@@ -27,22 +28,25 @@ module playerbulletmove(
             end
             Next_EnemyHp <= EnemyHp;
         end
-        else if(count2 == 17'd69444) begin
+        else if(count2 >= 17'd69420) begin
             if(!pause) begin
-                integer i;
-                for(i=0;i<24;i=i+1)begin
-                    if(PlayerBulletInitialized[i][17:16] == initialized || PlayerBulletInitialized[i][17:16] == moving)begin
-                        if(PlayerBulletInitialized[i][17:16] == moving && PlayerBulletInitialized[i][15:8] > (EnemyPositionX-8'd19) && PlayerBulletInitialized[i][15:8] < (EnemyPositionX+8'd20) && PlayerBulletInitialized[i][7:0] >= (EnemyPositionY-8'd23) && PlayerBulletInitialized[i][7:0] < (EnemyPositionY+8'd19)) begin
+                if(count2 == 17'd69420)begin
+                    j<=1;
+                end
+                if(count2 == 17'd69420 + j)begin
+                    if(PlayerBulletInitialized[j][17:16] == initialized || PlayerBulletInitialized[j][17:16] == moving)begin
+                        if(PlayerBulletInitialized[j][17:16] == moving && PlayerBulletInitialized[j][15:8] > (EnemyPositionX-8'd19) && PlayerBulletInitialized[j][15:8] < (EnemyPositionX+8'd20) && PlayerBulletInitialized[j][7:0] >= (EnemyPositionY-8'd23) && PlayerBulletInitialized[j][7:0] < (EnemyPositionY+8'd19)) begin
                             Next_EnemyHp <= EnemyHp - 1;
-                            PlayerBulletMoved[i] <= {destroyed,16'b0};
+                            PlayerBulletMoved[j] <= {destroyed,16'b0};
                         end
-                        else if(PlayerBulletInitialized[i][7:0] > 8'd147) 
-                            PlayerBulletMoved[i] <= {destroyed,16'b0};
+                        else if(PlayerBulletInitialized[j][7:0] > 8'd147) 
+                            PlayerBulletMoved[j] <= {destroyed,16'b0};
                         else 
-                            PlayerBulletMoved[i] <= {moving,PlayerBulletInitialized[i][15:0] + 8'd3};
+                            PlayerBulletMoved[j] <= {moving,PlayerBulletInitialized[j][15:0] + 8'd3};
                     end
                 end
             end
         end
     end
 endmodule
+
