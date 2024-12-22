@@ -1,4 +1,4 @@
-module oddbullet (
+module oddbulletinitialize (
     input      clk5m,rstn,pause,en,
     input      [16:0] count1,
     input      [7:0]  PlayerPositionX,
@@ -26,7 +26,7 @@ module oddbullet (
                 OddBulletInitialized[i] = 18'b0;
         end
         else if(count1 == 17'd69444) begin
-            if(!pause) begin
+            if(!pause && en) begin
                 if(initializ_count < 7'd104) initializ_count <= initializ_count + 1;
                 else initializ_count <= 7'd0;
                 if(initializ_count == 7'd0) begin
