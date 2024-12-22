@@ -25,20 +25,26 @@ module oddbulletmove (
     reg  [19:0]  move_countX3;
     initial begin
         for(i=0;i<25;i=i+1) begin
-            OddBulletMoved[i] ={sleeping,16'd0};
+            OddBulletMoved[i] = {sleeping,16'd0};
         end
         Next_Players = Players;
-        move_count1 <= 
-    end
-    always @(posedge clk5m) begin
-        
+        move_countY1 = 20'd0;
+        move_countY2 = 20'd0;
+        move_countY3 = 20'd0;
+        move_countX2 = 20'd0;
+        move_countX3 = 20'd0;
     end
     always @(posedge clk5m) begin
         if(!rstn) begin
             for(i=0;i<25;i=i+1) begin
-                OddBulletMoved[i] ={sleeping,16'd0};
+                OddBulletMoved[i] = {sleeping,16'd0};
             end
             Next_Players = Players;
+            move_countY1 = 20'd0;
+            move_countY2 = 20'd0;
+            move_countY3 = 20'd0;
+            move_countX2 = 20'd0;
+            move_countX3 = 20'd0;
         end
         else if(count2 == 17'd69444) begin
             if(!pause && en) begin
@@ -65,7 +71,7 @@ module oddbulletmove (
                                         OddBulletMoved[i] <= {moving,OddBulletInitialized[i][15:0]-8'd1};
                                 end
                                 if(move_countX2 == 20'd572916) begin
-                                    if(OddBulletInitialized[i][15:8] < 8'd1 && OddBulletInitialized[i][15:8] > 8'd150)
+                                    if(OddBulletInitialized[i][15:8] < 8'd1 || OddBulletInitialized[i][15:8] > 8'd150)
                                         OddBulletMoved[i] <= {destroyed,16'd0};
                                     else begin
                                         if(i%5 == 1)
@@ -83,7 +89,7 @@ module oddbulletmove (
                                         OddBulletMoved[i] <= {moving,OddBulletInitialized[i][15:0]-8'd1};
                                 end
                                 if(move_countX3 == 20'd305555) begin
-                                    if(OddBulletInitialized[i][15:8] < 8'd1 && OddBulletInitialized[i][15:8] > 8'd150)
+                                    if(OddBulletInitialized[i][15:8] < 8'd1 || OddBulletInitialized[i][15:8] > 8'd150)
                                         OddBulletMoved[i] <= {destroyed,16'd0};
                                     else begin
                                         if(i%5 == 0)
