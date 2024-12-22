@@ -13,23 +13,23 @@ module oddbulletinitialize (
     reg [2:0]   initialize_area;//5组子弹
     integer i;
     initial begin
-        initializ_count = 7'd0;
+        initialize_count = 7'd0;
         initialize_area = 3'd0;
         for(i=0;i<25;i=i+1)
             OddBulletInitialized[i] = 18'b0;
     end
     always @(posedge clk5m) begin
         if(!rstn) begin
-            initializ_count = 0;
+            initialize_count = 0;
             initialize_area = 0;
             for(i=0;i<25;i=i+1)
                 OddBulletInitialized[i] = 18'b0;
         end
         else if(count1 == 17'd69444) begin
             if(!pause && en) begin
-                if(initializ_count < 7'd104) initializ_count <= initializ_count + 1;
-                else initializ_count <= 7'd0;
-                if(initializ_count == 7'd0) begin
+                if(initialize_count < 7'd104) initialize_count <= initialize_count + 1;
+                else initialize_count <= 7'd0;
+                if(initialize_count == 7'd0) begin
                     OddBulletInitialized[initialize_area*5+0] <= {initialized,PlayerPositionX,8'd130};
                     OddBulletInitialized[initialize_area*5+1] <= {initialized,PlayerPositionX,8'd130};
                     OddBulletInitialized[initialize_area*5+2] <= {initialized,PlayerPositionX,8'd130};

@@ -1,4 +1,4 @@
-module even_bullet (
+module evenbullet (
     input    clk5m,rstn,pause,
     input    [16:0] count1,count2,count3,
     input    [7:0]  PlayerPositionX,
