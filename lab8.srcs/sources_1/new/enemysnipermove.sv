@@ -13,6 +13,7 @@ localparam initialized = 2'd1;
 localparam moving = 2'd2;
 localparam destroyed = 2'd3;
 integer i;
+integer j;
 initial begin
     for(i=0;i<16;i=i+1) begin
         SniperBulletMoved[i] = {sleeping, 16'd0};
@@ -26,19 +27,23 @@ always @(posedge clk5m) begin
         end
         Next_Players <= Players;
     end
-    else if(count2 == 17'd69444) begin
+    else if(count2 >= 17'd69428) begin
         if(!pause) begin
-            for(i=0;i<16;i=i+1) begin
-                if(SniperBulletInitialized[i][17:16] == initialized || SniperBulletInitialized[i][17:16] == moving) begin
-                    if(SniperBulletInitialized[i][17:16] == moving && SniperBulletInitialized[i][15:8]>(PlayerPositionX-8'd10) && SniperBulletInitialized[i][15:8]<(PlayerPositionX+8'd10) && SniperBulletInitialized[i][7:0]>(PlayerPositionY-8'd10) && SniperBulletInitialized[i][7:0]<(PlayerPositionY+8'd10)) begin
+            if(count2 == 17'd69428)begin
+                j <= 1;
+            end
+            if(count2 == 17'd69428 + j)begin
+                if(SniperBulletInitialized[j-1][17:16] == initialized || SniperBulletInitialized[j-1][17:16] == moving) begin
+                    if(SniperBulletInitialized[j-1][17:16] == moving && SniperBulletInitialized[j-1][15:8]>(PlayerPositionX-8'd10) && SniperBulletInitialized[j-1][15:8]<(PlayerPositionX+8'd10) && SniperBulletInitialized[j-1][7:0]>(PlayerPositionY-8'd10) && SniperBulletInitialized[j-1][7:0]<(PlayerPositionY+8'd10)) begin
                         Next_Players <= Players - 1;
-                        SniperBulletMoved[i] <= {destroyed,16'd0};
+                        SniperBulletMoved[j-1] <= {destroyed,16'd0};
                     end
                     else if(SniperBulletInitialized[i][7:0] < 8'd1)
-                        SniperBulletMoved[i] <= {destroyed,16'd0};
+                        SniperBulletMoved[j-1] <= {destroyed,16'd0};
                     else
-                        SniperBulletMoved[i] <= {moving,SniperBulletInitialized[i][15:0] - 8'd1};
+                        SniperBulletMoved[j-1] <= {moving,SniperBulletInitialized[i][15:0] - 8'd1};
                 end
+                j <= j + 1;
             end
         end
     end
