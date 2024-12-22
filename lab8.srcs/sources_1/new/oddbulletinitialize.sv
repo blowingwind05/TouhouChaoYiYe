@@ -20,8 +20,8 @@ module oddbulletinitialize (
     end
     always @(posedge clk5m) begin
         if(!rstn) begin
-            initialize_count = 0;
-            initialize_area = 0;
+            initialize_count = 7'd0;
+            initialize_area = 3'd0;
             for(i=0;i<25;i=i+1)
                 OddBulletInitialized[i] = 18'b0;
         end
