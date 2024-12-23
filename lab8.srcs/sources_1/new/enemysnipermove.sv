@@ -5,6 +5,7 @@ module enemysnipermove (
     input      [7:0]  PlayerPositionY,
     input      [2:0]  Players,
     input      [17:0] SniperBulletInitialized [15:0],
+    input      [7:0] Destroy_Line,
     output reg [2:0]  Next_Players,
     output reg [17:0] SniperBulletMoved [15:0]
 );
@@ -38,8 +39,9 @@ always @(posedge clk5m) begin
                         Next_Players <= Players - 1;
                         SniperBulletMoved[j-1] <= {destroyed,16'd0};
                     end
-                    else if(SniperBulletInitialized[j-1][7:0] < 8'd1)
+                    else if(SniperBulletInitialized[j-1][7:0] < (Destroy_Line > 8'd1 ? Destroy_Line : 8'd1)) begin
                         SniperBulletMoved[j-1] <= {destroyed,16'd0};
+                    end
                     else
                         SniperBulletMoved[j-1] <= {moving,SniperBulletInitialized[j-1][15:0] - 8'd1};
                 end

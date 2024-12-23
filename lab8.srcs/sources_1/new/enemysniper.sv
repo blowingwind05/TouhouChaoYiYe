@@ -5,6 +5,7 @@ module enemysniper (
     input      [7:0]  PlayerPositionY,
     input      [2:0]  Players,
     output reg [2:0]  Next_Players,
+    input      [7:0] Destroy_Line,
     output reg [17:0] SniperBullet [15:0]
 );
     wire [17:0] SniperBulletInitialized [15:0];
@@ -36,7 +37,8 @@ enemysnipermove ENEMYSNIPERMOVE (
     .Players(Players),
     .Next_Players(Next_Players),
     .SniperBulletInitialized(SniperBulletInitialized),
-    .SniperBulletMoved(SniperBulletMoved)
+    .SniperBulletMoved(SniperBulletMoved),
+    .Destroy_Line(Destroy_Line)
 );
 always @(posedge clk5m) begin
     if(!rstn) begin

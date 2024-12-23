@@ -284,7 +284,7 @@ always @(posedge pclk) begin
                 4:begin
                     if(i < 5'd16)begin
                         if(EnemySniperBullet[i][17:16] == 2'd1 || EnemySniperBullet[i][17:16] == 2'd2)begin
-                            if(x < (EnemySniperBullet[1][7:0] > 8'd11 ? 8'd21 : EnemySniperBullet[1][7:0] + 8'd10))begin
+                            if(x < (EnemySniperBullet[i][7:0] > 8'd11 ? 8'd21 : EnemySniperBullet[i][7:0] + 8'd10))begin
                                 if(rdaddr < (8'd150 - EnemySniperBullet[i][7:0] - 8'd10 + x)*8'd200 + EnemySniperBullet[i][15:8] + 8'd10)begin
                                     vramwe <= txdata[0];
                                     txaddr <= txaddr + 1;

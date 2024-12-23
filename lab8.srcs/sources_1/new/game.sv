@@ -345,6 +345,7 @@ enemysniper ENEMYSNIPER(
     .PlayerPositionY(PlayerPositionY),
     .Players(Players),
     .Next_Players(Next_Players),
-    .SniperBullet(EnemySniperBullet)
+    .SniperBullet(EnemySniperBullet),
+    .Destroy_Line(Destroy_Line)
 );
 endmodule
