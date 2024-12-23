@@ -18,6 +18,7 @@ module ScreenRenderer(
     input [7:0] PlayerPositionY, //range from 1 to 150
     input [17:0] PlayerBullet[23:0],//bullet_state,position_x,position_y
     input [17:0] EnemySniperBullet[15:0],//bullet_state,position_x,position_y
+    input [17:0] EnemySniperSingleBullet[15:0],//bullet_state,position_x,position_y
     input [7:0] EnemyPositionX, 
     input [7:0] EnemyPositionY,   
     output      [11:0] rgb,
@@ -63,6 +64,7 @@ localparam bluestar = 15'd4981;//store from 4981 to 5101
 localparam reimubomb = 15'd5102;//store from 5102 to 11701
 localparam yukaribomb = 15'd11702;//store from 11702 to 18301
 localparam enemysniperblue = 15'd18302;//store from 18302 to 18742
+localparam enemysniperred = 15'd18743;//store from 18743 to 19183
 //text location
 localparam zerozero = 15'd0;//store from 0 to 599
 localparam ten = 15'd600;//store from 600 to 1199
@@ -314,10 +316,52 @@ always @(posedge pclk) begin
                             x <= 0;
                         end
                     end
+                    else begin
+                        vrame <= 0;
+                        rdaddr <= (8'd150 - EnemySniperSingleBullet[0][7:0] - 8'd10)*8'd200 + EnemySniperSingleBullet[0][15:8] - 8'd11;
+                        rdprogress <= rdprogress + 1;
+                        txaddr <= enemysniperred;
+                        x <= 0;
+                        i <= 0;
+                    end
+                end
+                5:begin
+                    if(i < 5'd16)begin
+                        if(EnemySniperSingleBullet[i][17:16] == 2'd1 || EnemySniperSingleBullet[i][17:16] == 2'd2)begin
+                            if(x < (EnemySniperSingleBullet[i][7:0] > 8'd11 ? 8'd21 : EnemySniperSingleBullet[i][7:0] + 8'd10))begin
+                                if(rdaddr < (8'd150 - EnemySniperSingleBullet[i][7:0] - 8'd10 + x)*8'd200 + EnemySniperSingleBullet[i][15:8] + 8'd10)begin
+                                    vramwe <= txdata[0];
+                                    txaddr <= txaddr + 1;
+                                    rdaddr <= rdaddr + 1; 
+                                    vramwdata <= txdata[15:4];
+                                    vramwaddr <= rdaddr;
+                                end
+                                else begin//回车换行
+                                    vramwe <= 0;
+                                    rdaddr <= (8'd151 - EnemySniperSingleBullet[i][7:0] - 8'd10 + x)*8'd200 + EnemySniperSingleBullet[i][15:8] - 8'd11;
+                                    x <= x + 1;
+                                end
+                            end
+                            else begin
+                                vramwe <= 0;
+                                rdaddr <= (8'd150 - EnemySniperSingleBullet[i+1][7:0] - 8'd10)*8'd200 + EnemySniperSingleBullet[i+1][15:8] - 8'd11;
+                                txaddr <= enemysniperred;
+                                i <= i + 1;
+                                x <= 0;
+                            end
+                        end
+                        else begin//jump the render of bullet i
+                            vramwe <= 0;
+                            rdaddr <= (8'd150 - EnemySniperSingleBullet[i+1][7:0] - 8'd10)*8'd200 + EnemySniperSingleBullet[i+1][15:8] - 8'd11;
+                            txaddr <= enemysniperred;
+                            i <= i + 1;
+                            x <= 0;
+                        end
+                    end
                     else begin//end the progress three
                         vramwe <= 0;
                         rdaddr <= (8'd131 - EnemyPositionY)*8'd200 + EnemyPositionX - 8'd20;
-                        rdprogress <= rdprogress + 3;
+                        rdprogress <= rdprogress + 2;
                         txaddr <= marisa;
                         x <= 0;
                     end
