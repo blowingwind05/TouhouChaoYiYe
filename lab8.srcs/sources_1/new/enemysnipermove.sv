@@ -5,7 +5,7 @@ module enemysnipermove (
     input      [7:0]  PlayerPositionY,
     input      [2:0]  Players,
     input      [17:0] SniperBulletInitialized [15:0],
-    input      [7:0] Destroy_Line,
+    input      [7:0]  Destroy_Line,
     output reg [2:0]  Next_Players,
     output reg [17:0] SniperBulletMoved [15:0]
 );

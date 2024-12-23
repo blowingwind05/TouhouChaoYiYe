@@ -25,6 +25,7 @@ module enemysniperinitialize (
     always @(posedge clk5m) begin
         if(!rstn) begin
             initialize_area = 2'd0;
+            initialize_count = 5'd0;
             initialize_num = 2'd0;
             for(i=0;i<16;i=i+1)
                 SniperBulletInitialized[i] = 18'b0;
