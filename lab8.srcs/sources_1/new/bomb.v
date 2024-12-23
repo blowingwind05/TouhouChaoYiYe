@@ -40,6 +40,9 @@ module bomb(
                         counter <= counter + 1;
                         Next_Bombs <= Bombs - 1;
                     end
+                    else begin
+                        Next_Bombs <= Bombs;
+                    end
                 end
                 else begin
                     if(counter < 9'd288)begin
