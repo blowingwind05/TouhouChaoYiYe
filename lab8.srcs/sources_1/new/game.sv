@@ -194,12 +194,12 @@ module game(
                         if(count3 == 17'd69444)begin
                             PlayerPositionX <= (Player_Die==1'b0 ? Next_PlayerPositionX : Die_PlayerPositionX);
                             PlayerPositionY <= (Player_Die==1'b0 ? Next_PlayerPositionY : Die_PlayerPositionY);
-                            Players <= Next_Players;
+                            Players <= (Bomb_Activated==1'b0 ?  Next_Players : Players);
                             EnemyPositionX <= Next_EnemyPositionX;
                             EnemyPositionY <= Next_EnemyPositionY;
                             EnemyHp <= Next_EnemyHp;
                             Score <= Next_Score;
-                            Bombs <= (Player_Die==0 ? Next_Bombs : 3'd3);
+                            Bombs <= (Player_Die==1'b0 ? Next_Bombs : 3'd3);
                         end
                         if(count1 == 17'd69444)begin
                             if(Bomb_Activated)begin
