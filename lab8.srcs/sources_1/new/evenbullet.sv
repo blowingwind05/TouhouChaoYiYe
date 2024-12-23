@@ -4,6 +4,7 @@ module evenbullet (
     input      [7:0]  PlayerPositionX,
     input      [7:0]  PlayerPositionY,
     input      [2:0]  Players,
+    input      [7:0]  Destroy_Line,
     output reg [2:0]  Next_Players,
     output reg [17:0] EvenBullet[47:0]
 );
@@ -37,7 +38,8 @@ evenbulletmove EVENBULLETMOVE(
     .Players(Players),
     .Next_Players(Next_Players),
     .EvenBulletInitialized(EvenBulletInitialized),
-    .EvenBulletMoved(EvenBulletMoved)
+    .EvenBulletMoved(EvenBulletMoved),
+    .Destroy_Line(Destroy_Line)
 );
 always @(posedge clk5m) begin
     if(!rstn) begin

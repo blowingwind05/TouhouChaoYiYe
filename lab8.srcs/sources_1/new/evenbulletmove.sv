@@ -5,6 +5,7 @@ module evenbulletmove (
     input      [7:0]  PlayerPositionY,
     input      [2:0]  Players,
     input      [17:0] EvenBulletInitialized[47:0],
+    input      [7:0]  Destroy_Line,
     output reg [2:0]  Next_Players,
     output reg [17:0] EvenBulletMoved[47:0]
 );
@@ -47,7 +48,7 @@ always @(posedge clk5m) begin
                     end
                     else begin
                         if(move_countY == 20'd208333) begin
-                            if(EvenBulletInitialized[i][7:0] < 8'd1)
+                            if(EvenBulletInitialized[i][7:0] < (Destroy_Line > 8'd1 ? Destroy_Line : 8'd1))
                                 EvenBulletMoved[i] <= {destroyed,16'd0};
                             else
                                 EvenBulletMoved[i] <= {moving,EvenBulletInitialized[i][15:0]-8'd2};
