@@ -133,6 +133,7 @@ always @(posedge clk5m) begin
         if(!pause) begin
             if(count2 == 17'd69428)begin
                 j <= 1;
+                Next_Players <= Players;
             end
             if(count2 == 17'd69428 + j)begin
                 if(SniperBulletInitialized[j-1][17:16] == initialized || SniperBulletInitialized[j-1][17:16] == moving) begin

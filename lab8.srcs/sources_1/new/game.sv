@@ -194,7 +194,7 @@ module game(
                         if(count3 == 17'd69444)begin
                             PlayerPositionX <= (Player_Die==1'b0 ? Next_PlayerPositionX : Die_PlayerPositionX);
                             PlayerPositionY <= (Player_Die==1'b0 ? Next_PlayerPositionY : Die_PlayerPositionY);
-                            Players <= (Bomb_Activated==1'b0 ?  Next_Players : Players);
+                            Players <= (Bomb_Activated==1'b0 ?  (Next_Players < Next_Playerstwo ? Next_Players : Next_Playerstwo) : Players);
                             EnemyPositionX <= Next_EnemyPositionX;
                             EnemyPositionY <= Next_EnemyPositionY;
                             EnemyHp <= Next_EnemyHp;
@@ -335,6 +335,7 @@ enemymove ENEMYMOVE(
     .Next_EnemyPositionY(Next_EnemyPositionY)
 );
     wire [2:0] Next_Players;
+    wire [2:0] Next_Playerstwo;
 enemysniper ENEMYSNIPER(
     .clk5m(clk5m),
     .rstn(rstn&&game_rstn),
@@ -347,7 +348,7 @@ enemysniper ENEMYSNIPER(
     .Players(Players),
     .Next_Players(Next_Players),
     .SniperBullet(EnemySniperBullet),
-    .Destroy_Line(Destroy_Line)
+    .Destroy_Line(Destroy_Line > Destroy_Line_die ? Destroy_Line : Destroy_Line_die)
 );
 enemysnipersingle ENEMYSNIPERTWO(
     .clk5m(clk5m),
@@ -359,22 +360,22 @@ enemysnipersingle ENEMYSNIPERTWO(
     .PlayerPositionX(PlayerPositionX),
     .PlayerPositionY(PlayerPositionY),
     .Players(Players),
-    .Next_Players(Next_Players),
+    .Next_Players(Next_Playerstwo),
     .SniperBullet(EnemySniperSingleBullet),
-    .Destroy_Line(Destroy_Line)
+    .Destroy_Line(Destroy_Line > Destroy_Line_die ? Destroy_Line : Destroy_Line_die)
 );
 wire [7:0] Die_PlayerPositionX;
 wire [7:0] Die_PlayerPositionY;
 wire [7:0] Destroy_Line_die;
 wire Player_Die;
-playdie PLAYERDIE(
+playerdie PLAYERDIE(
     .clk5m(clk5m),
     .rstn(rstn),
     .count3(count3),
     .game_state(game_state),
     .playing_state(playing_state),
     .Players(Players),
-    .Next_Players(Next_Players),
+    .Next_Players(Next_Players < Next_Playerstwo ? Next_Players : Next_Playerstwo),
     .Die_PlayerPositionX(Die_PlayerPositionX),
     .Die_PlayerPositionY(Die_PlayerPositionY),
     .Player_Die(Player_Die),
