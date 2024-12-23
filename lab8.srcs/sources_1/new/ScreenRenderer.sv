@@ -317,7 +317,7 @@ always @(posedge pclk) begin
                         end
                     end
                     else begin
-                        vrame <= 0;
+                        vramwe <= 0;
                         rdaddr <= (8'd150 - EnemySniperSingleBullet[0][7:0] - 8'd10)*8'd200 + EnemySniperSingleBullet[0][15:8] - 8'd11;
                         rdprogress <= rdprogress + 1;
                         txaddr <= enemysniperred;
