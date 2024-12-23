@@ -9,6 +9,7 @@ module game(
     output reg [7:0] PlayerPositionY,
     output     [17:0] PlayerBullet[23:0],
     output     [17:0] EnemySniperBullet[15:0],
+    output     [17:0] EnemySniperSingleBullet[15:0],
     output reg [2:0] Players,//残机数剩余
     output reg [2:0] Bombs,//炸弹数剩余
     output reg [7:0] BombPositionY,
@@ -346,6 +347,20 @@ enemysniper ENEMYSNIPER(
     .Players(Players),
     .Next_Players(Next_Players),
     .SniperBullet(EnemySniperBullet),
+    .Destroy_Line(Destroy_Line)
+);
+enemysnipersingle ENEMYSNIPERTWO(
+    .clk5m(clk5m),
+    .rstn(rstn&&game_rstn),
+    .pause(playing_state),
+    .count1(count1),
+    .count2(count2),
+    .count3(count3),
+    .PlayerPositionX(PlayerPositionX),
+    .PlayerPositionY(PlayerPositionY),
+    .Players(Players),
+    .Next_Players(Next_Players),
+    .SniperBullet(EnemySniperSingleBullet),
     .Destroy_Line(Destroy_Line)
 );
 endmodule

@@ -21,6 +21,7 @@ module Top(
     wire [2:0] Players_setting;//残机数设置
     wire [17:0]   PlayerBullet[23:0];
     wire [17:0]   EnemySniperBullet[15:0];
+    wire [17:0]   EnemySniperSingleBullet[15:0];
     wire [2:0]    Players;//残机数剩余
     wire [2:0]    Bombs;//炸弹数剩余
     wire [7:0]    BombPositionY;
@@ -70,6 +71,7 @@ module Top(
         .EnemyPositionX(EnemyPositionX),
         .EnemyPositionY(EnemyPositionY),
         .EnemySniperBullet(EnemySniperBullet),
+        .EnemySniperSingleBullet(EnemySniperSingleBullet),
         .Score(Score),
         .rgb(rgb),
         .hs(hs),
@@ -111,6 +113,7 @@ module Top(
         .Score(Score),
         .EnemyPositionX(EnemyPositionX),.EnemyPositionY(EnemyPositionY),
         .EnemySniperBullet(EnemySniperBullet),
+        .EnemySniperSingleBullet(EnemySniperSingleBullet),
         .EnemyHp(EnemyHp)
     );
 endmodule
