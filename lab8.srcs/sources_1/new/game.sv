@@ -192,14 +192,14 @@ module game(
                     else begin
                         game_rstn = 1'b1;
                         if(count3 == 17'd69444)begin
-                            PlayerPositionX <= Next_PlayerPositionX;
-                            PlayerPositionY <= Next_PlayerPositionY;
+                            PlayerPositionX <= (Player_Die==1'b0 ? Next_PlayerPositionX : Die_PlayerPositionX);
+                            PlayerPositionY <= (Player_Die==1'b0 ? Next_PlayerPositionY : Die_PlayerPositionY);
                             Players <= Next_Players;
                             EnemyPositionX <= Next_EnemyPositionX;
                             EnemyPositionY <= Next_EnemyPositionY;
                             EnemyHp <= Next_EnemyHp;
                             Score <= Next_Score;
-                            Bombs <= Next_Bombs;
+                            Bombs <= (Player_Die==0 ? Next_Bombs : 3'd3);
                         end
                         if(count1 == 17'd69444)begin
                             if(Bomb_Activated)begin
@@ -362,5 +362,22 @@ enemysnipersingle ENEMYSNIPERTWO(
     .Next_Players(Next_Players),
     .SniperBullet(EnemySniperSingleBullet),
     .Destroy_Line(Destroy_Line)
+);
+wire [7:0] Die_PlayerPositionX;
+wire [7:0] Die_PlayerPositionY;
+wire [7:0] Destroy_Line_die;
+wire Player_Die;
+playdie PLAYERDIE(
+    .clk5m(clk5m),
+    .rstn(rstn),
+    .count3(count3),
+    .game_state(game_state),
+    .playing_state(playing_state),
+    .Players(Players),
+    .Next_Players(Next_Players),
+    .Die_PlayerPositionX(Die_PlayerPositionX),
+    .Die_PlayerPositionY(Die_PlayerPositionY),
+    .Player_Die(Player_Die),
+    .Destroy_Line_die(Destroy_Line_die)
 );
 endmodule

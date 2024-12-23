@@ -5,7 +5,8 @@ module enemysnipersingle (
     input      [7:0]  PlayerPositionY,
     input      [2:0]  Players,
     output reg [2:0]  Next_Players,
-    input      [7:0] Destroy_Line,
+    input      [7:0]  Destroy_Line,
+    input      [7:0]  Destroy_Line_die,
     output reg [17:0] SniperBullet [15:0]
 );
     wire [17:0] SniperBulletInitialized [15:0];
@@ -105,7 +106,7 @@ module enemysnipersmove (
     input      [7:0]  PlayerPositionY,
     input      [2:0]  Players,
     input      [17:0] SniperBulletInitialized [15:0],
-    input      [7:0] Destroy_Line,
+    input      [7:0]  (Destroy_Line_die==8'd0 ? Destroy_Line : Destroy_Line_die),
     output reg [2:0]  Next_Players,
     output reg [17:0] SniperBulletMoved [15:0]
 );
