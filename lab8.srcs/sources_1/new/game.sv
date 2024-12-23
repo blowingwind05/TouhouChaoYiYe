@@ -192,8 +192,8 @@ module game(
                     else begin
                         game_rstn = 1'b1;
                         if(count3 == 17'd69444)begin
-                            PlayerPositionX <= (Player_Die==1'b0 ? Next_PlayerPositionX : Die_PlayerPositionX);
-                            PlayerPositionY <= (Player_Die==1'b0 ? Next_PlayerPositionY : Die_PlayerPositionY);
+                            PlayerPositionX <= (Player_Die==1'b1 && Bomb_Activated == 1'b0 ? Die_PlayerPositionX : Next_PlayerPositionX);
+                            PlayerPositionY <= (Player_Die==1'b1 && Bomb_Activated == 1'b0 ? Die_PlayerPositionY : Next_PlayerPositionY );
                             Players <= (Bomb_Activated==1'b0 ?  (Next_Players < Next_Playerstwo ? Next_Players : Next_Playerstwo) : Players);
                             EnemyPositionX <= Next_EnemyPositionX;
                             EnemyPositionY <= Next_EnemyPositionY;
