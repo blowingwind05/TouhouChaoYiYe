@@ -43,6 +43,9 @@ always @(posedge clk5m) begin
                 else
                     initialize_area <= 0;
             end
+            else begin
+                for(i=0;i<48;i=i+1) EvenBulletInitialized[i] <= EvenBullet[i];
+            end
         end
     end
 end

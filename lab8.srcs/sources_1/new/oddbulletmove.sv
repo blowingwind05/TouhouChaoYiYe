@@ -5,6 +5,7 @@ module oddbulletmove (
     input      [7:0]  PlayerPositionY,
     input      [2:0]  Players,
     input      [17:0] OddBulletInitialized[49:0],
+    input      [7:0]  Destroy_Line,
     output reg [2:0]  Next_Players,
     output reg [17:0] OddBulletMoved[49:0]
 );
@@ -57,7 +58,7 @@ module oddbulletmove (
                         else begin
                             if(i%5 == 2) begin
                                 if(move_countY1 == 20'd138888) begin
-                                    if(OddBulletInitialized[i][7:0] < 8'd1)
+                                    if(OddBulletInitialized[i][7:0] < (Destroy_Line > 8'd1 ? Destroy_Line : 8'd1))
                                         OddBulletMoved[i] <= {destroyed,16'd0};
                                     else
                                         OddBulletMoved[i] <= {moving,OddBulletInitialized[i][15:0]-8'd1};
@@ -65,7 +66,7 @@ module oddbulletmove (
                             end
                             else if(i%5 == 1 || i%5 == 3) begin
                                 if(move_countY2 == 20'd143229) begin
-                                    if(OddBulletInitialized[i][7:0] < 8'd1)
+                                    if(OddBulletInitialized[i][7:0] < (Destroy_Line > 8'd1 ? Destroy_Line : 8'd1))
                                         OddBulletMoved[i] <= {destroyed,16'd0};
                                     else
                                         OddBulletMoved[i] <= {moving,OddBulletInitialized[i][15:0]-8'd1};
@@ -83,7 +84,7 @@ module oddbulletmove (
                             end
                             else begin
                                 if(move_countY3 == 20'd152777) begin
-                                    if(OddBulletInitialized[i][7:0] < 8'd1)
+                                    if(OddBulletInitialized[i][7:0] < (Destroy_Line > 8'd1 ? Destroy_Line : 8'd1))
                                         OddBulletMoved[i] <= {destroyed,16'd0};
                                     else
                                         OddBulletMoved[i] <= {moving,OddBulletInitialized[i][15:0]-8'd1};

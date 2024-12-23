@@ -48,6 +48,9 @@ module oddbulletinitialize (
                     else
                         initialize_area <= 0;
                 end
+                else begin
+                    OddBulletInitialized[i] <= OddBullet[i];
+                end
             end
         end
     end

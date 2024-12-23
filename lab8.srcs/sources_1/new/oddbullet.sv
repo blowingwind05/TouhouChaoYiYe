@@ -4,6 +4,7 @@ module oddbullet (
     input      [7:0]  PlayerPositionX,
     input      [7:0]  PlayerPositionY,
     input      [2:0]  Players,
+    input      [7:0]  Destroy_Line,
     output reg [2:0]  Next_Players,
     output reg [17:0] OddBullet [49:0]
 );
@@ -37,7 +38,8 @@ oddbulletmove ODDBULLETMOVE(
     .Players(Players),
     .Next_Players(Next_Players),
     .OddBulletInitialized(OddBulletInitialized),
-    .OddBulletMoved(OddBulletMoved)
+    .OddBulletMoved(OddBulletMoved),
+    .Destroy_Line(Destroy_Line)
 );
 always @(posedge clk5m) begin
     if(!rstn) begin
