@@ -38,10 +38,10 @@ always @(posedge clk5m) begin
                         Next_Players <= Players - 1;
                         SniperBulletMoved[j-1] <= {destroyed,16'd0};
                     end
-                    else if(SniperBulletInitialized[i][7:0] < 8'd1)
+                    else if(SniperBulletInitialized[j-1][7:0] < 8'd1)
                         SniperBulletMoved[j-1] <= {destroyed,16'd0};
                     else
-                        SniperBulletMoved[j-1] <= {moving,SniperBulletInitialized[i][15:0] - 8'd1};
+                        SniperBulletMoved[j-1] <= {moving,SniperBulletInitialized[j-1][15:0] - 8'd1};
                 end
                 j <= j + 1;
             end

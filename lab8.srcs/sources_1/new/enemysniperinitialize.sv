@@ -11,11 +11,11 @@ module enemysniperinitialize (
     localparam destroyed = 2'd3;
     reg [1:0]  initialize_area;// 4组子弹
     reg [1:0]  initialize_num;//4个子弹序号
-    reg [3:0]  initializ_count;//子弹生成间隔
+    reg [3:0]  initialize_count;//子弹生成间隔
     reg [7:0]  PlayerPositionX_reg;
     integer     i;
     initial begin
-        initializ_count = 4'd0;
+        initialize_count = 4'd0;
         initialize_area = 2'd0;
         initialize_num = 2'd0;
         PlayerPositionX_reg = PlayerPositionX;
@@ -31,9 +31,9 @@ module enemysniperinitialize (
         end
         else if(count1 == 17'd69444) begin
             if(!pause) begin
-                if(initializ_count < 4'd14) initializ_count <= initializ_count + 1;
-                else initializ_count <= 4'd0;
-                if(initializ_count == 4'd0) begin
+                if(initialize_count < 4'd14) initialize_count <= initialize_count + 1;
+                else initialize_count <= 4'd0;
+                if(initialize_count == 4'd0) begin
                     SniperBulletInitialized[initialize_area*4+initialize_num] <= {initialized, PlayerPositionX_reg,8'd120};
                     for(i=0;i<16;i=i+1) if(i != initialize_area*4+initialize_num) SniperBulletInitialized[i] <= SniperBullet[i];
                     initialize_num <= initialize_num + 1;
