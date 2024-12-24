@@ -178,7 +178,7 @@ module game(
                     end
                 end
                 playing: begin
-                    if(count3 == 17'd69444)begin
+                    if(count3 == 17'd0)begin
                         prev_game_state <= playing;
                     end
                     if(prev_game_state != playing) begin//initialize
@@ -249,6 +249,7 @@ module game(
                     end
                 end
                 fail: begin
+                    prev_game_state <= fail;
                     if(q) begin
                         game_state <= welcome;
                     end
@@ -260,6 +261,16 @@ module game(
                     end
                 end
                 win: begin
+                    prev_game_state <= win;
+                    if(q) begin
+                        game_state <= welcome;
+                    end
+                    else if(r) begin
+                        game_state <= playing;
+                    end
+                    else if(r) begin
+                        game_state <= playing;
+                    end
                 end
                 setting: begin
                     if(q) begin
