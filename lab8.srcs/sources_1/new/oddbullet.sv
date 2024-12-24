@@ -1,5 +1,5 @@
 module oddbullet (
-    input      clk5m,rstn,pause,en,speed,//发射速度
+    input      clk5m,rstn,pause,en,speed,//发射速度翻倍
     input      [16:0] count1,count2,count3,
     input      [7:0]  PlayerPositionX,
     input      [7:0]  PlayerPositionY,

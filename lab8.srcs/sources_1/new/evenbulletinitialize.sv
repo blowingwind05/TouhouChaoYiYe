@@ -11,10 +11,12 @@ localparam moving = 2'd2;
 localparam destroyed = 2'd3;
 reg [6:0] initializ_count;
 reg [2:0] initialize_area;//6组子弹
+reg [6:0] initialize_count_reg;
 integer i;
 initial begin
     initializ_count = 7'd0;
     initialize_area = 3'd0;
+    initialize_count_reg = 7'd30;
     for(i=0;i<48;i=i+1)
         EvenBulletInitialized[i] = 18'b0;
 end
@@ -22,12 +24,14 @@ always @(posedge clk5m) begin
     if(!rstn) begin
         initializ_count = 7'd0;
         initialize_area = 3'd0;
+        initialize_count_reg = 7'd30;
         for(i=0;i<48;i=i+1)
             EvenBulletInitialized[i] = 18'b0;
     end
     else if(count1 == 17'd69444) begin
+        if(speed) initialize_count_reg <= 7'd15;
         if(!pause) begin
-            if(initializ_count < 7'd30) initializ_count <= initializ_count + 1;
+            if(initializ_count < initialize_count_reg) initializ_count <= initializ_count + 1;
             else initializ_count < 7'd0
             if(initializ_count == 7'd0) begin
                 EvenBulletInitialized[initialize_area*4+0] <= {initialized,PlayerPositionX,8'd120};
