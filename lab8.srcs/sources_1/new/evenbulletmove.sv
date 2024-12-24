@@ -1,5 +1,5 @@
 module evenbulletmove (
-    input      clk5m,rstn,pause,en,
+    input      clk5m,rstn,pause,
     input      [16:0] count2,
     input      [7:0]  PlayerPositionX,
     input      [7:0]  PlayerPositionY,
@@ -39,11 +39,12 @@ always @(posedge clk5m) begin
         move_countX2 = 20'd0;
     end
     else if(count2 == 17'd69444) begin
-        if(!pause && en) begin
+        Next_Players <= Players;
+        if(!pause) begin
             for(i=0;i<48;i=i+1) begin
                 if(EvenBulletInitialized[i][17:16] == initialized || EvenBulletInitialized[i][17:16] == moving) begin
                     if(EvenBulletInitialized[i][17:16] == moving && EvenBulletInitialized[i][15:8]>(PlayerPositionX-8'd3) && EvenBulletInitialized[i][15:8]<(PlayerPositionX+8'd3) && EvenBulletInitialized[i][7:0]>(PlayerPositionY-8'd3) && EvenBulletInitialized[i][7:0]<(PlayerPositionY+8'd3)) begin
-                        Next_Players <= Players;
+                        Next_Players <= Players - 1;
                         EvenBulletMoved[i] <= {destroyed,16'd0};
                     end
                     else begin

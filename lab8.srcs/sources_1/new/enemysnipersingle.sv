@@ -1,5 +1,5 @@
 module enemysnipersingle (
-    input      clk5m,rstn,pause,
+    input      clk5m,rstn,pause,en,
     input      [16:0] count1,count2,count3,
     input      [7:0]  PlayerPositionX,
     input      [7:0]  PlayerPositionY,
@@ -21,7 +21,7 @@ end
 enemysnipersinitialize ENEMYSNIPERINITIALIZE(
     .clk5m(clk5m),
     .rstn(rstn),
-    .pause(pause),
+    .pause(pause || !en),
     .count1(count1),
     .PlayerPositionX(PlayerPositionX),
     .SniperBullet(SniperBullet),

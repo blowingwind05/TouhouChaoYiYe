@@ -1,5 +1,5 @@
 module oddbullet (
-    input      clk5m,rstn,pause,en,speed,//发射速度
+    input      clk5m,rstn,pause,en,speed,//发射速度翻倍
     input      [16:0] count1,count2,count3,
     input      [7:0]  PlayerPositionX,
     input      [7:0]  PlayerPositionY,
@@ -19,8 +19,7 @@ end
 oddbulletinitialize ODDBULLETINITIALIZE(
     .clk5m(clk5m),
     .rstn(rstn),
-    .pause(pause),
-    .en(en),
+    .pause(pause || !en),
     .speed(speed),
     .count1(count1),
     .PlayerPositionX(PlayerPositionX),
@@ -31,7 +30,6 @@ oddbulletmove ODDBULLETMOVE(
     .clk5m(clk5m),
     .rstn(rstn),
     .pause(pause),
-    .en(en),
     .count2(count2),
     .PlayerPositionX(PlayerPositionX),
     .PlayerPositionY(PlayerPositionY),

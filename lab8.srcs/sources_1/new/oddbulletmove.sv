@@ -1,5 +1,5 @@
 module oddbulletmove (
-    input      clk5m,rstn,pause,en,
+    input      clk5m,rstn,pause,
     input      [16:0] count2,
     input      [7:0]  PlayerPositionX,
     input      [7:0]  PlayerPositionY,
@@ -48,7 +48,8 @@ module oddbulletmove (
             move_countX3 = 20'd0;
         end
         else if(count2 == 17'd69444) begin
-            if(!pause && en) begin
+            Next_Players <= Players;
+            if(!pause) begin
                 for(i=0;i<50;i=i+1) begin
                     if(OddBulletInitialized[i][17:16] == initialized || OddBulletInitialized[i][17:16] == moving) begin
                         if(OddBulletInitialized[i][17:16] == moving && OddBulletInitialized[i][15:8]>(PlayerPositionX-8'd3) && OddBulletInitialized[i][15:8]<(PlayerPositionX+8'd3) && OddBulletInitialized[i][7:0]>(PlayerPositionY-8'd3) && OddBulletInitialized[i][7:0]<(PlayerPositionY+8'd3)) begin
