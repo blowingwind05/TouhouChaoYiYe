@@ -19,8 +19,7 @@ end
 evenbulletinitialize EVENBULLETINITIALIZED(
     .clk5m(clk5m),
     .rstn(rstn),
-    .pause(pause),
-    .en(en),
+    .pause(pause ||!en),
     .speed(speed),
     .count1(count1),
     .PlayerPositionX(PlayerPositionX),
@@ -31,7 +30,6 @@ evenbulletmove EVENBULLETMOVE(
     .clk5m(clk5m),
     .rstn(rstn),
     .pause(pause),
-    .en(en),
     .count2(count2),
     .PlayerPositionX(PlayerPositionX),
     .PlayerPositionY(PlayerPositionY),

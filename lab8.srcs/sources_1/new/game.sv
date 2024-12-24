@@ -338,6 +338,7 @@ enemymove ENEMYMOVE(
     wire [2:0] Next_Playerstwo;
 enemysniper ENEMYSNIPER(
     .clk5m(clk5m),
+    .en(1'b1),
     .rstn(rstn&&game_rstn),
     .pause(playing_state),
     .count1(count1),
@@ -352,6 +353,7 @@ enemysniper ENEMYSNIPER(
 );
 enemysnipersingle ENEMYSNIPERTWO(
     .clk5m(clk5m),
+    .en(1'b1),
     .rstn(rstn&&game_rstn),
     .pause(playing_state),
     .count1(count1),

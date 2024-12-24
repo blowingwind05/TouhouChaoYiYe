@@ -1,5 +1,5 @@
 module oddbulletinitialize (
-    input      clk5m,rstn,pause,en,speed,//发射频率翻倍
+    input      clk5m,rstn,pause,speed,//发射频率翻倍
     input      [16:0] count1,
     input      [7:0]  PlayerPositionX,
     input      [17:0] OddBullet[49:0],
@@ -30,7 +30,7 @@ module oddbulletinitialize (
         end
         else if(count1 == 17'd69444) begin
             if(speed) initialize_count_reg <= 7'd52;
-            if(!pause && en) begin
+            if(!pause) begin
                 if(initialize_count < initialize_count_reg) initialize_count <= initialize_count + 1;
                 else initialize_count <= 7'd0;
                 if(initialize_count == 7'd0) begin

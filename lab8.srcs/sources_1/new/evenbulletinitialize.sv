@@ -1,5 +1,5 @@
 module evenbulletinitialize (
-    input      clk5m,rstn,pause,en,speed,
+    input      clk5m,rstn,pause,speed,
     input      [16:0] count1,
     input      [7:0]  PlayerPositionX,
     input      [17:0] EvenBullet[47:0],
@@ -26,7 +26,7 @@ always @(posedge clk5m) begin
             EvenBulletInitialized[i] = 18'b0;
     end
     else if(count1 == 17'd69444) begin
-        if(!pause && en) begin
+        if(!pause) begin
             if(initializ_count < 7'd30) initializ_count <= initializ_count + 1;
             else initializ_count < 7'd0
             if(initializ_count == 7'd0) begin
