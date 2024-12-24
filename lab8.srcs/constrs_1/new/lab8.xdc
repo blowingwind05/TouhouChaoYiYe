@@ -2,7 +2,7 @@
 set_property -dict { PACKAGE_PIN E3    IOSTANDARD LVCMOS33 } [get_ports { clk }]; #IO_L12P_T1_MRCC_35 Sch=clk100mhz
 create_clock -add -name sys_clk_pin -period 10.00 -waveform {0 5} [get_ports { clk }];
 set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets clk_IBUF]
-
+set_property ALLOW_COMBINATORIAL_LOOPS TRUE [get_nets <myHier/myNet>]
 ##Switches
 
  set_property -dict { PACKAGE_PIN J15   IOSTANDARD LVCMOS33 } [get_ports { SW[0] }]; #IO_L24N_T3_RS0_15 Sch=sw[0]

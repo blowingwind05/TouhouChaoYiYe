@@ -22,6 +22,8 @@ module Top(
     wire [17:0]   PlayerBullet[23:0];
     wire [17:0]   EnemySniperBullet[15:0];
     wire [17:0]   EnemySniperSingleBullet[15:0];
+    wire     [17:0] EvenBullet[47:0];
+    wire     [17:0] OddBullet[49:0];
     wire [2:0]    Players;//残机数剩余
     wire [2:0]    Bombs;//炸弹数剩余
     wire [7:0]    BombPositionY;
@@ -72,6 +74,8 @@ module Top(
         .EnemyPositionY(EnemyPositionY),
         .EnemySniperBullet(EnemySniperBullet),
         .EnemySniperSingleBullet(EnemySniperSingleBullet),
+        .EvenBullet(EvenBullet),
+        .OddBullet(OddBullet),
         .Score(Score),
         .rgb(rgb),
         .hs(hs),
@@ -114,6 +118,8 @@ module Top(
         .EnemyPositionX(EnemyPositionX),.EnemyPositionY(EnemyPositionY),
         .EnemySniperBullet(EnemySniperBullet),
         .EnemySniperSingleBullet(EnemySniperSingleBullet),
+        .EvenBullet(EvenBullet),
+        .OddBullet(OddBullet),
         .EnemyHp(EnemyHp)
     );
 endmodule
