@@ -53,7 +53,7 @@ module oddbulletmove (
             if(!pause) begin
                 for(i=0;i<25;i=i+1) begin
                     if(OddBulletInitialized[i][17:16] == initialized || OddBulletInitialized[i][17:16] == moving) begin
-                        if(OddBulletInitialized[i][17:16] == moving && OddBulletInitialized[i][15:8]>(PlayerPositionX-8'd3) && OddBulletInitialized[i][15:8]<(PlayerPositionX+8'd3) && OddBulletInitialized[i][7:0]>(PlayerPositionY-8'd3) && OddBulletInitialized[i][7:0]<(PlayerPositionY+8'd3)) begin
+                        if(OddBulletInitialized[i][17:16] == moving && OddBulletInitialized[i][15:8]>(PlayerPositionX-8'd2) && OddBulletInitialized[i][15:8]<(PlayerPositionX+8'd2) && OddBulletInitialized[i][7:0]>(PlayerPositionY-8'd2) && OddBulletInitialized[i][7:0]<(PlayerPositionY+8'd2)) begin
                             Next_Players <= Players - 1;
                             OddBulletMoved[i] <= {destroyed,16'd0};
                         end
@@ -109,23 +109,23 @@ module oddbulletmove (
         end
         else begin
             if(move_countY1 == 20'd138888)
-                move_countY1 <= 0;
+                move_countY1 <= 20'd0;
             else
                 move_countY1 <= move_countY1 + 1; 
             if(move_countY2 == 20'd143229)
-                move_countY2 <= 0;
+                move_countY2 <= 20'd0;
             else
                 move_countY2 <= move_countY2 + 1;
             if(move_countY3 == 20'd152777)
-                move_countY3 <= 0;
+                move_countY3 <= 20'd0;
             else
                 move_countY3 <= move_countY3 + 1;
             if(move_countX2 == 20'd572916)
-                move_countX2 <= 0;
+                move_countX2 <= 20'd0;
             else
                 move_countX2 <= move_countX2 + 1;
             if(move_countX3 == 20'd305555)
-                move_countX3 <= 0;
+                move_countX3 <= 20'd0;
             else
                 move_countX3 <= move_countX3 + 1;
         end
