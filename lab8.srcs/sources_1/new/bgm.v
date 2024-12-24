@@ -13,7 +13,7 @@ module bgm(
     always@(posedge clk,negedge rstn)
         if(~rstn) total<=3125000;
         // else if(speedup==1) total<=3125000;
-        else if(speedup==2) total<=8900000;
+        else if(speedup==2) total<=3125000;
         else total<=3125000;
 
     always@(posedge clk,negedge rstn)
