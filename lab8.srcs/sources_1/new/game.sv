@@ -268,8 +268,8 @@ module game(
                     else if(r) begin
                         game_state <= playing;
                     end
-                    else if(r) begin
-                        game_state <= playing;
+                    else begin
+                        game_state <= win;
                     end
                 end
                 setting: begin
