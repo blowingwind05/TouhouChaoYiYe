@@ -10,12 +10,12 @@ module oddbulletinitialize (
     localparam moving = 2'd2;
     localparam destroyed = 2'd3;
     reg [6:0]   initialize_count;//子弹生成间隔
-    reg [2:0]   initialize_area;//5组子弹
+    reg [3:0]   initialize_area;//10组子弹
     reg [6:0]   initialize_count_reg;
     integer i;
     initial begin
         initialize_count = 7'd0;
-        initialize_area = 3'd0;
+        initialize_area = 4'd0;
         initialize_count_reg = 7'd104;
         for(i=0;i<50;i=i+1)
             OddBulletInitialized[i] = 18'b0;
@@ -23,7 +23,7 @@ module oddbulletinitialize (
     always @(posedge clk5m) begin
         if(!rstn) begin
             initialize_count = 7'd0;
-            initialize_area = 3'd0;
+            initialize_area = 4'd0;
             initialize_count_reg = 7'd104;
             for(i=0;i<50;i=i+1)
                 OddBulletInitialized[i] = 18'b0;
@@ -43,7 +43,7 @@ module oddbulletinitialize (
                         if(i!=initialize_area*5+0 && i!=initialize_area*5+1 && i!=initialize_area*5+2 && i!=initialize_area*5+3 && i!=initialize_area*5+4)
                             OddBulletInitialized[i] <= OddBullet[i];
                     end
-                    if(initialize_area < 3'd4)
+                    if(initialize_area < 4'd9)
                         initialize_area <= initialize_area + 1;
                     else
                         initialize_area <= 0;

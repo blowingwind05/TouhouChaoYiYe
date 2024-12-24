@@ -10,12 +10,12 @@ localparam initialized = 2'd1;
 localparam moving = 2'd2;
 localparam destroyed = 2'd3;
 reg [6:0] initializ_count;
-reg [2:0] initialize_area;//6组子弹
+reg [3:0] initialize_area;//12组子弹
 reg [6:0] initialize_count_reg;
 integer i;
 initial begin
     initializ_count = 7'd0;
-    initialize_area = 3'd0;
+    initialize_area = 4'd0;
     initialize_count_reg = 7'd30;
     for(i=0;i<48;i=i+1)
         EvenBulletInitialized[i] = 18'b0;
@@ -23,7 +23,7 @@ end
 always @(posedge clk5m) begin
     if(!rstn) begin
         initializ_count = 7'd0;
-        initialize_area = 3'd0;
+        initialize_area = 4'd0;
         initialize_count_reg = 7'd30;
         for(i=0;i<48;i=i+1)
             EvenBulletInitialized[i] = 18'b0;
@@ -42,7 +42,7 @@ always @(posedge clk5m) begin
                     if(i!=initialize_area*4+0 && i!=initialize_area*4+1 && i!=initialize_area*4+2 && i!=initialize_area*4+3)
                         EvenBulletInitialized[i] <= EvenBullet[i];
                 end
-                if(initialize_area < 3'd5)
+                if(initialize_area < 4'd11)
                     initialize_area <= initialize_area + 1;
                 else
                     initialize_area <= 0;
