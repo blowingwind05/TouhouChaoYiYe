@@ -65,7 +65,7 @@ module game(
         PlayerPositionY = 8'd30;
         EnemyPositionX = 8'd75;
         EnemyPositionY = 8'd131;
-        EnemyHp = 16'd6000;
+        EnemyHp = 16'd3000;
         Score = 16'd0;
         Players = 3'd4;
         Bombs = 3'd3;
@@ -96,7 +96,7 @@ module game(
             PlayerPositionY <= 8'd30;
             EnemyPositionX <= 8'd75;
             EnemyPositionY <= 8'd131;
-            EnemyHp <= 16'd6000;
+            EnemyHp <= 16'd3000;
             Score <= 16'd0;
             Players <= 3'd4;
             Bombs <= 3'd3;
@@ -187,7 +187,7 @@ module game(
                         playing_state = unpaused;
                         PlayerPositionX <= 8'd75;
                         PlayerPositionY <= 8'd30;
-                        EnemyHp <= 16'd6000;
+                        EnemyHp <= 16'd3000;
                         EnemyPositionX <= 8'd75;
                         EnemyPositionY <= 8'd131;
                         Score <= 16'd0;
