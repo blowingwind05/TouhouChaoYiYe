@@ -10,8 +10,8 @@ module game(
     output     [17:0] PlayerBullet[23:0],
     output     [17:0] EnemySniperBullet[15:0],
     output     [17:0] EnemySniperSingleBullet[15:0],
-    output     [17:0] EvenBullet[47:0],
-    output     [17:0] OddBullet[49:0],
+    output     [17:0] EvenBullet[23:0],
+    output     [17:0] OddBullet[24:0],
     output     [7:0]  Cannon_Line[3:0],
     output reg [2:0] Players,//残机数剩余
     output reg [2:0] Bombs,//炸弹数剩余
