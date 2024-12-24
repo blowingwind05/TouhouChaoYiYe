@@ -24,7 +24,7 @@ oddbulletinitialize ODDBULLETINITIALIZE(
     .count1(count1),
     .PlayerPositionX(PlayerPositionX),
     .OddBullet(OddBullet),
-    .OddBulletInitialized(oddbulletinitialize)
+    .OddBulletInitialized(OddBulletInitialized)
 );
 oddbulletmove ODDBULLETMOVE(
     .clk5m(clk5m),
