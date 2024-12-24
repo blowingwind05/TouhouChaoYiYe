@@ -464,7 +464,7 @@ always @(posedge pclk) begin
                     end
                 end
                 10:begin
-                    if(i < Players)begin
+                    if(i < Players - 1)begin
                         if(x < 11)begin
                             if(rdaddr < (33+x)*8'd200 + 8'd165 + 11 * i)begin
                                 vramwe <= txdata[0];

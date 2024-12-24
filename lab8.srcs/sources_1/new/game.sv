@@ -186,7 +186,7 @@ module game(
                         EnemyPositionX <= 8'd75;
                         EnemyPositionY <= 8'd131;
                         Score <= 16'd0;
-                        Players <= Players_setting ;
+                        Players <= Players_setting + 1;
                         Bombs <= Bombs_setting;
                     end
                     else begin
@@ -236,7 +236,7 @@ module game(
                     else if(EnemyHp == 0) begin
                         game_state <= win;
                     end
-                    else if(Players == 7) begin//Players此时为-1（溢出），游戏失败
+                    else if(Players == 0) begin
                         game_state <= fail;
                     end
                     else begin
