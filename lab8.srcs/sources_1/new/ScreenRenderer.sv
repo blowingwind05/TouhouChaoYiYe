@@ -39,11 +39,14 @@ reg [14 : 0] wcaddr;
 reg [14 : 0] wcprogress;
 reg [14 : 0] fladdr;
 reg [14 : 0] flprogress;
+reg [14 : 0] winaddr;
+reg [14 : 0] winprogress;
 wire [11 : 0] rdata;
 reg [11 : 0] vramwdata;
 wire [11 : 0] bgdata;
 wire [11 : 0] wcdata;
 wire [11 : 0] fldata;
+wire [11 : 0] windata;
 reg [14 : 0] txaddr;
 wire [15 : 0] txdata;
 reg [14 : 0] txtaddr;
@@ -131,6 +134,11 @@ blk_mem_gen_2 failpage (
   .clka(clk),    // input wire clkb
   .addra(fladdr),  // input wire [14 : 0] addrb
   .douta(fldata)  // output wire [11 : 0] doutb
+);
+blk_mem_gen_5 winpage (
+  .clka(clk),    // input wire clkb
+  .addra(winaddr),  // input wire [14 : 0] addrb
+  .douta(windata)  // output wire [11 : 0] doutb
 );
 blk_mem_gen_0_1 texture (  
   .clka(clk),    
@@ -605,6 +613,24 @@ always @(posedge pclk) begin
     end
     win:begin
         prev_game_state <= win;
+        if(prev_game_state != game_state)begin
+            vramwe <= 0;
+            winprogress <= 0;
+            winaddr <= 0;
+        end
+        else begin
+            if(winprogress < 200*150)begin
+                vramwe <= 1;
+                winaddr <= winaddr + 1;
+                winprogress <= winprogress + 1;
+                vramwaddr <= winaddr;
+                vramwdata <= windata;
+            end
+            else begin
+                vramwe <= 0;
+                winaddr <= 0;
+            end
+        end
     end
     setting:begin
         prev_game_state <= setting;

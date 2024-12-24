@@ -176,7 +176,9 @@ module game(
                     end
                 end
                 playing: begin
-                    prev_game_state <= playing;
+                    if(count3 == 17'd69444)begin
+                        prev_game_state <= playing;
+                    end
                     if(prev_game_state != playing) begin//initialize
                         game_rstn = 1'b0;
                         playing_state = unpaused;
@@ -228,6 +230,7 @@ module game(
                     if(playing_state == paused)begin
                         if(q)begin
                             game_state <= welcome;
+                            playing_state <= unpaused;
                         end
                         else begin
                             game_state <= playing;

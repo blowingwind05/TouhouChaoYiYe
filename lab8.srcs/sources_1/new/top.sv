@@ -84,7 +84,7 @@ module Top(
     .volume(volume),       // 音量
     .song(game_state <= 2'b11 ? game_state : 0),        //切歌
     .rstn(rstn),           // 输入复位
-    .speedup(2'b00), // 控制音符速度
+    .speedup(2'b10), // 控制音符速度
     .B(pwm),  // 输出音频信号
     .G(gain)
     );
