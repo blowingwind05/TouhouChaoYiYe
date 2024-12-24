@@ -178,7 +178,7 @@ module game(
                     end
                 end
                 playing: begin
-                    if(count3 == 17'd0)begin
+                    if(count3 == 17'd64999)begin
                         prev_game_state <= playing;
                     end
                     if(prev_game_state != playing) begin//initialize
@@ -238,10 +238,10 @@ module game(
                             game_state <= playing;
                         end
                     end
-                    else if(EnemyHp == 0) begin
+                    else if(prev_game_state == playing && EnemyHp == 0) begin
                         game_state <= win;
                     end
-                    else if(Players == 0) begin
+                    else if(prev_game_state == playing && Players == 0) begin
                         game_state <= fail;
                     end
                     else begin
