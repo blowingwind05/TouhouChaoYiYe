@@ -30,8 +30,8 @@ end
     initial begin
         G = 1'b1;
     end
-wire menu,bgm,fail;
-reg menubegin,bgmbegin,failbegin;
+wire menu,bgm,fail,win;
+reg menubegin,bgmbegin,failbegin,winbegin;
 bgm BGM(
     .clk(clk),
     .start(start),
@@ -56,33 +56,45 @@ fail FAIL(
     .speedup(speedup),
     .B(fail)
     );
-always @(posedge clk) begin
-    case (song)
-        2'd0: begin
-            B<=menu;
-            bgmbegin<=0;
-            failbegin<=0;
-            menubegin<=1;
-        end 
-        2'd1: begin
-            B<=bgm;
-            bgmbegin<=1;
-            menubegin<=0;
-            failbegin<=0;
-        end  
-        2'd2: begin
-            B<=fail;
-            bgmbegin<=0;
-            menubegin<=0;
-            failbegin<=1;
-        end
-        2'd3:begin
-            B<=0;
-            bgmbegin<=0;
-            menubegin<=0;
-            failbegin<=0;
-        end  
-        default:;
-    endcase
-end
-endmodule
+    win WIN(
+        .clk(clk),
+        .start(start),
+        .rstn(winbegin),
+        .frac(frac),      
+        .speedup(speedup),
+        .B(win)
+        );
+    always @(posedge clk) begin
+        case (song)
+            2'd0: begin
+                B<=menu;
+                bgmbegin<=0;
+                failbegin<=0;
+                menubegin<=1;
+                winbegin<=0;
+            end 
+            2'd1: begin
+                B<=bgm;
+                bgmbegin<=1;
+                menubegin<=0;
+                failbegin<=0;
+                winbegin<=0;
+            end  
+            2'd2: begin
+                B<=fail;
+                bgmbegin<=0;
+                menubegin<=0;
+                failbegin<=1;
+                winbegin<=0;
+            end
+            2'd3:begin
+                B<=win;
+                bgmbegin<=0;
+                menubegin<=0;
+                failbegin<=0;
+                winbegin<=1;
+            end  
+            default:;
+        endcase
+    end
+    endmodule
