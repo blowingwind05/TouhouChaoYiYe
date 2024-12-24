@@ -126,7 +126,6 @@ always @(posedge clk5m) begin
         for(i=0;i<16;i=i+1) begin
             SniperBulletMoved[i] <= {sleeping,16'd0};
         end
-        Next_Players <= Players;
     end
     else if(count2 >= 17'd69428) begin
         if(!pause) begin

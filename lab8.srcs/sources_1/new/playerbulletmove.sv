@@ -31,8 +31,6 @@ module playerbulletmove(
             for(i=0;i<24;i=i+1)begin
                 PlayerBulletMoved[i] <= {sleeping,16'b0};
             end
-            Next_EnemyHp <= EnemyHp;
-            Next_Score <= Score;
             counter <= 3'd0;
         end
         else if(count2 >= 17'd69420) begin
