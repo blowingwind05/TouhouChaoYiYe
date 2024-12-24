@@ -4,10 +4,10 @@ module oddbulletmove (
     input      [7:0]  PlayerPositionX,
     input      [7:0]  PlayerPositionY,
     input      [2:0]  Players,
-    input      [17:0] OddBulletInitialized[49:0],
+    input      [17:0] OddBulletInitialized[24:0],
     input      [7:0]  Destroy_Line,
     output reg [2:0]  Next_Players,
-    output reg [17:0] OddBulletMoved[49:0]
+    output reg [17:0] OddBulletMoved[24:0]
 );
     //30(3):32(2):33(1) (y)(2帧移动1像素)
     //15(3):8(2) (x)
@@ -25,7 +25,7 @@ module oddbulletmove (
     reg  [19:0]  move_countX2;
     reg  [19:0]  move_countX3;
     initial begin
-        for(i=0;i<50;i=i+1) begin
+        for(i=0;i<25;i=i+1) begin
             OddBulletMoved[i] = {sleeping,16'd0};
         end
         Next_Players = Players;
@@ -37,7 +37,7 @@ module oddbulletmove (
     end
     always @(posedge clk5m) begin
         if(!rstn) begin
-            for(i=0;i<50;i=i+1) begin
+            for(i=0;i<25;i=i+1) begin
                 OddBulletMoved[i] = {sleeping,16'd0};
             end
             Next_Players = Players;
@@ -47,12 +47,13 @@ module oddbulletmove (
             move_countX2 = 20'd0;
             move_countX3 = 20'd0;
         end
-        else if(count2 == 17'd69444) begin
+        else if(count2 == 17'd69400)
             Next_Players <= Players;
+        else if(count2 == 17'd69444) begin
             if(!pause) begin
-                for(i=0;i<50;i=i+1) begin
+                for(i=0;i<25;i=i+1) begin
                     if(OddBulletInitialized[i][17:16] == initialized || OddBulletInitialized[i][17:16] == moving) begin
-                        if(OddBulletInitialized[i][17:16] == moving && OddBulletInitialized[i][15:8]>(PlayerPositionX-8'd3) && OddBulletInitialized[i][15:8]<(PlayerPositionX+8'd3) && OddBulletInitialized[i][7:0]>(PlayerPositionY-8'd3) && OddBulletInitialized[i][7:0]<(PlayerPositionY+8'd3)) begin
+                        if(OddBulletInitialized[i][17:16] == moving && OddBulletInitialized[i][15:8]>(PlayerPositionX-8'd2) && OddBulletInitialized[i][15:8]<(PlayerPositionX+8'd2) && OddBulletInitialized[i][7:0]>(PlayerPositionY-8'd2) && OddBulletInitialized[i][7:0]<(PlayerPositionY+8'd2)) begin
                             Next_Players <= Players - 1;
                             OddBulletMoved[i] <= {destroyed,16'd0};
                         end
@@ -108,23 +109,23 @@ module oddbulletmove (
         end
         else begin
             if(move_countY1 == 20'd138888)
-                move_countY1 <= 0;
+                move_countY1 <= 20'd0;
             else
                 move_countY1 <= move_countY1 + 1; 
             if(move_countY2 == 20'd143229)
-                move_countY2 <= 0;
+                move_countY2 <= 20'd0;
             else
                 move_countY2 <= move_countY2 + 1;
             if(move_countY3 == 20'd152777)
-                move_countY3 <= 0;
+                move_countY3 <= 20'd0;
             else
                 move_countY3 <= move_countY3 + 1;
             if(move_countX2 == 20'd572916)
-                move_countX2 <= 0;
+                move_countX2 <= 20'd0;
             else
                 move_countX2 <= move_countX2 + 1;
             if(move_countX3 == 20'd305555)
-                move_countX3 <= 0;
+                move_countX3 <= 20'd0;
             else
                 move_countX3 <= move_countX3 + 1;
         end

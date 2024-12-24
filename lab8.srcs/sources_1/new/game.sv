@@ -12,6 +12,7 @@ module game(
     output     [17:0] EnemySniperSingleBullet[15:0],
     output     [17:0] EvenBullet[47:0],
     output     [17:0] OddBullet[49:0],
+    output     [7:0]  Cannon_Line[3:0],
     output reg [2:0] Players,//残机数剩余
     output reg [2:0] Bombs,//炸弹数剩余
     output reg [7:0] BombPositionY,
@@ -362,6 +363,7 @@ enemymove ENEMYMOVE(
     wire [2:0] Next_Playerstwo;
     wire [2:0] Next_Playersthree;
     wire [2:0] Next_Playersfour;
+    wire [2:0] Next_Playersfive;
 enemysniper ENEMYSNIPER(
     .clk5m(clk5m),
     .en(1'b1),
@@ -397,7 +399,6 @@ evenbullet EVENBULLET(
     .en(1'b1),
     .rstn(rstn&&game_rstn),
     .pause(playing_state),
-    .speed(1'b0),
     .count1(count1),
     .count2(count2),
     .count3(count3),
@@ -413,7 +414,6 @@ oddbullet ODDBULLET(
     .en(1'b1),
     .rstn(rstn&&game_rstn),
     .pause(playing_state),
-    .speed(1'b0),
     .count1(count1),
     .count2(count2),
     .count3(count3),
@@ -423,6 +423,17 @@ oddbullet ODDBULLET(
     .Next_Players(Next_Playersfour),
     .OddBullet(OddBullet),
     .Destroy_Line(Destroy_Line > Destroy_Line_die ? Destroy_Line : Destroy_Line_die)
+);
+cannon CANNON(
+    .clk5m(clk5m),
+    .en(1'b1),
+    .rstn(rstn&&game_rstn),
+    .pause(playing_state),
+    .count1(count1),
+    .PlayerPositionX(PlayerPositionX),
+    .Players(Players),
+    .Next_Players(Next_Playersfive),
+    .Cannon_Line(Cannon_Line)
 );
 wire [7:0] Die_PlayerPositionX;
 wire [7:0] Die_PlayerPositionY;

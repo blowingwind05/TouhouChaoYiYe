@@ -4,10 +4,10 @@ module evenbulletmove (
     input      [7:0]  PlayerPositionX,
     input      [7:0]  PlayerPositionY,
     input      [2:0]  Players,
-    input      [17:0] EvenBulletInitialized[47:0],
+    input      [17:0] EvenBulletInitialized[23:0],
     input      [7:0]  Destroy_Line,
     output reg [2:0]  Next_Players,
-    output reg [17:0] EvenBulletMoved[47:0]
+    output reg [17:0] EvenBulletMoved[23:0]
 );
 //y:3帧移动2像素
 //x:3:1(9帧移动1像素)
@@ -20,7 +20,7 @@ reg  [19:0]  move_countY;
 reg  [19:0]  move_countX1;
 reg  [19:0]  move_countX2;
 initial begin
-    for(i=0;i<48;i=i+1) begin
+    for(i=0;i<24;i=i+1) begin
         EvenBulletMoved[i] = {sleeping,16'd0};
     end
     Next_Players = Players;
@@ -30,20 +30,21 @@ initial begin
 end
 always @(posedge clk5m) begin
     if(!rstn) begin
-        for(i=0;i<48;i=i+1) begin
-            EvenBulletMoved[i] = {sleeping,16'd0};
+        for(i=0;i<24;i=i+1) begin
+            EvenBulletMoved[i] <= {sleeping,16'd0};
         end
-        Next_Players = Players;
-        move_countY  = 20'd0;
-        move_countX1 = 20'd0;
-        move_countX2 = 20'd0;
-    end
-    else if(count2 == 17'd69444) begin
         Next_Players <= Players;
+        move_countY  <= 20'd0;
+        move_countX1 <= 20'd0;
+        move_countX2 <= 20'd0;
+    end
+    else if(count2 == 17'd69400)
+        Next_Players <= Players;
+    else if(count2 == 17'd69444) begin
         if(!pause) begin
-            for(i=0;i<48;i=i+1) begin
+            for(i=0;i<24;i=i+1) begin
                 if(EvenBulletInitialized[i][17:16] == initialized || EvenBulletInitialized[i][17:16] == moving) begin
-                    if(EvenBulletInitialized[i][17:16] == moving && EvenBulletInitialized[i][15:8]>(PlayerPositionX-8'd3) && EvenBulletInitialized[i][15:8]<(PlayerPositionX+8'd3) && EvenBulletInitialized[i][7:0]>(PlayerPositionY-8'd3) && EvenBulletInitialized[i][7:0]<(PlayerPositionY+8'd3)) begin
+                    if(EvenBulletInitialized[i][17:16] == moving && EvenBulletInitialized[i][15:8]>(PlayerPositionX-8'd2) && EvenBulletInitialized[i][15:8]<(PlayerPositionX+8'd2) && EvenBulletInitialized[i][7:0]>(PlayerPositionY-8'd2) && EvenBulletInitialized[i][7:0]<(PlayerPositionY+8'd2)) begin
                         Next_Players <= Players - 1;
                         EvenBulletMoved[i] <= {destroyed,16'd0};
                     end
@@ -85,15 +86,15 @@ always @(posedge clk5m) begin
     end
     else begin
         if(move_countY == 20'd208333)
-            move_countY <= 0;
+            move_countY <= 20'd0;
         else
             move_countY <= move_countY + 1;
         if(move_countX1 == 20'd625000)
-            move_countX1 <= 0;
+            move_countX1 <= 20'd0;
         else
             move_countX1 <= move_countX1 + 1;
         if(move_countX2 == 20'd208333)
-            move_countX2 <= 0;
+            move_countX2 <= 20'd0;
         else
             move_countX2 <= move_countX2 + 1;
     end
