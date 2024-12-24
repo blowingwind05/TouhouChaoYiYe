@@ -198,7 +198,15 @@ module game(
                         if(count3 == 17'd69444)begin
                             PlayerPositionX <= (Player_Die==1'b1 && Bomb_Activated == 1'b0 ? Die_PlayerPositionX : Next_PlayerPositionX);
                             PlayerPositionY <= (Player_Die==1'b1 && Bomb_Activated == 1'b0 ? Die_PlayerPositionY : Next_PlayerPositionY );
-                            Players <= (Bomb_Activated==1'b0 ?  (Next_Players < Next_Playerstwo ? Next_Players : Next_Playerstwo) : Players);
+                            Players <= (Bomb_Activated == 1'b0 ? 
+                                (Next_Players < Next_Playerstwo ? 
+                                    (Next_Players < Next_Playersthree ? 
+                                        (Next_Players < Next_Playersfour ? Next_Players : Next_Playersfour) 
+                                        : (Next_Playersthree < Next_Playersfour ? Next_Playersthree : Next_Playersfour)) 
+                                    : (Next_Playerstwo < Next_Playersthree ? 
+                                        (Next_Playerstwo < Next_Playersfour ? Next_Playerstwo : Next_Playersfour) 
+                                        : (Next_Playersfour < Next_Playersthree ? Next_Playersfour : Next_Playersthree))) 
+                                : Players);
                             EnemyPositionX <= Next_EnemyPositionX;
                             EnemyPositionY <= Next_EnemyPositionY;
                             EnemyHp <= Next_EnemyHp;
@@ -238,10 +246,10 @@ module game(
                             game_state <= playing;
                         end
                     end
-                    else if(EnemyHp == 0) begin
+                    else if(prev_game_state == playing && EnemyHp == 0) begin
                         game_state <= win;
                     end
-                    else if(Players == 0) begin
+                    else if(prev_game_state == playing && Players == 0) begin
                         game_state <= fail;
                     end
                     else begin
