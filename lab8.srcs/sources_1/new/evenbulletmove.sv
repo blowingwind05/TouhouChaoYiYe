@@ -38,8 +38,9 @@ always @(posedge clk5m) begin
         move_countX1 = 20'd0;
         move_countX2 = 20'd0;
     end
-    else if(count2 == 17'd69444) begin
+    else if(count2 == 17'd69400)
         Next_Players <= Players;
+    else if(count2 == 17'd69444) begin
         if(!pause) begin
             for(i=0;i<48;i=i+1) begin
                 if(EvenBulletInitialized[i][17:16] == initialized || EvenBulletInitialized[i][17:16] == moving) begin
