@@ -9,43 +9,40 @@ module oddbulletmove (
     output reg [2:0]  Next_Players,
     output reg [17:0] OddBulletMoved[24:0]
 );
-    //30(3):32(2):33(1) (y)(2帧移动1像素)
-    //15(3):8(2) (x)
-    //5280;
-    //176(30),165(32),160(33)
-    //352(15),660(8)
+    //Y:3帧1像素(3)，5帧2像素(2),2帧1像素(1)
+    //X:5帧1像素(3):10帧1像素(2) (x)
     localparam sleeping = 2'd0;
     localparam initialized = 2'd1;
     localparam moving = 2'd2;
     localparam destroyed = 2'd3;
     integer i;
-    reg  [19:0]  move_countY1;
-    reg  [19:0]  move_countY2;
-    reg  [19:0]  move_countY3;
-    reg  [19:0]  move_countX2;
-    reg  [19:0]  move_countX3;
+    reg  [3:0]  move_countY1;
+    reg  [3:0]  move_countY2;
+    reg  [3:0]  move_countY3;
+    reg  [3:0]  move_countX2;
+    reg  [3:0]  move_countX3;
     initial begin
         for(i=0;i<25;i=i+1) begin
             OddBulletMoved[i] = {sleeping,16'd0};
         end
         Next_Players = Players;
-        move_countY1 = 20'd0;
-        move_countY2 = 20'd0;
-        move_countY3 = 20'd0;
-        move_countX2 = 20'd0;
-        move_countX3 = 20'd0;
+        move_countY1 = 4'd0;
+        move_countY2 = 4'd0;
+        move_countY3 = 4'd0;
+        move_countX2 = 4'd0;
+        move_countX3 = 4'd0;
     end
     always @(posedge clk5m) begin
         if(!rstn) begin
             for(i=0;i<25;i=i+1) begin
-                OddBulletMoved[i] = {sleeping,16'd0};
+                OddBulletMoved[i] <= {sleeping,16'd0};
             end
-            Next_Players = Players;
-            move_countY1 = 20'd0;
-            move_countY2 = 20'd0;
-            move_countY3 = 20'd0;
-            move_countX2 = 20'd0;
-            move_countX3 = 20'd0;
+            Next_Players <= Players;
+            move_countY1 <= 4'd0;
+            move_countY2 <= 4'd0;
+            move_countY3 <= 4'd0;
+            move_countX2 <= 4'd0;
+            move_countX3 <= 4'd0;
         end
         else if(count2 == 17'd69400)begin
             Next_Players <= Players;
@@ -53,6 +50,62 @@ module oddbulletmove (
                 OddBulletMoved[i] <= OddBulletInitialized[i];
             end
         end
+
+        else if(count2 == 17'd69422) begin
+            if(!pause) begin
+                for(i=0;i<25;i=i+1) begin
+                    if(OddBulletInitialized[i][17:16] == initialized || OddBulletInitialized[i][17:16] == moving) begin
+                        if(OddBulletInitialized[i][17:16] == moving && OddBulletInitialized[i][15:8]>(PlayerPositionX-8'd2) && OddBulletInitialized[i][15:8]<(PlayerPositionX+8'd2) && OddBulletInitialized[i][7:0]>(PlayerPositionY-8'd2) && OddBulletInitialized[i][7:0]<(PlayerPositionY+8'd2)) begin
+                            Next_Players <= Players - 1;
+                            OddBulletMoved[i] <= {destroyed,16'd0};
+                        end
+
+                        else begin
+                            if(i%5 == 2) begin
+                                if(move_countY1 == 4'd1) begin
+                                    move_countY1 <= 4'd0;
+                                    if(OddBulletInitialized[i][7:0] <= (Destroy_Line > 8'd1 ? Destroy_Line : 8'd1))
+                                        OddBulletMoved[i] <= {destroyed,16'd0};
+                                    else
+                                        OddBulletMoved[i] <= {moving,OddBulletInitialized[i][15:0]-8'd1};
+                                end
+                                else begin
+                                    move_countY1 <= move_countY1 + 1;
+                                end
+                            end
+
+                            else if(i%5 == 1 || i%5 == 3) begin
+                                if(move_countY2 == 4'd4) begin
+                                    move_countY2 <= 4'd0;
+                                    if(OddBulletInitialized[i][7:0] <= (Destroy_Line > 8'd2 ? Destroy_Line : 8'd2))
+                                        OddBulletMoved[i] <= {destroyed,16'd0};
+                                    else
+                                        OddBulletMoved[i] <= {moving,OddBulletInitialized[i][15:0]-8'd2};
+                                end
+                                else begin
+                                    move_countY2 <= move_countY2 + 1;
+                                end
+                            end
+
+                            else begin
+                                if(move_countY3 == 4'd2) begin
+                                    move_countY3 <= 4'd0;
+                                    if(OddBulletInitialized[i][7:0] <= (Destroy_Line > 8'd1 ? Destroy_Line : 8'd1))
+                                        OddBulletMoved[i] <= {destroyed,16'd0};
+                                    else
+                                        OddBulletMoved[i] <= {moving,OddBulletInitialized[i][15:0]-8'd1};
+                                end
+                                else begin
+                                    move_countY3 <= move_countY3 + 1;
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+
+
         else if(count2 == 17'd69444) begin
             if(!pause) begin
                 for(i=0;i<25;i=i+1) begin
@@ -62,22 +115,20 @@ module oddbulletmove (
                             OddBulletMoved[i] <= {destroyed,16'd0};
                         end
                         else begin
-                            if(i%5 == 2) begin
-                                if(move_countY1 == 20'd138888) begin
-                                    if(OddBulletInitialized[i][7:0] <= (Destroy_Line > 8'd1 ? Destroy_Line : 8'd1))
+                            if(i%5 == 1 || i%5 == 3) begin
+                                if(move_countY2 == 4'd4) begin
+                                    move_countY2 <= 4'd0;
+                                    if(OddBulletInitialized[i][7:0] <= (Destroy_Line > 8'd2 ? Destroy_Line : 8'd2))
                                         OddBulletMoved[i] <= {destroyed,16'd0};
                                     else
-                                        OddBulletMoved[i] <= {moving,OddBulletInitialized[i][15:0]-8'd1};
+                                        OddBulletMoved[i] <= {moving,OddBulletInitialized[i][15:0]-8'd2};
                                 end
-                            end
-                            else if(i%5 == 1 || i%5 == 3) begin
-                                if(move_countY2 == 20'd143229) begin
-                                    if(OddBulletInitialized[i][7:0] <= (Destroy_Line > 8'd1 ? Destroy_Line : 8'd1))
-                                        OddBulletMoved[i] <= {destroyed,16'd0};
-                                    else
-                                        OddBulletMoved[i] <= {moving,OddBulletInitialized[i][15:0]-8'd1};
+                                else begin
+                                    move_countY2 <= move_countY2 + 1;
                                 end
-                                if(move_countX2 == 20'd572916) begin
+
+                                if(move_countX2 == 4'd9) begin
+                                    move_countX2 <= 4'd0;
                                     if(OddBulletInitialized[i][15:8] <= 8'd3 || OddBulletInitialized[i][15:8] >= 8'd148)
                                         OddBulletMoved[i] <= {destroyed,16'd0};
                                     else begin
@@ -87,15 +138,25 @@ module oddbulletmove (
                                             OddBulletMoved[i] <= {moving,OddBulletInitialized[i][15:8]+8'd1,OddBulletInitialized[i][7:0]};
                                     end
                                 end
+                                else begin
+                                    move_countX2 <= move_countX2 + 1;
+                                end
                             end
-                            else begin
-                                if(move_countY3 == 20'd152777) begin
+
+                            else if(i%5 == 0 || i%5 == ) begin
+                                if(move_countY3 == 4'd2) begin
+                                    move_countY3 <= 4'd0;
                                     if(OddBulletInitialized[i][7:0] <= (Destroy_Line > 8'd1 ? Destroy_Line : 8'd1))
                                         OddBulletMoved[i] <= {destroyed,16'd0};
                                     else
                                         OddBulletMoved[i] <= {moving,OddBulletInitialized[i][15:0]-8'd1};
                                 end
-                                if(move_countX3 == 20'd305555) begin
+                                else begin
+                                    move_countY3 <= move_countY3 + 1;
+                                end
+
+                                if(move_countX3 == 4'd4) begin
+                                    move_countX3 <= 4'd0;
                                     if(OddBulletInitialized[i][15:8] <= 8'd3 || OddBulletInitialized[i][15:8] >= 8'd148)
                                         OddBulletMoved[i] <= {destroyed,16'd0};
                                     else begin
@@ -105,33 +166,14 @@ module oddbulletmove (
                                             OddBulletMoved[i] <= {moving,OddBulletInitialized[i][15:8]+8'd1,OddBulletInitialized[i][7:0]};
                                     end
                                 end
+                                else begin
+                                    move_countX3 <= move_countX3 + 1;
+                                end
                             end
                         end
                     end
                 end
             end
-        end
-        else begin
-            if(move_countY1 == 20'd138888)
-                move_countY1 <= 20'd0;
-            else
-                move_countY1 <= move_countY1 + 1; 
-            if(move_countY2 == 20'd143229)
-                move_countY2 <= 20'd0;
-            else
-                move_countY2 <= move_countY2 + 1;
-            if(move_countY3 == 20'd152777)
-                move_countY3 <= 20'd0;
-            else
-                move_countY3 <= move_countY3 + 1;
-            if(move_countX2 == 20'd572916)
-                move_countX2 <= 20'd0;
-            else
-                move_countX2 <= move_countX2 + 1;
-            if(move_countX3 == 20'd305555)
-                move_countX3 <= 20'd0;
-            else
-                move_countX3 <= move_countX3 + 1;
         end
     end
 endmodule
