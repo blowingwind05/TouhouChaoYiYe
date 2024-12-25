@@ -232,7 +232,7 @@ always @(posedge pclk) begin
                         end
                         else begin//jump the render of cannon
                             rdaddr <= (8'd150 - PlayerBullet[0][7:0])*8'd200 + PlayerBullet[0][15:8] - 8'd3;
-                            rdprogress <= rdprogress + 1;
+                            rdprogress <= rdprogress + 2;
                             txaddr <= shift ? yukaribullet: reimubullet;
                             x <= 0;
                             i <= 0;
