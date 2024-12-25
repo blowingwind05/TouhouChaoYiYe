@@ -21,6 +21,7 @@ module ScreenRenderer(
     input [17:0] EnemySniperSingleBullet[15:0],//bullet_state,position_x,position_y
     input [17:0] EvenBullet[23:0],//bullet_state,position_x,position_y
     input [17:0] OddBullet[24:0],//bullet_state,position_x,position_y
+    input [7:0] Cannon_Line[3:0],
     input [7:0] EnemyPositionX, 
     input [7:0] EnemyPositionY,   
     output      [11:0] rgb,
@@ -221,7 +222,76 @@ always @(posedge pclk) begin
                         vramwaddr <= rdaddr;
                         vramwdata <= bgdata;//render the background
                     end
-                    else begin//end the progress one
+                    else begin
+                        vramwe <= 0;
+                        if(Cannon_Line[0] != 8'd0)begin
+                            rdaddr <= (8'd150 - 8'd130)*8'd200 + Cannon_Line[0] - 8'd1;
+                            rdprogress <= rdprogress + 1;
+                            x <= 0;
+                            i <= 0;
+                        end
+                        else begin//jump the render of cannon
+                            rdaddr <= (8'd150 - PlayerBullet[0][7:0])*8'd200 + PlayerBullet[0][15:8] - 8'd3;
+                            rdprogress <= rdprogress + 2;
+                            txaddr <= shift ? yukaribullet: reimubullet;
+                            x <= 0;
+                            i <= 0;
+                        end
+                    end
+                end
+                1:begin
+                    if(i<2)begin
+                        if(i == 0)begin
+                            if(x<8'd130)begin
+                                if(rdaddr < (8'd150 - 8'd130 + x)*8'd200 + Cannon_Line[1])begin
+                                    vramwe <= 1;
+                                    rdaddr <= rdaddr + 1;
+                                    vramwdata <= 12'hCCC;
+                                    vramwaddr <= rdaddr;
+                                end
+                                else begin
+                                    vramwe <= 0;
+                                    rdaddr <= (8'd151 - 8'd130 + x)*8'd200 + Cannon_Line[0] - 8'd1;
+                                    x <= x + 1;
+                                end
+                            end
+                            else begin
+                                if(Cannon_Line[2]!=Cannon_Line[3])begin
+                                    vramwe <= 0;
+                                    rdaddr <= (8'd150 - 8'd130)*8'd200 + Cannon_Line[2] - 8'd1;
+                                    x <= 0;
+                                    i <= i+1;
+                                end
+                                else begin//jump the render of cannon
+                                    i <= 2;
+                                end
+                            end
+                        end
+                        else if(i == 1)begin
+                            if(x<8'd130)begin
+                                if(rdaddr < (8'd150 - 8'd130 + x)*8'd200 + Cannon_Line[3])begin
+                                    vramwe <= 1;
+                                    rdaddr <= rdaddr + 1;
+                                    vramwdata <= 12'hFFF;
+                                    vramwaddr <= rdaddr;
+                                end
+                                else begin
+                                    vramwe <= 0;
+                                    rdaddr <= (8'd151 - 8'd130 + x)*8'd200 + Cannon_Line[2] - 8'd1;
+                                    x <= x + 1;
+                                end
+                            end
+                            else begin
+                                vramwe <= 0;
+                                rdaddr <= (8'd150 - PlayerBullet[0][7:0])*8'd200 + PlayerBullet[0][15:8] - 8'd3;
+                                rdprogress <= rdprogress + 1;
+                                txaddr <= shift ? yukaribullet: reimubullet;
+                                x <= 0;
+                                i <= 0;
+                            end
+                        end
+                    end
+                    else begin
                         vramwe <= 0;
                         rdaddr <= (8'd150 - PlayerBullet[0][7:0])*8'd200 + PlayerBullet[0][15:8] - 8'd3;
                         rdprogress <= rdprogress + 1;
@@ -230,7 +300,7 @@ always @(posedge pclk) begin
                         i <= 0;
                     end
                 end
-                1:begin
+                2:begin
                     if(i < 5'd24)begin
                         if(PlayerBullet[i][17:16] == 2'd1 || PlayerBullet[i][17:16] == 2'd2)begin
                             if(x < 8'd6)begin
@@ -271,7 +341,7 @@ always @(posedge pclk) begin
                         x <= 0;
                     end
                 end
-                2:begin//begin the progress three
+                3:begin
                     if(x < 40)begin
                         if(rdaddr < (8'd131 - PlayerPositionY + x)*8'd200 + PlayerPositionX + 8'd20)begin
                             vramwe <= txdata[0];
@@ -289,7 +359,7 @@ always @(posedge pclk) begin
                     else begin//end the progress three
                         vramwe <= 0;
                         rdaddr <= (8'd150 - EnemySniperBullet[0][7:0] - 8'd10)*8'd200 + EnemySniperBullet[0][15:8] - 8'd11;
-                        rdprogress <= rdprogress + 2;
+                        rdprogress <= rdprogress + 1;
                         txaddr <= enemysniperblue;
                         x <= 0;
                         i <= 0;
