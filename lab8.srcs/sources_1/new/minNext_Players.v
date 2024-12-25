@@ -1,5 +1,5 @@
 module minNext_Players (
-    input      clk5m,
+    input      clk5m,rstn,
     input      [16:0] count5,
     input      [2:0]  Next_Playersone,
     input      [2:0]  Next_Playerstwo,
@@ -12,7 +12,10 @@ module minNext_Players (
         Next_Players = 3'd3;
     end
     always @(clk5m) begin
-        if(count5 == 17'd69444) begin
+        if(!rstn) begin
+            Next_Players <= 3'd3;
+        end
+        else if(count5 == 17'd69444) begin
             if(Next_Playersone < Next_Playerstwo && Next_Playersone < Next_Playersthree && Next_Playersone < Next_Playersfour && Next_Playersone < Next_Playersfive)
                 Next_Players <= Next_Playersone;
             else if(Next_Playerstwo < Next_Playersone && Next_Playerstwo < Next_Playersthree && Next_Playerstwo < Next_Playersfour && Next_Playerstwo < Next_Playersfive)

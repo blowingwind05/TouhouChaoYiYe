@@ -436,6 +436,16 @@ cannon CANNON(
     .Next_Players(Next_Playersfive),
     .Cannon_Line(Cannon_Line)
 );
+minNext_Players MIN(
+    .clk5m(clk5m),
+    .rstn(rstn&&game_rstn),
+    .count5(count5),
+    .Next_Playersone(Next_Playersone),
+    .Next_Playerstwo(Next_Playerstwo),
+    .Next_Playersthree(Next_Playersthree),
+    .Next_Playersfive(Next_Playersfive),
+    .Next_Players(Next_Players)
+);
 wire [7:0] Die_PlayerPositionX;
 wire [7:0] Die_PlayerPositionY;
 wire [7:0] Destroy_Line_die;
