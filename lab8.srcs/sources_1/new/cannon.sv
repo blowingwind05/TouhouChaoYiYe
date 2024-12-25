@@ -59,14 +59,16 @@ module cannon (
                             counter <= counter + 1;
                             movecounter <= movecounter + 1;
                             if(counter < 9'd144) begin  //灰线扩散
-                                if(Cannon_Line[0] < 8'd2 || Cannon_Line[0] < PlayerPositionX_reg-8'd24)
-                                    Cannon_Line[0] <= Cannon_Line[0];
-                                else
-                                    Cannon_Line[0] <= Cannon_Line[0] - 1;
-                                if(Cannon_Line[1] > 8'd149 || Cannon_Line[1] > PlayerPositionX_reg+8'd24)
-                                    Cannon_Line[1] <= Cannon_Line[1];
-                                else
-                                    Cannon_Line[1] <= Cannon_Line[1] + 1;
+                                if(movecounter[1] == 1'b0) begin
+                                    if(Cannon_Line[0] < 8'd2 || Cannon_Line[0] < PlayerPositionX_reg-8'd24)
+                                        Cannon_Line[0] <= Cannon_Line[0];
+                                    else
+                                        Cannon_Line[0] <= Cannon_Line[0] - 1;
+                                    if(Cannon_Line[1] > 8'd149 || Cannon_Line[1] > PlayerPositionX_reg+8'd24)
+                                        Cannon_Line[1] <= Cannon_Line[1];
+                                    else
+                                        Cannon_Line[1] <= Cannon_Line[1] + 1;
+                                end
                             end
                             if(counter > 9'd20 && counter < 9'd288) begin //实炮扩散
                                 if(movecounter == 2'd0) begin
