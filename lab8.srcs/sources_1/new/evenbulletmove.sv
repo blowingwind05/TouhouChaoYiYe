@@ -47,20 +47,27 @@ always @(posedge clk5m) begin
 
     else if(count2 == 17'd69422) begin
         if(!pause) begin
-            if(move_countY == 4'd2)
+            if(move_countY == 4'd2) begin
                 move_countY <= 4'd0;
-            else
+            end
+            else begin
                 move_countY <= move_countY + 1;
+            end
             
-            if(move_countX1 == 4'd8)
+            if(move_countX1 == 4'd8) begin
                 move_countX1 <= 4'd0;
-            else
+            end
+            else begin
                 move_countX1 <= move_countX1 + 1;
+            end
             
-            if(move_countX2 == 4'd2)
+            if(move_countX2 == 4'd2) begin
                 move_countX2 <= 4'd0;
-            else
+            end
+            else begin
                 move_countX2 <= move_countX2 + 1;
+            end
+
             for(i=0;i<24;i=i+1) begin
                 if(EvenBulletInitialized[i][17:16] == initialized || EvenBulletInitialized[i][17:16] == moving) begin
                     if(EvenBulletMoved[i][17:16] == moving && EvenBulletMoved[i][15:8]>(PlayerPositionX-8'd2) && EvenBulletMoved[i][15:8]<(PlayerPositionX+8'd2) && EvenBulletMoved[i][7:0]>(PlayerPositionY-8'd2) && EvenBulletMoved[i][7:0]<(PlayerPositionY+8'd2)) begin

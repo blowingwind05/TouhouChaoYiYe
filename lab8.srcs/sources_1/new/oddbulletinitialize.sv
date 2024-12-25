@@ -45,7 +45,7 @@ module oddbulletinitialize (
                         initialize_area <= 3'd0;
                 end
                 else begin
-                    for(i=0;i<24;i=i+1) OddBulletInitialized[i] <= OddBullet[i];
+                    for(i=0;i<25;i=i+1) OddBulletInitialized[i] <= OddBullet[i];
                 end
             end
         end
