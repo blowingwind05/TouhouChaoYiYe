@@ -61,7 +61,7 @@ module oddbulletmove (
                 if(move_countY2 == 4'd4)
                     move_countY2 <= 4'd0;
                 else
-                    move_countY2 <= move_countY2 + 1'
+                    move_countY2 <= move_countY2 + 1;
 
                 if(move_countY3 == 4'd2)
                     move_countY3 <= 4'd0;
