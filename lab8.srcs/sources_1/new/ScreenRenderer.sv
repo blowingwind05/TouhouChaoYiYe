@@ -263,6 +263,7 @@ always @(posedge pclk) begin
                                     i <= i+1;
                                 end
                                 else begin//jump the render of cannon
+                                    vramwe <= 0;
                                     i <= 2;
                                 end
                             end
