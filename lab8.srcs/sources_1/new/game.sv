@@ -10,8 +10,8 @@ module game(
     output     [17:0] PlayerBullet[23:0],
     output     [17:0] EnemySniperBullet[15:0],
     output     [17:0] EnemySniperSingleBullet[15:0],
-    output     [17:0] EvenBullet[47:0],
-    output     [17:0] OddBullet[49:0],
+    output     [17:0] EvenBullet[23:0],
+    output     [17:0] OddBullet[24:0],
     output     [7:0]  Cannon_Line[3:0],
     output reg [2:0] Players,//残机数剩余
     output reg [2:0] Bombs,//炸弹数剩余
@@ -65,7 +65,7 @@ module game(
         PlayerPositionY = 8'd30;
         EnemyPositionX = 8'd75;
         EnemyPositionY = 8'd131;
-        EnemyHp = 16'd6000;
+        EnemyHp = 16'd3000;
         Score = 16'd0;
         Players = 3'd4;
         Bombs = 3'd3;
@@ -96,7 +96,7 @@ module game(
             PlayerPositionY <= 8'd30;
             EnemyPositionX <= 8'd75;
             EnemyPositionY <= 8'd131;
-            EnemyHp <= 16'd6000;
+            EnemyHp <= 16'd3000;
             Score <= 16'd0;
             Players <= 3'd4;
             Bombs <= 3'd3;
@@ -187,7 +187,7 @@ module game(
                         playing_state = unpaused;
                         PlayerPositionX <= 8'd75;
                         PlayerPositionY <= 8'd30;
-                        EnemyHp <= 16'd6000;
+                        EnemyHp <= 16'd3000;
                         EnemyPositionX <= 8'd75;
                         EnemyPositionY <= 8'd131;
                         Score <= 16'd0;
@@ -199,15 +199,7 @@ module game(
                         if(count3 == 17'd69444)begin
                             PlayerPositionX <= (Player_Die==1'b1 && Bomb_Activated == 1'b0 ? Die_PlayerPositionX : Next_PlayerPositionX);
                             PlayerPositionY <= (Player_Die==1'b1 && Bomb_Activated == 1'b0 ? Die_PlayerPositionY : Next_PlayerPositionY );
-                            Players <= (Bomb_Activated == 1'b0 ? 
-                                (Next_Players < Next_Playerstwo ? 
-                                    (Next_Players < Next_Playersthree ? 
-                                        (Next_Players < Next_Playersfour ? Next_Players : Next_Playersfour) 
-                                        : (Next_Playersthree < Next_Playersfour ? Next_Playersthree : Next_Playersfour)) 
-                                    : (Next_Playerstwo < Next_Playersthree ? 
-                                        (Next_Playerstwo < Next_Playersfour ? Next_Playerstwo : Next_Playersfour) 
-                                        : (Next_Playersfour < Next_Playersthree ? Next_Playersfour : Next_Playersthree))) 
-                                : Players);
+                            Players <= (Bomb_Activated==1'b0 ?  (Next_Players < Next_Playerstwo ? Next_Players : Next_Playerstwo) : Players);
                             EnemyPositionX <= Next_EnemyPositionX;
                             EnemyPositionY <= Next_EnemyPositionY;
                             EnemyHp <= Next_EnemyHp;
