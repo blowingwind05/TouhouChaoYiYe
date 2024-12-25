@@ -47,6 +47,20 @@ always @(posedge clk5m) begin
 
     else if(count2 == 17'd69422) begin
         if(!pause) begin
+            if(move_countY == 4'd2)
+                move_countY <= 4'd0;
+            else
+                move_countY <= move_countY + 1;
+            
+            if(move_countX1 == 4'd8)
+                move_countX1 <= 4'd0;
+            else
+                move_countX1 <= move_countX1 + 1;
+            
+            if(move_countX2 == 4'd2)
+                move_countX2 <= 4'd0;
+            else
+                move_countX2 <= move_countX2 + 1;
             for(i=0;i<24;i=i+1) begin
                 if(EvenBulletInitialized[i][17:16] == initialized || EvenBulletInitialized[i][17:16] == moving) begin
                     if(EvenBulletMoved[i][17:16] == moving && EvenBulletMoved[i][15:8]>(PlayerPositionX-8'd2) && EvenBulletMoved[i][15:8]<(PlayerPositionX+8'd2) && EvenBulletMoved[i][7:0]>(PlayerPositionY-8'd2) && EvenBulletMoved[i][7:0]<(PlayerPositionY+8'd2)) begin
@@ -56,14 +70,10 @@ always @(posedge clk5m) begin
 
                     else begin
                         if(move_countY == 4'd2) begin
-                            move_countY <= 4'd0;
                             if(EvenBulletInitialized[i][7:0] <= (Destroy_Line > 8'd1 ? Destroy_Line : 8'd1))
                                 EvenBulletMoved[i] <= {destroyed,16'd0};
                             else
                                 EvenBulletMoved[i] <= {moving,EvenBulletMoved[i][15:0]-8'd2};
-                        end
-                        eles begin
-                            move_countY <= move_countY + 1;
                         end
                     end
                 end
@@ -83,7 +93,6 @@ always @(posedge clk5m) begin
                     else begin
                         if(i%4 == 1 || i%4 == 2) begin
                             if(move_countX1 == 4'd8) begin
-                                move_countX1 <= 4'd0;
                                 if(EvenBulletInitialized[i][15:8] <= 8'd3 || EvenBulletMoved[i][15:8] >= 8'd148)
                                     EvenBulletMoved[i] <= {destroyed,16'd0};
                                 else begin
@@ -93,14 +102,10 @@ always @(posedge clk5m) begin
                                         EvenBulletMoved[i] <= {moving,EvenBulletMoved[i][15:8]+8'd1,EvenBulletMoved[i][7:0]};
                                 end
                             end
-                            else begin
-                                move_countX1 <= move_countX1 + 1;
-                            end
                         end
 
                         if(i%4 == 0 || i%4 == 3) begin
                             if(move_countX2 == 4'd2) begin
-                                move_countX2 <= 4'd0;
                                 if(EvenBulletInitialized[i][15:8] <= 8'd3 || EvenBulletInitialized[i[15:8] >= 8'd148])
                                     EvenBulletMoved[i] <= {destroyed,16'd0};
                                 else begin
@@ -109,9 +114,6 @@ always @(posedge clk5m) begin
                                     else
                                         EvenBulletMoved[i] <= {moving,EvenBulletMoved[i][15:8]+8'd1,EvenBulletMoved[i][7:0]};
                                 end
-                            end
-                            else begin
-                                move_countX2 <= move_countX2 + 1;
                             end
                         end
                     end
