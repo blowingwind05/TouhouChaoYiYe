@@ -443,6 +443,7 @@ minNext_Players MIN(
     .Next_Playersone(Next_Playersone),
     .Next_Playerstwo(Next_Playerstwo),
     .Next_Playersthree(Next_Playersthree),
+    .Next_Playersfour(Next_Playersfour),
     .Next_Playersfive(Next_Playersfive),
     .Next_Players(Next_Players)
 );
