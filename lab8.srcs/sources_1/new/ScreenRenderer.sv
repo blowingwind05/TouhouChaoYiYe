@@ -19,8 +19,8 @@ module ScreenRenderer(
     input [17:0] PlayerBullet[23:0],//bullet_state,position_x,position_y
     input [17:0] EnemySniperBullet[15:0],//bullet_state,position_x,position_y
     input [17:0] EnemySniperSingleBullet[15:0],//bullet_state,position_x,position_y
-    input [17:0] EvenBullet[47:0],//bullet_state,position_x,position_y
-    input [17:0] OddBullet[49:0],//bullet_state,position_x,position_y
+    input [17:0] EvenBullet[23:0],//bullet_state,position_x,position_y
+    input [17:0] OddBullet[24:0],//bullet_state,position_x,position_y
     input [7:0] EnemyPositionX, 
     input [7:0] EnemyPositionY,   
     output      [11:0] rgb,
@@ -71,7 +71,7 @@ localparam yukaribomb = 15'd11702;//store from 11702 to 18301
 localparam enemysniperblue = 15'd18302;//store from 18302 to 18742
 localparam enemysniperred = 15'd18743;//store from 18743 to 19183
 localparam bulletyellow = 15'd19184;//store from 19184 to 19208
-localparam bulletblue = 15'd19209;//store from 19209 to 19233
+localparam bulletgreen = 15'd19209;//store from 19209 to 19233
 //text location
 localparam zerozero = 15'd0;//store from 0 to 599
 localparam ten = 15'd600;//store from 600 to 1199
@@ -380,9 +380,9 @@ always @(posedge pclk) begin
                     end
                 end
                 6:begin
-                    if(i < 8'd50)begin
+                    if(i < 8'd25)begin
                         if(OddBullet[i][17:16] == 2'd1 || OddBullet[i][17:16] == 2'd2)begin
-                            if(x < 8'd5)begin
+                            if(x < (OddBullet[i][7:0] > 8'd3 ? 8'd5 : OddBullet[i][7:0] + 8'd2))begin
                                 if(rdaddr < (8'd150 - OddBullet[i][7:0] -8'd2 + x)*8'd200 + OddBullet[i][15:8] + 8'd2)begin
                                     vramwe <= txdata[0];
                                     txaddr <= txaddr + 1;
@@ -416,15 +416,15 @@ always @(posedge pclk) begin
                         vramwe <= 0;
                         rdaddr <= (8'd150 - EvenBullet[0][7:0] - 8'd2)*8'd200 + EvenBullet[0][15:8] - 8'd3;
                         rdprogress <= rdprogress + 1;
-                        txaddr <= bulletblue;
+                        txaddr <= bulletgreen;
                         x <= 0;
                         i <= 0;
                     end
                 end
                 7:begin
-                    if(i < 8'd48)begin
+                    if(i < 8'd24)begin
                         if(EvenBullet[i][17:16] == 2'd1 || EvenBullet[i][17:16] == 2'd2)begin
-                            if(x < 8'd5)begin
+                            if(x < (EvenBullet[i][7:0] > 8'd3 ? 8'd5 : EvenBullet[i][7:0] + 8'd2))begin
                                 if(rdaddr < (8'd150 - EvenBullet[i][7:0] - 8'd2 + x)*8'd200 + EvenBullet[i][15:8] + 8'd2)begin
                                     vramwe <= txdata[0];
                                     txaddr <= txaddr + 1;
@@ -441,7 +441,7 @@ always @(posedge pclk) begin
                             else begin
                                 vramwe <= 0;
                                 rdaddr <= (8'd150 - EvenBullet[i+1][7:0] - 8'd2)*8'd200 + EvenBullet[i+1][15:8] - 8'd3;
-                                txaddr <= bulletblue;
+                                txaddr <= bulletgreen;
                                 i <= i + 1;
                                 x <= 0;
                             end
@@ -449,7 +449,7 @@ always @(posedge pclk) begin
                         else begin//jump the render of bullet i
                             vramwe <= 0;
                             rdaddr <= (8'd150 - EvenBullet[i+1][7:0] - 8'd2)*8'd200 + EvenBullet[i+1][15:8] - 8'd3;
-                            txaddr <= bulletblue;
+                            txaddr <= bulletgreen;
                             i <= i + 1;
                             x <= 0;
                         end

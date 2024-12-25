@@ -38,8 +38,12 @@ always @(posedge clk5m) begin
         move_countX1 <= 20'd0;
         move_countX2 <= 20'd0;
     end
-    else if(count2 == 17'd69400)
+    else if(count2 == 17'd69400)begin
         Next_Players <= Players;
+        for(i=0;i<24;i=i+1)begin
+            EvenBulletMoved[i] <= EvenBulletInitialized[i];
+        end
+    end
     else if(count2 == 17'd69444) begin
         if(!pause) begin
             for(i=0;i<24;i=i+1) begin
@@ -50,14 +54,14 @@ always @(posedge clk5m) begin
                     end
                     else begin
                         if(move_countY == 20'd208333) begin
-                            if(EvenBulletInitialized[i][7:0] < (Destroy_Line > 8'd1 ? Destroy_Line : 8'd1))
+                            if(EvenBulletInitialized[i][7:0] <= (Destroy_Line > 8'd1 ? Destroy_Line : 8'd1))
                                 EvenBulletMoved[i] <= {destroyed,16'd0};
                             else
                                 EvenBulletMoved[i] <= {moving,EvenBulletInitialized[i][15:0]-8'd2};
                         end
                         if(i%4 == 1 || i%4 == 2) begin
                             if(move_countX1 == 20'd625000) begin
-                                if(EvenBulletInitialized[i][15:8] < 8'd1 || EvenBulletInitialized[i[15:8] > 8'd150])
+                                if(EvenBulletInitialized[i][15:8] <= 8'd3 || EvenBulletInitialized[i[15:8] >= 8'd148])
                                     EvenBulletMoved[i] <= {destroyed,16'd0};
                                 else begin
                                     if(i%4 == 1)
@@ -69,7 +73,7 @@ always @(posedge clk5m) begin
                         end
                         if(i%4 == 0 || i%4 == 3) begin
                             if(move_countX2 == 20'd208333) begin
-                                if(EvenBulletInitialized[i][15:8] < 8'd1 || EvenBulletInitialized[i[15:8] > 8'd150])
+                                if(EvenBulletInitialized[i][15:8] <= 8'd3 || EvenBulletInitialized[i[15:8] >= 8'd148])
                                     EvenBulletMoved[i] <= {destroyed,16'd0};
                                 else begin
                                     if(i%4 == 0)

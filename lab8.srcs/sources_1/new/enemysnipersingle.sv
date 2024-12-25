@@ -139,7 +139,7 @@ always @(posedge clk5m) begin
                         Next_Players <= Players - 1;
                         SniperBulletMoved[j-1] <= {destroyed,16'd0};
                     end
-                    else if(SniperBulletInitialized[j-1][7:0] < (Destroy_Line > 8'd1 ? Destroy_Line : 8'd1)) begin
+                    else if(SniperBulletInitialized[j-1][7:0] <= (Destroy_Line > 8'd1 ? Destroy_Line : 8'd1)) begin
                         SniperBulletMoved[j-1] <= {destroyed,16'd0};
                     end
                     else
