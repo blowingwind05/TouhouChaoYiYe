@@ -23,7 +23,7 @@ module game(
     output reg [15:0] EnemyHp,
     output reg [15:0] Score
     );
-    reg [16:0] count1,count2,count3,count4;
+    reg [16:0] count1,count2,count3,count4,count5;
     reg game_rstn;
     reg [2:0]  prev_game_state;
     reg [2:0]  Bombs_setting; 
@@ -52,6 +52,7 @@ module game(
     initial begin
         count1 = 17'd69444;
         count2 = 17'd52083;
+        count5 = 17'd40000;
         count3 = 17'd34722;
         count4 = 17'd17361;
         game_rstn = 1'b1;
@@ -83,6 +84,7 @@ module game(
         if(!rstn)begin
             count1 <= 17'd69444;
             count2 <= 17'd52083;
+            count5 <= 17'd40000;
             count3 <= 17'd34722;
             count4 <= 17'd17361;
             game_rstn <= 1'b1;
@@ -126,12 +128,18 @@ module game(
             end
             else
                 count3 <= count3 + 1;
-    
+
             if(count4 == 17'd69444) begin
                 count4 <= 0;
             end
             else
                 count4 <= count4 + 1;
+
+                if(count5 == 17'd69444) begin
+                    count5 <= 0;
+                end
+                else
+                    count5 <= count4 + 1;
 
             if(game_state == setting)begin
                 updown_reg <= up || down;//updown_reg用于防止连续按键
@@ -199,7 +207,7 @@ module game(
                         if(count3 == 17'd69444)begin
                             PlayerPositionX <= (Player_Die==1'b1 && Bomb_Activated == 1'b0 ? Die_PlayerPositionX : Next_PlayerPositionX);
                             PlayerPositionY <= (Player_Die==1'b1 && Bomb_Activated == 1'b0 ? Die_PlayerPositionY : Next_PlayerPositionY );
-                            Players <= (Bomb_Activated==1'b0 ?  (Next_Players < Next_Playerstwo ? Next_Players : Next_Playerstwo) : Players);
+                            Players <= (Bomb_Activated==1'b0 ?  Next_Players : Players);
                             EnemyPositionX <= Next_EnemyPositionX;
                             EnemyPositionY <= Next_EnemyPositionY;
                             EnemyHp <= Next_EnemyHp;
@@ -352,6 +360,7 @@ enemymove ENEMYMOVE(
     .Next_EnemyPositionY(Next_EnemyPositionY)
 );
     wire [2:0] Next_Players;
+    wire [2:0] Next_Playersone;
     wire [2:0] Next_Playerstwo;
     wire [2:0] Next_Playersthree;
     wire [2:0] Next_Playersfour;
@@ -367,7 +376,7 @@ enemysniper ENEMYSNIPER(
     .PlayerPositionX(PlayerPositionX),
     .PlayerPositionY(PlayerPositionY),
     .Players(Players),
-    .Next_Players(Next_Players),
+    .Next_Players(Next_Playersone),
     .SniperBullet(EnemySniperBullet),
     .Destroy_Line(Destroy_Line > Destroy_Line_die ? Destroy_Line : Destroy_Line_die)
 );
@@ -438,7 +447,7 @@ playerdie PLAYERDIE(
     .game_state(game_state),
     .playing_state(playing_state),
     .Players(Players),
-    .Next_Players(Next_Players < Next_Playerstwo ? Next_Players : Next_Playerstwo),
+    .Next_Players(Next_Players),
     .Die_PlayerPositionX(Die_PlayerPositionX),
     .Die_PlayerPositionY(Die_PlayerPositionY),
     .Player_Die(Player_Die),
