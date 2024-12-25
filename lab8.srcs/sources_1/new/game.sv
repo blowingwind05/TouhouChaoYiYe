@@ -139,7 +139,7 @@ module game(
                     count5 <= 0;
                 end
                 else
-                    count5 <= count4 + 1;
+                    count5 <= count5 + 1;
 
             if(game_state == setting)begin
                 updown_reg <= up || down;//updown_reg用于防止连续按键
