@@ -47,6 +47,9 @@ module enemysniperinitialize (
                     PlayerPositionX_reg <= PlayerPositionX;
                 end
             end
+            else begin
+                for(i=0;i<16;i=i+1) SniperBulletInitialized[i] <= SniperBullet[i];
+            end
         end
     end
 endmodule
