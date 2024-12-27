@@ -32,6 +32,7 @@ module playerbulletmove(
                 PlayerBulletMoved[i] <= {sleeping,16'b0};
             end
             counter <= 3'd0;
+            Next_EnemyHp <= 16'd3000;
         end
         else if(count2 >= 17'd69420) begin
             if(!pause) begin
@@ -49,7 +50,12 @@ module playerbulletmove(
                 if(count2 == 17'd69420 + j)begin
                     if(PlayerBulletInitialized[j-1][17:16] == initialized || PlayerBulletInitialized[j-1][17:16] == moving)begin
                         if(PlayerBulletInitialized[j-1][17:16] == moving && PlayerBulletInitialized[j-1][15:8] > (EnemyPositionX-8'd19) && PlayerBulletInitialized[j-1][15:8] < (EnemyPositionX+8'd20) && PlayerBulletInitialized[j-1][7:0] >= (EnemyPositionY-8'd23) && PlayerBulletInitialized[j-1][7:0] < (EnemyPositionY+8'd19)) begin
-                            Next_EnemyHp <= Next_EnemyHp - 1;
+                            if(Next_EnemyHp > 16'd3)begin
+                                Next_EnemyHp <= Next_EnemyHp - 1;
+                            end
+                            else begin
+                                Next_EnemyHp <= 16'd0;
+                            end
                             Next_Score <= Next_Score + 1;
                             PlayerBulletMoved[j-1] <= {destroyed,16'b0};
                         end
@@ -66,4 +72,3 @@ module playerbulletmove(
         end
     end
 endmodule
-

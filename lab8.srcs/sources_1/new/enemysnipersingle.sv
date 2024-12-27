@@ -83,7 +83,7 @@ module enemysnipersinitialize (
         end
         else if(count1 == 17'd69444) begin
             if(!pause) begin
-                if(initialize_count < 6'd63) initialize_count <= initialize_count + 1;
+                if(initialize_count < 6'd53) initialize_count <= initialize_count + 1;
                 else initialize_count <= 6'd0;
                 if(initialize_count == 6'd15) begin
                     SniperBulletInitialized[initialize_num] <= {initialized, PlayerPositionX_reg,8'd120};

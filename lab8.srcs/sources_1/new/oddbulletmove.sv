@@ -53,41 +53,31 @@ module oddbulletmove (
 
         else if(count2 == 17'd69422) begin
             if(!pause) begin
-                if(move_countY1 == 4'd1) begin
+                if(move_countY1 == 4'd1)
                     move_countY1 <= 4'd0;
-                end
-                else begin
+                else
                     move_countY1 <= move_countY1 + 1;
-                end
 
-                if(move_countY2 == 4'd4) begin
+                if(move_countY2 == 4'd4)
                     move_countY2 <= 4'd0;
-                end
-                else begin
+                else
                     move_countY2 <= move_countY2 + 1;
-                end
 
-                if(move_countY3 == 4'd2) begin
+                if(move_countY3 == 4'd2)
                     move_countY3 <= 4'd0;
-                end
-                else begin
+                else
                     move_countY3 <= move_countY3 + 1;
-                end
                 
-                if(move_countX2 == 4'd9) begin
+                if(move_countX2 == 4'd9)
                     move_countX2 <= 4'd0;
-                end
-                else begin
+                else
                     move_countX2 <= move_countX2 + 1;
-                end
                 
-                if(move_countX3 == 4'd4) begin
+                if(move_countX3 == 4'd4)
                     move_countX3 <= 4'd0;
-                end
                 else begin
                     move_countX3 <= move_countX3 + 1;
                 end
-                
                 for(i=0;i<25;i=i+1) begin
                     if(OddBulletInitialized[i][17:16] == initialized || OddBulletInitialized[i][17:16] == moving) begin
                         if(OddBulletMoved[i][17:16] == moving && OddBulletMoved[i][15:8]>(PlayerPositionX-8'd2) && OddBulletMoved[i][15:8]<(PlayerPositionX+8'd2) && OddBulletMoved[i][7:0]>(PlayerPositionY-8'd2) && OddBulletMoved[i][7:0]<(PlayerPositionY+8'd2)) begin

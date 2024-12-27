@@ -33,8 +33,20 @@ module cannon (
             counter <= 9'd0;
             CD <= 10'd0;
         end
-        else if(count1 == 17'd69400)
+        else if(!en)begin
             Next_Players <= Players;
+            counter <= 9'd0;
+            Cannon_Line[0] <= 8'd0;
+            Cannon_Line[1] <= 8'd0;
+            Cannon_Line[2] <= 8'd0;
+            Cannon_Line[3] <= 8'd0;
+            movecounter <= 2'd0;
+            PlayerPositionX_reg <= PlayerPositionX;
+            CD <= 10'd500;
+        end
+        else if(count1 == 17'd69400)begin
+            Next_Players <= Players;
+        end
         else if(count1 == 17'd69444) begin
             if(!pause && en) begin
                 if(CD < 10'd864)begin
@@ -70,7 +82,7 @@ module cannon (
                                         Cannon_Line[1] <= Cannon_Line[1] + 1;
                                 end
                             end
-                            if(counter > 9'd20 && counter < 9'd288) begin //实炮扩散
+                            if(counter > 9'd72 && counter < 9'd288) begin //实炮扩散
                                 if(movecounter == 2'd0) begin
                                     if(Cannon_Line[2] < 8'd2 || Cannon_Line[2] < PlayerPositionX_reg-8'd24)
                                         Cannon_Line[2] <= Cannon_Line[2];

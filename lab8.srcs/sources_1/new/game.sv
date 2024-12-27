@@ -1,5 +1,7 @@
 module game(
     input clk5m,rstn,w,s,a,d,o,z,x,r,q,shift,esc,up,down,left,right, 
+    input Player_Invincible,
+    input [2:0] Enemy_Control,
     output reg [2:0] game_state,
     output reg       playing_state,
     output reg       setting_state,
@@ -12,7 +14,7 @@ module game(
     output     [17:0] EnemySniperSingleBullet[15:0],
     output     [17:0] EvenBullet[23:0],
     output     [17:0] OddBullet[24:0],
-    output     [7:0]  Cannon_Line[3:0],
+    output     [7:0] Cannon_Line[3:0],
     output reg [2:0] Players,//残机数剩余
     output reg [2:0] Bombs,//炸弹数剩余
     output reg [7:0] BombPositionY,
@@ -20,8 +22,9 @@ module game(
     output           Bomb_Type,
     output reg [7:0] EnemyPositionX,
     output reg [7:0] EnemyPositionY,
-    output reg [15:0] EnemyHp,
-    output reg [15:0] Score
+    output wire [2:0] Next_Playersfive,
+    output reg [15:0] Score,
+    output            test
     );
     reg [16:0] count1,count2,count3,count4,count5;
     reg game_rstn;
@@ -48,13 +51,13 @@ module game(
     localparam setting_volume = 1'b1;
     localparam setting_Players = 1'b0;
     reg left_state, left_prev, right_state, right_prev;
-
+    reg [15:0] EnemyHp;
     initial begin
         count1 = 17'd69444;
         count2 = 17'd52083;
-        count5 = 17'd40000;
         count3 = 17'd34722;
         count4 = 17'd17361;
+        count5 <= 17'd40000;
         game_rstn = 1'b1;
         esc_reg = 1'b0;
         updown_reg = 1'b0;
@@ -84,9 +87,9 @@ module game(
         if(!rstn)begin
             count1 <= 17'd69444;
             count2 <= 17'd52083;
-            count5 <= 17'd40000;
             count3 <= 17'd34722;
             count4 <= 17'd17361;
+            count5 <= 17'd40000;
             game_rstn <= 1'b1;
             esc_reg <= 1'b0;
             updown_reg <= 1'b0;
@@ -128,19 +131,17 @@ module game(
             end
             else
                 count3 <= count3 + 1;
-
+    
             if(count4 == 17'd69444) begin
                 count4 <= 0;
             end
             else
                 count4 <= count4 + 1;
-
-                if(count5 == 17'd69444) begin
-                    count5 <= 0;
-                end
-                else
-                    count5 <= count5 + 1;
-
+            if(count5 == 17'd69444) begin
+                count5 <= 0;
+            end
+            else
+                count5 <= count5 + 1;
             if(game_state == setting)begin
                 updown_reg <= up || down;//updown_reg用于防止连续按键
                 if((up || down) && !updown_reg)begin
@@ -187,6 +188,34 @@ module game(
                     end
                 end
                 playing: begin
+                    if(EnemyHp > 16'd2250)begin
+                        en1 <= 0;
+                        en2 <= 0;
+                        en3 <= 1;
+                        en4 <= 1;
+                        en5 <= 0;
+                    end
+                    else if(EnemyHp > 16'd1500)begin
+                        en1 <= 0;
+                        en2 <= 1;
+                        en3 <= 1;
+                        en4 <= 1;
+                        en5 <= 0;
+                    end
+                    else if(EnemyHp > 16'd750)begin
+                        en1 <= 1;
+                        en2 <= 1;
+                        en3 <= 1;
+                        en4 <= 1;
+                        en5 <= 0;
+                    end
+                    else begin
+                        en1 <= 1;
+                        en2 <= 1;
+                        en3 <= 0;
+                        en4 <= 0;
+                        en5 <= 1;
+                    end
                     if(count3 == 17'd69444)begin
                         prev_game_state <= playing;
                     end
@@ -207,10 +236,10 @@ module game(
                         if(count3 == 17'd69444)begin
                             PlayerPositionX <= (Player_Die==1'b1 && Bomb_Activated == 1'b0 ? Die_PlayerPositionX : Next_PlayerPositionX);
                             PlayerPositionY <= (Player_Die==1'b1 && Bomb_Activated == 1'b0 ? Die_PlayerPositionY : Next_PlayerPositionY );
-                            Players <= (Bomb_Activated==1'b0 ?  Next_Players : Players);
+                            Players <= Player_Invincible ? Players : (Bomb_Activated == 1'b0 ? Next_Players: Players);
                             EnemyPositionX <= Next_EnemyPositionX;
                             EnemyPositionY <= Next_EnemyPositionY;
-                            EnemyHp <= Next_EnemyHp;
+                            EnemyHp <= Enemy_Control == 3'b100 ? 0 : (Enemy_Control == 3'b011 ? 16'd750 : (Enemy_Control == 3'b010 ? 16'd1500 : (Enemy_Control == 3'b001 ? 16'd2250 : Next_EnemyHp)));
                             Score <= Next_Score;
                             Bombs <= (Player_Die==1'b0 ? Next_Bombs : 3'd3);
                         end
@@ -359,15 +388,14 @@ enemymove ENEMYMOVE(
     .Next_EnemyPositionX(Next_EnemyPositionX),
     .Next_EnemyPositionY(Next_EnemyPositionY)
 );
-    wire [2:0] Next_Players;
     wire [2:0] Next_Playersone;
     wire [2:0] Next_Playerstwo;
     wire [2:0] Next_Playersthree;
     wire [2:0] Next_Playersfour;
-    wire [2:0] Next_Playersfive;
+    reg en1,en2,en3,en4,en5;
 enemysniper ENEMYSNIPER(
     .clk5m(clk5m),
-    .en(1'b1),
+    .en(en1),
     .rstn(rstn&&game_rstn),
     .pause(playing_state),
     .count1(count1),
@@ -382,7 +410,7 @@ enemysniper ENEMYSNIPER(
 );
 enemysnipersingle ENEMYSNIPERTWO(
     .clk5m(clk5m),
-    .en(1'b1),
+    .en(en2),
     .rstn(rstn&&game_rstn),
     .pause(playing_state),
     .count1(count1),
@@ -397,7 +425,7 @@ enemysnipersingle ENEMYSNIPERTWO(
 );
 evenbullet EVENBULLET(
     .clk5m(clk5m),
-    .en(1'b1),
+    .en(en3),
     .rstn(rstn&&game_rstn),
     .pause(playing_state),
     .count1(count1),
@@ -408,11 +436,11 @@ evenbullet EVENBULLET(
     .Players(Players),
     .Next_Players(Next_Playersthree),
     .EvenBullet(EvenBullet),
-    .Destroy_Line(Destroy_Line > Destroy_Line_die ? Destroy_Line : Destroy_Line_die)
+    .Destroy_Line(en3 ? (Destroy_Line > Destroy_Line_die ? Destroy_Line : Destroy_Line_die) : 8'd140)
 );
 oddbullet ODDBULLET(
     .clk5m(clk5m),
-    .en(1'b1),
+    .en(en4),
     .rstn(rstn&&game_rstn),
     .pause(playing_state),
     .count1(count1),
@@ -423,11 +451,12 @@ oddbullet ODDBULLET(
     .Players(Players),
     .Next_Players(Next_Playersfour),
     .OddBullet(OddBullet),
-    .Destroy_Line(Destroy_Line > Destroy_Line_die ? Destroy_Line : Destroy_Line_die)
+    .Destroy_Line(en4 ? (Destroy_Line > Destroy_Line_die ? Destroy_Line : Destroy_Line_die) : 8'd140)
 );
+assign test = en5 && (Destroy_Line_die == 8'd0);
 cannon CANNON(
     .clk5m(clk5m),
-    .en(1'b1),
+    .en(en5 && (Destroy_Line_die == 8'd0)),
     .rstn(rstn&&game_rstn),
     .pause(playing_state),
     .count1(count1),
@@ -435,17 +464,6 @@ cannon CANNON(
     .Players(Players),
     .Next_Players(Next_Playersfive),
     .Cannon_Line(Cannon_Line)
-);
-minNext_Players MIN(
-    .clk5m(clk5m),
-    .rstn(rstn&&game_rstn),
-    .count5(count5),
-    .Next_Playersone(Next_Playersone),
-    .Next_Playerstwo(Next_Playerstwo),
-    .Next_Playersthree(Next_Playersthree),
-    .Next_Playersfour(Next_Playersfour),
-    .Next_Playersfive(Next_Playersfive),
-    .Next_Players(Next_Players)
 );
 wire [7:0] Die_PlayerPositionX;
 wire [7:0] Die_PlayerPositionY;
@@ -464,4 +482,51 @@ playerdie PLAYERDIE(
     .Player_Die(Player_Die),
     .Destroy_Line_die(Destroy_Line_die)
 );
+wire [2:0] Next_Players;
+minNext_Players MIN(
+    .clk5m(clk5m),
+    .rstn(rstn&&game_rstn),
+    .count5(count5),
+    .Next_Playersone(Next_Playersone),
+    .Next_Playerstwo(Next_Playerstwo),
+    .Next_Playersthree(Next_Playersthree),
+    .Next_Playersfour(Next_Playersfour),
+    .Next_Playersfive(Next_Playersfive),
+    .Next_Players(Next_Players)
+);
+endmodule
+module minNext_Players (
+    input      clk5m,rstn,
+    input      [16:0] count5,
+    input      [2:0]  Next_Playersone,
+    input      [2:0]  Next_Playerstwo,
+    input      [2:0]  Next_Playersthree,
+    input      [2:0]  Next_Playersfour,
+    input      [2:0]  Next_Playersfive,
+    output reg [2:0]  Next_Players
+);
+    initial begin
+        Next_Players = 3'd3;
+    end
+    always @(clk5m) begin
+        if(!rstn) begin
+            Next_Players <= 3'd3;
+        end
+        else if(count5 == 17'd69444) begin
+            if(Next_Playersone <= Next_Playerstwo && Next_Playersone <= Next_Playersthree && Next_Playersone <= Next_Playersfour && Next_Playersone <= Next_Playersfive)begin
+                Next_Players <= Next_Playersone;
+            end
+            else if(Next_Playerstwo <= Next_Playersone && Next_Playerstwo <= Next_Playersthree && Next_Playerstwo <= Next_Playersfour && Next_Playerstwo <= Next_Playersfive)begin
+                Next_Players <= Next_Playerstwo;
+            end
+            else if(Next_Playersthree <= Next_Playersone && Next_Playersthree <= Next_Playerstwo && Next_Playersthree <= Next_Playersfour && Next_Playersthree <= Next_Playersfive)begin
+                Next_Players <= Next_Playersthree;
+            end
+            else if(Next_Playersfour <= Next_Playersone && Next_Playersfour <= Next_Playerstwo && Next_Playersfour <= Next_Playersthree && Next_Playersfour <= Next_Playersfive)begin
+                Next_Players <= Next_Playersfour;
+            end
+            else
+                Next_Players <= Next_Playersfive;
+        end
+    end
 endmodule

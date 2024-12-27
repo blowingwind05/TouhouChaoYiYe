@@ -48,6 +48,9 @@ module oddbulletinitialize (
                     for(i=0;i<25;i=i+1) OddBulletInitialized[i] <= OddBullet[i];
                 end
             end
+            else begin
+                for(i=0;i<25;i=i+1) OddBulletInitialized[i] <= OddBullet[i];
+            end
         end
     end
 endmodule

@@ -47,6 +47,9 @@ always @(posedge clk5m) begin
                 for(i=0;i<24;i=i+1) EvenBulletInitialized[i] <= EvenBullet[i];
             end
         end
+        else begin
+            for(i=0;i<24;i=i+1) EvenBulletInitialized[i] <= EvenBullet[i];
+        end
     end
 end
 endmodule
