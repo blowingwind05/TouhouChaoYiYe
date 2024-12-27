@@ -113,7 +113,7 @@ always @(posedge clk5m) begin
 
                         if(i%4 == 0 || i%4 == 3) begin
                             if(move_countX2 == 4'd2) begin
-                                if(EvenBulletInitialized[i][15:8] <= 8'd3 || EvenBulletInitialized[i[15:8] >= 8'd148])
+                                if(EvenBulletInitialized[i][15:8] <= 8'd3 || EvenBulletInitialized[i][15:8] >= 8'd148)
                                     EvenBulletMoved[i] <= {destroyed,16'd0};
                                 else begin
                                     if(i%4 == 0)
