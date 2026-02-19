@@ -1,2 +1,2 @@
 # TouhouChaoYiYe
-数电实验lab8
+中国科学技术大学24FALL数电实验lab8作品
